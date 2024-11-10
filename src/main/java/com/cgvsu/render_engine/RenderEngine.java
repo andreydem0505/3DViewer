@@ -34,8 +34,9 @@ public class RenderEngine {
                 Vector3f vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
 
                 javax.vecmath.Vector3f vertexVecmath = new javax.vecmath.Vector3f(vertex.x, vertex.y, vertex.z);
+                javax.vecmath.Vector3f projectedVertex = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertexVecmath);
 
-                Point2f resultPoint = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertexVecmath), width, height);
+                Point2f resultPoint = vertexToPoint(projectedVertex, width, height);
                 resultPoints.add(resultPoint);
             }
 
