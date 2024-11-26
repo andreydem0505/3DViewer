@@ -5,6 +5,7 @@ import com.cgvsu.model.Polygon;
 import java.util.*;
 
 public class Linal {
+    public static final float eps = 1e-7f;
     private static final Vector3f zero = new Vector3f(0f, 0f, 0f);
     public static Vector3f subtract(Vector3f a, Vector3f b){
         return new Vector3f(a.x - b.x, a.y - b.y, a.z - b.z);
