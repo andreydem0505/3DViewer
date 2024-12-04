@@ -1,5 +1,7 @@
-package com.cgvsu.objreader;
+package com.cgvsu.io.objreader;
 
+import com.cgvsu.io.objreader.ObjReader;
+import com.cgvsu.io.objreader.ObjReaderException;
 import com.cgvsu.math.Vector3f;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

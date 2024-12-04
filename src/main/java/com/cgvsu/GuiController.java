@@ -1,7 +1,10 @@
 package com.cgvsu;
 
+import com.cgvsu.model.Polygon;
 import com.cgvsu.render_engine.CamerasController;
+import com.cgvsu.render_engine.PixelWriter;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.triangulation.Triangulation;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -19,7 +22,7 @@ import java.io.File;
 import javax.vecmath.Vector3f;
 
 import com.cgvsu.model.Model;
-import com.cgvsu.objreader.ObjReader;
+import com.cgvsu.io.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 
 public class GuiController {
@@ -51,15 +54,17 @@ public class GuiController {
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
-        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
+        PixelWriter pixelWriter = new PixelWriter(canvas);
+
+        KeyFrame frame = new KeyFrame(Duration.millis(30), event -> {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
-            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+            pixelWriter.clearScreen();
             camerasController.currentCamera.setAspectRatio((float) (height / width));
 
             if (mesh != null) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camerasController.currentCamera, mesh, (int) width, (int) height);
+                RenderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height);
             }
         });
 
