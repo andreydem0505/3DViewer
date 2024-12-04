@@ -1,17 +1,23 @@
 package com.cgvsu.render_engine;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.cgvsu.math.Vector3f;
-import javafx.scene.canvas.GraphicsContext;
 import javax.vecmath.*;
 import com.cgvsu.model.Model;
+import com.cgvsu.model.Polygon;
+import com.cgvsu.rasterization.Bresenham;
+import com.cgvsu.rasterization.PlainColorTrianglePainter;
+import com.cgvsu.rasterization.TriangleRasterization;
+import javafx.scene.paint.Color;
+
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
 public class RenderEngine {
 
     public static void render(
-            final GraphicsContext graphicsContext,
+            final PixelWriter pixelWriter,
             final Camera camera,
             final Model mesh,
             final int width,
@@ -25,35 +31,55 @@ public class RenderEngine {
         modelViewProjectionMatrix.mul(viewMatrix);
         modelViewProjectionMatrix.mul(projectionMatrix);
 
-        final int nPolygons = mesh.polygons.size();
-        for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
-            final int nVerticesInPolygon = mesh.polygons.get(polygonInd).getVertexIndices().size();
+        Point3f[] resultPoints = new Point3f[mesh.vertices.size()];
+        for (int i = 0; i < mesh.vertices.size(); i++) {
+            Vector3f vertex = mesh.vertices.get(i);
+            javax.vecmath.Vector3f vertexVecmath = new javax.vecmath.Vector3f(vertex.x, vertex.y, vertex.z);
+            javax.vecmath.Vector3f projectedVertex = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertexVecmath);
+            Point2f resultPoint = vertexToPoint(projectedVertex, width, height);
+            resultPoints[i] = new Point3f(resultPoint.x, resultPoint.y, projectedVertex.z);
+        }
 
-            ArrayList<Point2f> resultPoints = new ArrayList<>();
-            for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                Vector3f vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
+        fillWithColor(pixelWriter, resultPoints, mesh.polygons, Color.CYAN);
 
-                javax.vecmath.Vector3f vertexVecmath = new javax.vecmath.Vector3f(vertex.x, vertex.y, vertex.z);
-                javax.vecmath.Vector3f projectedVertex = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertexVecmath);
+        for (Polygon curPolygon : mesh.polygons) {
+            final int nVerticesInPolygon = curPolygon.getVertexIndices().size();
+            List<Integer> polygonVertices = curPolygon.getVertexIndices();
 
-                Point2f resultPoint = vertexToPoint(projectedVertex, width, height);
-                resultPoints.add(resultPoint);
-            }
-
-            for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                graphicsContext.strokeLine(
-                        resultPoints.get(vertexInPolygonInd - 1).x,
-                        resultPoints.get(vertexInPolygonInd - 1).y,
-                        resultPoints.get(vertexInPolygonInd).x,
-                        resultPoints.get(vertexInPolygonInd).y);
+            for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; vertexInPolygonInd++) {
+                Bresenham.drawBresenhamLine(
+                        pixelWriter,
+                        Math.round(resultPoints[polygonVertices.get(vertexInPolygonInd - 1)].x),
+                        Math.round(resultPoints[polygonVertices.get(vertexInPolygonInd - 1)].y),
+                        resultPoints[polygonVertices.get(vertexInPolygonInd - 1)].z,
+                        Math.round(resultPoints[polygonVertices.get(vertexInPolygonInd)].x),
+                        Math.round(resultPoints[polygonVertices.get(vertexInPolygonInd)].y),
+                        resultPoints[polygonVertices.get(vertexInPolygonInd)].z
+                );
             }
 
             if (nVerticesInPolygon > 0)
-                graphicsContext.strokeLine(
-                        resultPoints.get(nVerticesInPolygon - 1).x,
-                        resultPoints.get(nVerticesInPolygon - 1).y,
-                        resultPoints.get(0).x,
-                        resultPoints.get(0).y);
+                Bresenham.drawBresenhamLine(
+                        pixelWriter,
+                        Math.round(resultPoints[polygonVertices.get(nVerticesInPolygon - 1)].x),
+                        Math.round(resultPoints[polygonVertices.get(nVerticesInPolygon - 1)].y),
+                        resultPoints[polygonVertices.get(nVerticesInPolygon - 1)].z,
+                        Math.round(resultPoints[polygonVertices.get(0)].x),
+                        Math.round(resultPoints[polygonVertices.get(0)].y),
+                        resultPoints[polygonVertices.get(0)].z
+                );
+        }
+    }
+
+    private static void fillWithColor(PixelWriter pixelWriter, Point3f[] resultPoints, List<Polygon> polygons, Color color) {
+        for (Polygon curPolygon : polygons) {
+            for (int[] triangle : curPolygon.getTriangles()) {
+                int[] x = Arrays.stream(triangle).map(e -> Math.round(resultPoints[e].x)).toArray();
+                int[] y = Arrays.stream(triangle).map(e -> Math.round(resultPoints[e].y)).toArray();
+                double[] z = Arrays.stream(triangle).mapToDouble(e -> resultPoints[e].z).toArray();
+                new TriangleRasterization(new PlainColorTrianglePainter(pixelWriter, x, y, z, color))
+                        .fillTriangle();
+            }
         }
     }
 }
