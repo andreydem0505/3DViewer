@@ -1,6 +1,5 @@
 package com.cgvsu.render_engine;
 
-import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
