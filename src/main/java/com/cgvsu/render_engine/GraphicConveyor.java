@@ -37,6 +37,13 @@ public class GraphicConveyor {
         return new Matrix4f(matrix);
     }
 
+    public static Vector3f getRay(Vector3f lightSource, Vector3f target) {
+        Vector3f result = new Vector3f();
+        result.sub(target, lightSource);
+        result.normalize();
+        return result;
+    }
+
     public static Matrix4f perspective(
             final float fov,
             final float aspectRatio,
