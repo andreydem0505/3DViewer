@@ -28,6 +28,13 @@ public class Linal {
         return c;
     }
 
+    public static Vector3f normalize(Vector3f a){
+        Vector3f b = new Vector3f(a);
+        b.normalize();
+
+        return b;
+    }
+
     public static Vector3f mean(List<Vector3f> vectors){
         Vector3f result = new Vector3f(0f, 0f, 0f);
 
