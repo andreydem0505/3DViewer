@@ -2,6 +2,7 @@ package com.cgvsu;
 
 import com.cgvsu.math.Linal;
 import com.cgvsu.model.Polygon;
+import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.CamerasController;
 import com.cgvsu.render_engine.PixelWriter;
 import com.cgvsu.render_engine.RenderEngine;
@@ -20,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
-import javax.vecmath.Vector3f;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.io.objreader.ObjReader;

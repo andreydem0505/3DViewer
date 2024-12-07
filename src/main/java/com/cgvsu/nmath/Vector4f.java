@@ -3,29 +3,80 @@ package com.cgvsu.nmath;
 /**
  * Класс Vector4X для работы с четырехмерными векторами.
  */
-public record Vector4(float x, float y, float z, float w) implements Vector<Vector4> {
+public class Vector4f implements Vector<Vector4f> {
+    private float x, y, z, w;
+    @Override
+    public float x() {
+        return x;
+    }
+
+    @Override
+    public float y() {
+        return y;
+    }
+
+    @Override
+    public float z() {
+        return z;
+    }
+
+    @Override
+    public float w() {
+        return w;
+    }
+
+    public Vector4f(float x, float y, float z, float w) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    public Vector4f(Vector4f source){
+        this.x = source.x();
+        this.y = source.y();
+        this.z = source.z();
+        this.w = source.w();
+    }
+
     // Реализация методов интерфейса Vector
     @Override
-    public Vector4 add(Vector4 v2) {
-        return new Vector4(this.x + v2.x, this.y + v2.y, this.z + v2.z, this.w + v2.w);
+    public Vector4f add(Vector4f v2) {
+        this.x += v2.x;
+        this.y += v2.y;
+        this.z += v2.z;
+        this.w += v2.w;
+        return this;
     }
 
     @Override
-    public Vector4 subtract(Vector4 v2) {
-        return new Vector4(this.x - v2.x, this.y - v2.y, this.z - v2.z, this.w - v2.w);
+    public Vector4f subtract(Vector4f v2) {
+        this.x -= v2.x;
+        this.y -= v2.y;
+        this.z -= v2.z;
+        this.w -= v2.w;
+        return this;
     }
 
     @Override
-    public Vector4 scale(float scalar) {
-        return new Vector4(this.x * scalar, this.y * scalar, this.z * scalar, this.w * scalar);
+    public Vector4f scale(float scalar) {
+        this.x *= scalar;
+        this.y *= scalar;
+        this.z *= scalar;
+        this.w *= scalar;
+        return this;
     }
 
     @Override
-    public Vector4 divide(float scalar) {
+    public Vector4f divide(float scalar) {
         if (scalar == 0) {
             throw new ArithmeticException("Vector4X.divide: деление на ноль невозможно.");
         }
-        return new Vector4(this.x / scalar, this.y / scalar, this.z / scalar, this.w / scalar);
+        this.x /= scalar;
+        this.y /= scalar;
+        this.z /= scalar;
+        this.w /= scalar;
+        return this;
     }
 
     @Override
@@ -34,7 +85,7 @@ public record Vector4(float x, float y, float z, float w) implements Vector<Vect
     }
 
     @Override
-    public Vector4 normalize() {
+    public Vector4f normalize() {
         float length = length();
         if (length == 0) {
             throw new ArithmeticException("Vector4X.normalize: длина вектора равна нулю, нормализация невозможна.");
@@ -43,7 +94,7 @@ public record Vector4(float x, float y, float z, float w) implements Vector<Vect
     }
 
     @Override
-    public float dotProduct(Vector4 v2) {
+    public float dotProduct(Vector4f v2) {
         return this.x * v2.x + this.y * v2.y + this.z * v2.z + this.w * v2.w;
     }
 
@@ -57,7 +108,7 @@ public record Vector4(float x, float y, float z, float w) implements Vector<Vect
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
-        Vector4 vector = (Vector4) obj;
+        Vector4f vector = (Vector4f) obj;
         return Math.abs(this.x - vector.x) < 1e-6 &&
                 Math.abs(this.y - vector.y) < 1e-6 &&
                 Math.abs(this.z - vector.z) < 1e-6 &&

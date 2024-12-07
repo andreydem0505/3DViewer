@@ -1,49 +1,42 @@
 package com.cgvsu.math;
 
 import com.cgvsu.model.Polygon;
+import com.cgvsu.nmath.Vector3f;
 
 import java.util.*;
 
 public class Linal {
     public static final float eps = 1e-7f;
     private static final Vector3f zero = new Vector3f(0f, 0f, 0f);
-    public static Vector3f subtract(Vector3f a, Vector3f b){
-        return new Vector3f(a.x - b.x, a.y - b.y, a.z - b.z);
-    }
 
     public static Vector3f add(Vector3f a, Vector3f b){
-        return new Vector3f(a.x + b.x, a.y + b.y, a.z + b.z);
+        Vector3f c = new Vector3f(a);
+        c.add(b);
+        return c;
+    }
+
+    public static Vector3f subtract(Vector3f a, Vector3f b){
+        Vector3f c = new Vector3f(a);
+        c.subtract(b);
+        return c;
+    }
+
+    public static Vector3f crossProduct(Vector3f a, Vector3f b){
+        Vector3f c = new Vector3f(a);
+        c = c.crossProduct(b);
+
+        return c;
     }
 
     public static Vector3f mean(List<Vector3f> vectors){
         Vector3f result = new Vector3f(0f, 0f, 0f);
 
         for (Vector3f vector : vectors){
-            result.x += vector.x;
-            result.y += vector.y;
-            result.z += vector.z;
+            result.add(vector);
         }
-        result.x /= vectors.size();
-        result.y /= vectors.size();
-        result.z /= vectors.size();
+        result.divide(vectors.size());
 
         return result;
-    }
-
-    public static Vector3f vectorProduct(Vector3f a, Vector3f b){
-        float i = a.y * b.z - a.z * b.y;
-        float j = a.z * b.x - a.x * b.z;
-        float k = a.x * b.y - a.y * b.x;
-
-        return new Vector3f(i, j, k);
-    }
-
-    public static Vector3f normalize(Vector3f a){
-        if(a.equals(zero))
-            return zero;
-
-        float len = (float) Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
-        return new Vector3f(a.x / len, a.y / len, a.z / len);
     }
 
     private static void putToDict(Map<Integer, Pair> dict, ArrayList<Vector3f> vertices, ArrayList<Integer> indices, int prevIndex, int currIndex, int nextIndex){
@@ -51,15 +44,15 @@ public class Linal {
         Vector3f currVertex = vertices.get(indices.get(currIndex));
         Vector3f nextVertex = vertices.get(indices.get(nextIndex));
 
-        Vector3f a = Linal.subtract(prevVertex, currVertex);
-        Vector3f b = Linal.subtract(nextVertex, currVertex);
-        Vector3f normal = Linal.normalize(Linal.vectorProduct(b, a));
+        Vector3f a = subtract(prevVertex, currVertex);
+        Vector3f b = subtract(nextVertex, currVertex);
+        Vector3f normal = b.crossProduct(a).normalize();
 
         if (!dict.containsKey(indices.get(currIndex))) {
             Pair pair = new Pair();
             dict.put(indices.get(currIndex), pair);
         }
-        dict.get(indices.get(currIndex)).v = Linal.add(dict.get(indices.get(currIndex)).v, normal);
+        dict.get(indices.get(currIndex)).v.add(normal);
         dict.get(indices.get(currIndex)).c++;
     }
 
@@ -88,11 +81,9 @@ public class Linal {
             Vector3f normal = pair.v;
             int amount = pair.c;
 
-            normal.x /= amount;
-            normal.y /= amount;
-            normal.z /= amount;
+            normal.divide(amount);
 
-            normal = Linal.normalize(normal);
+            normal = normal.normalize();
             normals.add(normal);
         }
 
@@ -105,9 +96,9 @@ public class Linal {
         for (Polygon polygon : polygons){
             ArrayList<Integer> indices = polygon.getVertexIndices();
 
-            Vector3f a = Linal.subtract(vertices.get(indices.get(0)), vertices.get(indices.get(1)));
-            Vector3f b = Linal.subtract(vertices.get(indices.get(2)), vertices.get(indices.get(1)));
-            Vector3f normal = Linal.normalize(Linal.vectorProduct(b, a));
+            Vector3f a = subtract(vertices.get(indices.get(0)), vertices.get(indices.get(1)));
+            Vector3f b = subtract(vertices.get(indices.get(2)), vertices.get(indices.get(1)));
+            Vector3f normal = b.crossProduct(a).normalize();
 
             normals.add(normal);
         }
@@ -118,11 +109,5 @@ public class Linal {
     private static class Pair {
         Vector3f v = new Vector3f(0f, 0f, 0f);
         int c = 0;
-    }
-
-    private class NormalCalculationError extends RuntimeException {
-        public NormalCalculationError(String message, int polygonIndex){
-            super("Error calculating normal of polygon: " + polygonIndex + ". " + message);
-        }
     }
 }
