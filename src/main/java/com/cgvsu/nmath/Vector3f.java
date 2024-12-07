@@ -3,27 +3,64 @@ package com.cgvsu.nmath;
 /**
  * Класс Vector3X для работы с трехмерными векторами.
  */
-public record Vector3f(float x, float y, float z) implements Vector<Vector3f> {
+public class Vector3f implements Vector<Vector3f> {
+    private float x, y, z;
+    @Override
+    public float x() {
+        return x;
+    }
+
+    @Override
+    public float y() {
+        return y;
+    }
+
+    @Override
+    public float z() {
+        return z;
+    }
+
     @Override
     public float w() {
         return 0;
+    }
+
+    public Vector3f(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public Vector3f(Vector3f source){
+        this.x = source.x();
+        this.y = source.y();
+        this.z = source.z();
     }
 
 
     // Реализация методов интерфейса Vector
     @Override
     public Vector3f add(Vector3f v2) {
-        return new Vector3f(this.x + v2.x, this.y + v2.y, this.z + v2.z);
+        this.x += v2.x;
+        this.y += v2.y;
+        this.z += v2.z;
+        return this;
     }
 
     @Override
     public Vector3f subtract(Vector3f v2) {
-        return new Vector3f(this.x - v2.x, this.y - v2.y, this.z - v2.z);
+        this.x -= v2.x;
+        this.y -= v2.y;
+        this.z -= v2.z;
+        return this;
     }
 
     @Override
     public Vector3f scale(float scalar) {
-        return new Vector3f(this.x * scalar, this.y * scalar, this.z * scalar);
+        this.x *= scalar;
+        this.y *= scalar;
+        this.z *= scalar;
+        return this;
     }
 
     @Override
@@ -31,7 +68,10 @@ public record Vector3f(float x, float y, float z) implements Vector<Vector3f> {
         if (scalar == 0) {
             throw new ArithmeticException("Vector3X3.divide: деление на ноль невозможно.");
         }
-        return new Vector3f(this.x / scalar, this.y / scalar, this.z / scalar);
+        this.x /= scalar;
+        this.y /= scalar;
+        this.z /= scalar;
+        return this;
     }
 
     @Override

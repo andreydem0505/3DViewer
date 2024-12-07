@@ -102,6 +102,10 @@ public class Matrix3x3 implements Matrix<Matrix3x3, Vector3f> {
         return new Matrix3x3(result);
     }
 
+    public float get(int i, int j) {
+        return elements[i * 3 + j];
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Matrix3x3X{\n");

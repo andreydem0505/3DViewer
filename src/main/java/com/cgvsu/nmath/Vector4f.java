@@ -3,21 +3,68 @@ package com.cgvsu.nmath;
 /**
  * Класс Vector4X для работы с четырехмерными векторами.
  */
-public record Vector4f(float x, float y, float z, float w) implements Vector<Vector4f> {
+public class Vector4f implements Vector<Vector4f> {
+    private float x, y, z, w;
+    @Override
+    public float x() {
+        return x;
+    }
+
+    @Override
+    public float y() {
+        return y;
+    }
+
+    @Override
+    public float z() {
+        return z;
+    }
+
+    @Override
+    public float w() {
+        return w;
+    }
+
+    public Vector4f(float x, float y, float z, float w) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    public Vector4f(Vector4f source){
+        this.x = source.x();
+        this.y = source.y();
+        this.z = source.z();
+        this.w = source.w();
+    }
+
     // Реализация методов интерфейса Vector
     @Override
     public Vector4f add(Vector4f v2) {
-        return new Vector4f(this.x + v2.x, this.y + v2.y, this.z + v2.z, this.w + v2.w);
+        this.x += v2.x;
+        this.y += v2.y;
+        this.z += v2.z;
+        this.w += v2.w;
+        return this;
     }
 
     @Override
     public Vector4f subtract(Vector4f v2) {
-        return new Vector4f(this.x - v2.x, this.y - v2.y, this.z - v2.z, this.w - v2.w);
+        this.x -= v2.x;
+        this.y -= v2.y;
+        this.z -= v2.z;
+        this.w -= v2.w;
+        return this;
     }
 
     @Override
     public Vector4f scale(float scalar) {
-        return new Vector4f(this.x * scalar, this.y * scalar, this.z * scalar, this.w * scalar);
+        this.x *= scalar;
+        this.y *= scalar;
+        this.z *= scalar;
+        this.w *= scalar;
+        return this;
     }
 
     @Override
@@ -25,7 +72,11 @@ public record Vector4f(float x, float y, float z, float w) implements Vector<Vec
         if (scalar == 0) {
             throw new ArithmeticException("Vector4X.divide: деление на ноль невозможно.");
         }
-        return new Vector4f(this.x / scalar, this.y / scalar, this.z / scalar, this.w / scalar);
+        this.x /= scalar;
+        this.y /= scalar;
+        this.z /= scalar;
+        this.w /= scalar;
+        return this;
     }
 
     @Override

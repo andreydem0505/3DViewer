@@ -26,4 +26,6 @@ public interface Matrix<M, V> {
      * Транспонирование матрицы.
      */
     M transpose();
+
+    float get(int i, int j);
 }

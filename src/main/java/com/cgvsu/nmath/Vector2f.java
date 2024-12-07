@@ -3,7 +3,17 @@ package com.cgvsu.nmath;
 /**
  * Класс Vector2X для работы с двухмерными векторами.
  */
-public record Vector2f(float x, float y) implements Vector<Vector2f> {
+public class Vector2f implements Vector<Vector2f> {
+    private float x, y;
+
+    @Override
+    public float x() {
+        return x;
+    }
+    @Override
+    public float y() {
+        return y;
+    }
     @Override
     public float z() {
         return 0;
@@ -14,20 +24,36 @@ public record Vector2f(float x, float y) implements Vector<Vector2f> {
         return 0;
     }
 
+    public Vector2f(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Vector2f(Vector2f source){
+        this.x = source.x();
+        this.y = source.y();
+    }
+
     // Реализация методов интерфейса Vector2X
     @Override
     public Vector2f add(Vector2f v2) {
-        return new Vector2f(this.x + v2.x, this.y + v2.y);
+        this.x += v2.x;
+        this.y += v2.y;
+        return this;
     }
 
     @Override
     public Vector2f subtract(Vector2f v2) {
-        return new Vector2f(this.x - v2.x, this.y - v2.y);
+        this.x -= v2.x;
+        this.y -= v2.y;
+        return this;
     }
 
     @Override
     public Vector2f scale(float scalar) {
-        return new Vector2f(this.x * scalar, this.y * scalar);
+        this.x *= scalar;
+        this.y *= scalar;
+        return this;
     }
 
     @Override
@@ -35,7 +61,9 @@ public record Vector2f(float x, float y) implements Vector<Vector2f> {
         if (scalar == 0) {
             throw new ArithmeticException("Vector2X.divide: деление на ноль невозможно.");
         }
-        return new Vector2f(this.x / scalar, this.y / scalar);
+        this.x /= scalar;
+        this.y /= scalar;
+        return this;
     }
 
     @Override

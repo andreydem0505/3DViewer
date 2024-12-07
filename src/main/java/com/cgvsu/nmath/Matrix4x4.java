@@ -15,6 +15,14 @@ public class Matrix4x4 implements Matrix<Matrix4x4, Vector4f> {
         System.arraycopy(elements, 0, this.elements, 0, 16);
     }
 
+    public Matrix4x4(Matrix4x4 source) {
+        if (source.elements == null || source.elements.length != 16) {
+            throw new IllegalArgumentException("Matrix4x4: некорректные размеры матрицы.");
+        }
+        this.elements = new float[16];
+        System.arraycopy(source.elements, 0, this.elements, 0, 16);
+    }
+
     // Реализация методов интерфейса Matrix
     @Override
     public Matrix4x4 add(Matrix4x4 m2) {
@@ -141,6 +149,10 @@ public class Matrix4x4 implements Matrix<Matrix4x4, Vector4f> {
         return matrix[0] * (matrix[4] * matrix[8] - matrix[5] * matrix[7])
                 - matrix[1] * (matrix[3] * matrix[8] - matrix[5] * matrix[6])
                 + matrix[2] * (matrix[3] * matrix[7] - matrix[4] * matrix[6]);
+    }
+
+    public float get(int i, int j) {
+        return elements[i * 4 + j];
     }
 
     @Override
