@@ -3,7 +3,7 @@ package com.cgvsu.nmath;
 /**
  * Класс Matrix3x3 для работы с матрицами размером 3x3.
  */
-public class Matrix3x3 implements Matrix<Matrix3x3, Vector3> {
+public class Matrix3x3 implements Matrix<Matrix3x3, Vector3f> {
     private final float[] elements;
 
     // Конструктор
@@ -49,14 +49,14 @@ public class Matrix3x3 implements Matrix<Matrix3x3, Vector3> {
     }
 
     @Override
-    public Vector3 multiplyMV(Vector3 v2) {
+    public Vector3f multiplyMV(Vector3f v2) {
         float[] result = new float[3];
         for (int i = 0; i < 3; i++) {
             result[i] = this.elements[i * 3] * v2.x() +
                     this.elements[i * 3 + 1] * v2.y() +
                     this.elements[i * 3 + 2] * v2.z();
         }
-        return new Vector3(result[0], result[1], result[2]);
+        return new Vector3f(result[0], result[1], result[2]);
 
     }
 

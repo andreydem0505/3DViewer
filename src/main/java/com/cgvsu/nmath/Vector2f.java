@@ -3,7 +3,7 @@ package com.cgvsu.nmath;
 /**
  * Класс Vector2X для работы с двухмерными векторами.
  */
-public record Vector2(float x, float y) implements Vector<Vector2> {
+public record Vector2f(float x, float y) implements Vector<Vector2f> {
     @Override
     public float z() {
         return 0;
@@ -16,26 +16,26 @@ public record Vector2(float x, float y) implements Vector<Vector2> {
 
     // Реализация методов интерфейса Vector2X
     @Override
-    public Vector2 add(Vector2 v2) {
-        return new Vector2(this.x + v2.x, this.y + v2.y);
+    public Vector2f add(Vector2f v2) {
+        return new Vector2f(this.x + v2.x, this.y + v2.y);
     }
 
     @Override
-    public Vector2 subtract(Vector2 v2) {
-        return new Vector2(this.x - v2.x, this.y - v2.y);
+    public Vector2f subtract(Vector2f v2) {
+        return new Vector2f(this.x - v2.x, this.y - v2.y);
     }
 
     @Override
-    public Vector2 scale(float scalar) {
-        return new Vector2(this.x * scalar, this.y * scalar);
+    public Vector2f scale(float scalar) {
+        return new Vector2f(this.x * scalar, this.y * scalar);
     }
 
     @Override
-    public Vector2 divide(float scalar) {
+    public Vector2f divide(float scalar) {
         if (scalar == 0) {
             throw new ArithmeticException("Vector2X.divide: деление на ноль невозможно.");
         }
-        return new Vector2(this.x / scalar, this.y / scalar);
+        return new Vector2f(this.x / scalar, this.y / scalar);
     }
 
     @Override
@@ -44,7 +44,7 @@ public record Vector2(float x, float y) implements Vector<Vector2> {
     }
 
     @Override
-    public Vector2 normalize() {
+    public Vector2f normalize() {
         float length = length();
         if (length == 0) {
             throw new ArithmeticException("Vector2X.normalize: длина вектора равна нулю, нормализация невозможна.");
@@ -53,7 +53,7 @@ public record Vector2(float x, float y) implements Vector<Vector2> {
     }
 
     @Override
-    public float dotProduct(Vector2 v2) {
+    public float dotProduct(Vector2f v2) {
         return this.x * v2.x + this.y * v2.y;
     }
 
@@ -67,7 +67,7 @@ public record Vector2(float x, float y) implements Vector<Vector2> {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
-        Vector2 vector2x = (Vector2) obj;
+        Vector2f vector2x = (Vector2f) obj;
         return Math.abs(this.x - vector2x.x) < 1e-6 && Math.abs(this.y - vector2x.y) < 1e-6;
     }
 }

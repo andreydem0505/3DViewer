@@ -3,7 +3,7 @@ package com.cgvsu.nmath;
 /**
  * Класс Matrix4x4 для работы с матрицами размером 4x4.
  */
-public class Matrix4x4 implements Matrix<Matrix4x4, Vector4> {
+public class Matrix4x4 implements Matrix<Matrix4x4, Vector4f> {
     private final float[] elements;
 
     // Конструктор
@@ -49,7 +49,7 @@ public class Matrix4x4 implements Matrix<Matrix4x4, Vector4> {
     }
 
     @Override
-    public Vector4 multiplyMV(Vector4 v2) {
+    public Vector4f multiplyMV(Vector4f v2) {
         float[] result = new float[4];
         for (int i = 0; i < 4; i++) {
             result[i] = this.elements[i * 4] * v2.x() +
@@ -58,7 +58,7 @@ public class Matrix4x4 implements Matrix<Matrix4x4, Vector4> {
                     this.elements[i * 4 + 3] * v2.w();
 
         }
-        return new Vector4(result[0], result[1], result[2], result[3]);
+        return new Vector4f(result[0], result[1], result[2], result[3]);
     }
 
     @Override
