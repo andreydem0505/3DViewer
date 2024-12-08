@@ -29,9 +29,9 @@ public class RenderEngine {
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
 
-        Matrix4x4 modelViewProjectionMatrix = new Matrix4x4(modelMatrix);
+        Matrix4x4 modelViewProjectionMatrix = new Matrix4x4(projectionMatrix);
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiplyMM(viewMatrix);
-        modelViewProjectionMatrix = modelViewProjectionMatrix.multiplyMM(projectionMatrix);
+        modelViewProjectionMatrix = modelViewProjectionMatrix.multiplyMM(modelMatrix);
 
         Vector3f[] resultPoints = new Vector3f[mesh.vertices.size()];
         Vector3f[] normals = new Vector3f[mesh.normals.size()];
