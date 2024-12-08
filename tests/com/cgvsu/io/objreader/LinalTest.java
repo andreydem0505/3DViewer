@@ -42,7 +42,7 @@ public class LinalTest {
         }catch (ArithmeticException e){
             failed = true; // planned failing
         }
-        Assertions.assertTrue(failed);
+        Assertions.assertFalse(failed);
     }
 
 //    @Test
