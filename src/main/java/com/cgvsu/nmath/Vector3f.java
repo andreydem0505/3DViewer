@@ -1,5 +1,7 @@
 package com.cgvsu.nmath;
 
+import com.cgvsu.math.Linal;
+
 /**
  * Класс Vector3X для работы с трехмерными векторами.
  */
@@ -82,8 +84,12 @@ public class Vector3f implements Vector<Vector3f> {
     public Vector3f normalize() {
         float length = length();
         if (length == 0) {
-            throw new ArithmeticException("Vector3.normalize: длина вектора равна нулю, нормализация невозможна.");
+            x = 0;
+            y = 0;
+            z = 0;
+            return this;
         }
+
         return divide(length);
     }
 
@@ -112,8 +118,8 @@ public class Vector3f implements Vector<Vector3f> {
         if (obj == null || getClass() != obj.getClass()) return false;
 
         Vector3f vector3X = (Vector3f) obj;
-        return Math.abs(this.x - vector3X.x) < 1e-6 &&
-                Math.abs(this.y - vector3X.y) < 1e-6 &&
-                Math.abs(this.z - vector3X.z) < 1e-6;
+        return Math.abs(this.x - vector3X.x) < Linal.eps &&
+                Math.abs(this.y - vector3X.y) < Linal.eps &&
+                Math.abs(this.z - vector3X.z) < Linal.eps;
     }
 }
