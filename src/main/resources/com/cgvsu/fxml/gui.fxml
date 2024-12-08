@@ -1,54 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.canvas.Canvas?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cgvsu.GuiController">
-    <MenuBar>
+<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
+    <MenuBar prefHeight="25.0" prefWidth="300.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClick" text="Load Model">
             <accelerator>
-                <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="F"/>
+                <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
             </accelerator>
             </MenuItem>
+         <MenuItem mnemonicParsing="false" text="Save Model" />
         </Menu>
-        <Menu mnemonicParsing="false" text="Camera Options">
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="UP"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraBackward" text="Backward">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="DOWN"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraLeft" text="Left">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="LEFT"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraRight" text="Right">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="RIGHT"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraUp" text="Up">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="W"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraDown" text="Down">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="S"/>
-                </accelerator>
-            </MenuItem>
+        <Menu mnemonicParsing="false" text="Switch theme">
+         <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+         </items>
         </Menu>
+      <Menu mnemonicParsing="false" text="Controls">
+        <items>
+               <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                   </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#handleCameraBackward" text="Backward">
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                   </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#handleCameraLeft" text="Left">
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                   </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#handleCameraRight" text="Right">
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="D" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                   </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#handleCameraUp" text="Up">
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="E" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                   </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#handleCameraDown" text="Down">
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                   </accelerator>
+               </MenuItem>
+        </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="CalcNormals">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+        </items>
+      </Menu>
     </MenuBar>
 
-    <Canvas fx:id="canvas" width="1600" height="870" AnchorPane.topAnchor="30.0"/>
+    <Canvas fx:id="canvas" height="870" width="1600" AnchorPane.topAnchor="30.0" />
+    <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
+        <VBox prefWidth="300.0">
+            <!-- Меню объектов -->
+            <TitledPane expanded="false" focusTraversable="false" text="Objects">
+                <VBox spacing="5">
+                    <HBox spacing="5">
+                        <Button onAction="#handleCameraBackward" text="+" />
+                        <Button onAction="#handleCameraBackward" text="-" />
+                    </HBox>
+                    <TreeView fx:id="objectsTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0" />
+                </VBox>
+            </TitledPane>
+
+            <!-- Меню камер -->
+            <TitledPane expanded="false" focusTraversable="false" text="Cameras">
+                <VBox spacing="5">
+                    <HBox spacing="5">
+                        <Button onAction="#handleCameraBackward" text="+" />
+                        <Button onAction="#handleCameraBackward" text="-" />
+                    </HBox>
+                    <TreeView fx:id="camerasTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0">
+                        <VBox.margin>
+                            <Insets />
+                        </VBox.margin>
+                    </TreeView>
+                    <VBox spacing="5">
+                        <Label text="Active Camera Coordinates:" />
+                        <GridPane hgap="10" vgap="5">
+                            <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <TextField fx:id="cameraX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="cameraY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="cameraZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                        <Label text="Direction:" />
+                        <GridPane hgap="10" vgap="5">
+                            <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <TextField fx:id="directionX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="directionY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="directionZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                    </VBox>
+                    <Button mnemonicParsing="false" text="Set" textAlignment="CENTER" />
+                </VBox>
+            </TitledPane>
+
+            <!-- Меню освещения -->
+            <TitledPane expanded="false" focusTraversable="false" text="Lighting">
+                <VBox spacing="5">
+                    <HBox spacing="5">
+                        <Button onAction="#handleCameraBackward" text="+" />
+                        <Button onAction="#handleCameraBackward" text="-" />
+                    </HBox>
+                    <TreeView fx:id="lightingTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0" />
+                    <VBox spacing="5">
+                        <Label text="Active Lighting Direction:" />
+                        <GridPane hgap="10" vgap="5">
+                            <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <TextField fx:id="lightingX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="lightingY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="lightingZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                    </VBox>
+                    <Button mnemonicParsing="false" text="Set" />
+                </VBox>
+            </TitledPane>
+
+            <!-- Меню редактирования модели -->
+            <TitledPane expanded="false" focusTraversable="false" text="Model Transformation">
+                <VBox spacing="5">
+                    <Label text="Scale:" />
+                    <GridPane hgap="10" vgap="5">
+                        <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="scaleX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="scaleY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="scaleZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <columnConstraints>
+                            <ColumnConstraints />
+                            <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+                    <Label text="Rotation:" />
+                    <GridPane hgap="10" vgap="5">
+                        <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="rotationX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="rotationY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="rotationZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <columnConstraints>
+                            <ColumnConstraints />
+                            <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+                    <Label text="Position:" />
+                    <GridPane hgap="10" vgap="5">
+                        <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="positionX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="positionY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="positionZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <columnConstraints>
+                            <ColumnConstraints />
+                            <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+                    <Button mnemonicParsing="false" text="Confirm" />
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </ScrollPane>
+
 </AnchorPane>
