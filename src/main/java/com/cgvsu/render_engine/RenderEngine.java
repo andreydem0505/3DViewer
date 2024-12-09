@@ -1,5 +1,6 @@
 package com.cgvsu.render_engine;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import com.cgvsu.rasterization.Bresenham;
 import com.cgvsu.rasterization.PlainColorTrianglePainter;
 import com.cgvsu.rasterization.PlainColorWithLightningTrianglePainter;
 import com.cgvsu.rasterization.TriangleRasterization;
-import javafx.scene.paint.Color;
+
 
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
@@ -122,7 +123,7 @@ public class RenderEngine {
                     x[i] = Math.round(resultPoints[curVertexIndex].x());
                     y[i] = Math.round(resultPoints[curVertexIndex].y());
                     z[i] = resultPoints[curVertexIndex].z();
-                    n[i] = normals.get(curVertexIndex);
+                    n[i] = normals[curVertexIndex];
                     v[i] = vertices.get(curVertexIndex);
                 }
                 new TriangleRasterization(new PlainColorWithLightningTrianglePainter(pixelWriter, x, y, z, n, v, lightSource, color))
