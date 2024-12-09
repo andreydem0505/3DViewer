@@ -71,6 +71,8 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+        loadModel("./models/caracal_cube.obj");
     }
 
     @FXML
@@ -84,7 +86,11 @@ public class GuiController {
             return;
         }
 
-        Path fileName = Path.of(file.getAbsolutePath());
+        loadModel(file.getAbsolutePath());
+    }
+
+    private void loadModel(String path) {
+        Path fileName = Path.of(path);
 
         try {
             String fileContent = Files.readString(fileName);
@@ -92,7 +98,7 @@ public class GuiController {
             mesh.normals = Linal.calculateVerticesNormals(mesh.vertices, mesh.polygons);
             // todo: обработка ошибок
         } catch (IOException exception) {
-
+            System.err.println("Failed to load model.\nError: " + exception.getLocalizedMessage());
         }
     }
 
