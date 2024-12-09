@@ -1,6 +1,8 @@
 package com.cgvsu.rasterization;
 
+import com.cgvsu.math.Linal;
 import com.cgvsu.render_engine.PixelWriter;
+import javafx.scene.paint.Color;
 
 public abstract class TrianglePainter {
     protected final PixelWriter pixelWriter;
@@ -15,7 +17,15 @@ public abstract class TrianglePainter {
 
     public void putPixel(int x, int y) {
         InterpolationResult result = interpolate(x, y);
-        pixelWriter.putPixel(x, y, result.z, result.color);
+        boolean success = false;
+        for (float coordinate : result.barycentricCoordinates) {
+            if (Math.abs(coordinate) > Linal.eps) {
+                success = true;
+                break;
+            }
+        }
+        if (success)
+            pixelWriter.putPixel(x, y, result.z, result.color);
     }
 
     protected void sort() {
