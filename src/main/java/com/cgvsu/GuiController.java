@@ -1,18 +1,16 @@
 package com.cgvsu;
 
 import com.cgvsu.math.Linal;
-import com.cgvsu.model.Polygon;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.CamerasController;
 import com.cgvsu.render_engine.PixelWriter;
 import com.cgvsu.render_engine.RenderEngine;
-import com.cgvsu.triangulation.Triangulation;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -34,7 +32,7 @@ public class GuiController {
     AnchorPane anchorPane;
 
     @FXML
-    private Canvas canvas;
+    private ImageView imageView;
 
     private Model mesh = null;
 
@@ -49,17 +47,17 @@ public class GuiController {
 
     @FXML
     private void initialize() {
-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue()));
+        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue()));
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
-        PixelWriter pixelWriter = new PixelWriter(canvas);
+        PixelWriter pixelWriter = new PixelWriter(imageView);
 
         KeyFrame frame = new KeyFrame(Duration.millis(30), event -> {
-            double width = canvas.getWidth();
-            double height = canvas.getHeight();
+            double width = imageView.getFitWidth();
+            double height = imageView.getFitHeight();
 
             pixelWriter.clearScreen();
             camerasController.currentCamera.setAspectRatio((float) (height / width));
@@ -81,7 +79,7 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
         if (file == null) {
             return;
         }

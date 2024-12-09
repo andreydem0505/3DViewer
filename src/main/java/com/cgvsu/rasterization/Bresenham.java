@@ -1,7 +1,8 @@
 package com.cgvsu.rasterization;
 
 import com.cgvsu.render_engine.PixelWriter;
-import javafx.scene.paint.Color;
+
+import java.awt.*;
 
 public class Bresenham {
     private static int sign(int x) {

@@ -1,10 +1,11 @@
 package com.cgvsu.rasterization;
 
-import com.cgvsu.math.Linal;
+import com.cgvsu.math.Barycentric;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.GraphicConveyor;
 import com.cgvsu.render_engine.PixelWriter;
-import javafx.scene.paint.Color;
+
+import java.awt.*;
 
 public class PlainColorWithLightningTrianglePainter extends PlainColorTrianglePainter {
     private final Vector3f[] normals;
@@ -30,36 +31,19 @@ public class PlainColorWithLightningTrianglePainter extends PlainColorTrianglePa
     @Override
     protected InterpolationResult interpolate(int x, int y) {
         InterpolationResult result = super.interpolate(x, y);
+        if (result == null) return null;
+
         float[] barycentricCoordinates = result.barycentricCoordinates;
 
-        Vector3f n = new Vector3f(
-                -barycentricCoordinates[0] * normals[0].x() +
-                        -barycentricCoordinates[1] * normals[1].x() +
-                        -barycentricCoordinates[2] * normals[2].x(),
-                -barycentricCoordinates[0] * normals[0].y() +
-                        -barycentricCoordinates[1] * normals[1].y() +
-                        -barycentricCoordinates[2] * normals[2].y(),
-                -barycentricCoordinates[0] * normals[0].z() +
-                        -barycentricCoordinates[1] * normals[1].z() +
-                        -barycentricCoordinates[2] * normals[2].z()
-        );
+        Vector3f n = Barycentric.getVector(barycentricCoordinates, normals);
+        n.scale(-1);
         n.normalize();
-        Vector3f ray = GraphicConveyor.getRay(lightSource, new Vector3f(
-                barycentricCoordinates[0] * vertices[0].x() +
-                        barycentricCoordinates[1] * vertices[1].x() +
-                        barycentricCoordinates[2] * vertices[2].x(),
-                barycentricCoordinates[0] * vertices[0].y() +
-                        barycentricCoordinates[1] * vertices[1].y() +
-                        barycentricCoordinates[2] * vertices[2].y(),
-                barycentricCoordinates[0] * vertices[0].z() +
-                        barycentricCoordinates[1] * vertices[1].z() +
-                        barycentricCoordinates[2] * vertices[2].z()
-        ));
+        Vector3f ray = GraphicConveyor.getRay(lightSource, Barycentric.getVector(barycentricCoordinates, vertices));
         ray.normalize();
         float l = Math.abs(n.dotProduct(ray));
         return new InterpolationResult(
                 barycentricCoordinates,
-                new Color(color.getRed(), color.getGreen(), color.getBlue(), Math.max(0, k * (1 - l))),
+                new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (Math.max(0, k * (1 - l)) * 255)),
                 result.z
         );
     }

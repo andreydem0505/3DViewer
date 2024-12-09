@@ -70,6 +70,8 @@ public class RenderEngine {
             if (nVerticesInPolygon > 0)
                 drawLine(pixelWriter, resultPoints, polygonVertices, nVerticesInPolygon - 1, 0);
         }
+
+        pixelWriter.draw();
     }
 
     private static void drawLine(PixelWriter pixelWriter, Vector3f[] resultPoints, List<Integer> vertices, int i, int j) {
@@ -104,16 +106,24 @@ public class RenderEngine {
             List<Vector3f> vertices,
             Vector3f lightSource,
             Color color) {
+        int curVertexIndex;
+        int[] x, y;
+        double[] z;
+        Vector3f[] n, v;
         for (Polygon curPolygon : polygons) {
             for (int[] triangle : curPolygon.getTriangles()) {
-                int[] x = Arrays.stream(triangle).map(e -> Math.round(resultPoints[e].x())).toArray();
-                int[] y = Arrays.stream(triangle).map(e -> Math.round(resultPoints[e].y())).toArray();
-                double[] z = Arrays.stream(triangle).mapToDouble(e -> resultPoints[e].z()).toArray();
-                Vector3f[] n = new Vector3f[3];
-                Vector3f[] v = new Vector3f[3];
+                x = new int[3];
+                y = new int[3];
+                z = new double[3];
+                n = new Vector3f[3];
+                v = new Vector3f[3];
                 for (int i = 0; i < 3; i++) {
-                    n[i] = normals[triangle[i]];
-                    v[i] = vertices.get(triangle[i]);
+                    curVertexIndex = triangle[i];
+                    x[i] = Math.round(resultPoints[curVertexIndex].x());
+                    y[i] = Math.round(resultPoints[curVertexIndex].y());
+                    z[i] = resultPoints[curVertexIndex].z();
+                    n[i] = normals.get(curVertexIndex);
+                    v[i] = vertices.get(curVertexIndex);
                 }
                 new TriangleRasterization(new PlainColorWithLightningTrianglePainter(pixelWriter, x, y, z, n, v, lightSource, color))
                         .fillTriangle();
