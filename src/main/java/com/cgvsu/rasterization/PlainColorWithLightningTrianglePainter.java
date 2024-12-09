@@ -31,20 +31,6 @@ public class PlainColorWithLightningTrianglePainter extends PlainColorTrianglePa
     protected InterpolationResult interpolate(int x, int y) {
         InterpolationResult result = super.interpolate(x, y);
         float[] barycentricCoordinates = result.barycentricCoordinates;
-        boolean good = false;
-        for (float coord : barycentricCoordinates){
-            if (Math.abs(coord) > Linal.eps) {
-                good = true;
-                break;
-            }
-        }
-        if (!good)
-            return new InterpolationResult(
-                    barycentricCoordinates,
-                    new Color(color.getRed(), color.getGreen(), color.getBlue(), 1),
-                    Float.MAX_VALUE
-            );
-
 
         Vector3f n = new Vector3f(
                 -barycentricCoordinates[0] * normals[0].x() +
