@@ -6,6 +6,7 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
         <Menu mnemonicParsing="false" text="File">
@@ -62,7 +63,7 @@
       </Menu>
     </MenuBar>
 
-    <Canvas fx:id="canvas" height="870" width="1600" AnchorPane.topAnchor="30.0" />
+    <ImageView fx:id="imageView" fitHeight="870" fitWidth="1600" AnchorPane.topAnchor="30.0" />
     <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->

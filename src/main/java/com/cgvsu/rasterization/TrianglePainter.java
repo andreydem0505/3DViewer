@@ -1,31 +1,31 @@
 package com.cgvsu.rasterization;
 
+import com.cgvsu.math.Barycentric;
 import com.cgvsu.math.Linal;
 import com.cgvsu.render_engine.PixelWriter;
-import javafx.scene.paint.Color;
 
 public abstract class TrianglePainter {
     protected final PixelWriter pixelWriter;
     protected final int[] arrX;
     protected final int[] arrY;
+    protected final double[] arrZ;
 
-    public TrianglePainter(PixelWriter pixelWriter, int[] arrX, int[] arrY) {
+    public TrianglePainter(PixelWriter pixelWriter, int[] arrX, int[] arrY, double[] arrZ) {
         this.pixelWriter = pixelWriter;
         this.arrX = arrX;
         this.arrY = arrY;
+        this.arrZ = arrZ;
     }
 
     public void putPixel(int x, int y) {
         InterpolationResult result = interpolate(x, y);
-        boolean success = false;
+        if (result == null) return;
         for (float coordinate : result.barycentricCoordinates) {
             if (Math.abs(coordinate) > Linal.eps) {
-                success = true;
+                pixelWriter.forcePutPixel(x, y, result.z, result.color);
                 break;
             }
         }
-        if (success)
-            pixelWriter.putPixel(x, y, result.z, result.color);
     }
 
     protected void sort() {
@@ -40,14 +40,25 @@ public abstract class TrianglePainter {
         }
     }
 
-    protected abstract InterpolationResult interpolate(int x, int y);
+    protected InterpolationResult interpolate(int x, int y) {
+        float[] barycentricCoordinates = Barycentric.calculate(x, y, arrX, arrY);
+        double z = barycentricCoordinates[0] * arrZ[0] +
+                barycentricCoordinates[1] * arrZ[1] +
+                barycentricCoordinates[2] * arrZ[2];
+        if (!pixelWriter.isPixelVisible(x, y, z))
+            return null;
+        return new InterpolationResult(barycentricCoordinates, null, z);
+    }
 
     protected void swap(int i, int j) {
         int tempY = arrY[i];
         int tempX = arrX[i];
+        double tempZ = arrZ[i];
         arrX[i] = arrX[j];
         arrY[i] = arrY[j];
+        arrZ[i] = arrZ[j];
         arrX[j] = tempX;
         arrY[j] = tempY;
+        arrZ[j] = tempZ;
     }
 }

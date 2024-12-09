@@ -1,10 +1,10 @@
 package com.cgvsu.rasterization;
 
-import javafx.scene.paint.Color;
+import java.awt.*;
 
 public class InterpolationResult {
     public float[] barycentricCoordinates;
-    public final Color color;
+    public Color color;
     public final double z;
 
     public InterpolationResult(float[] barycentricCoordinates, Color color, double z) {
