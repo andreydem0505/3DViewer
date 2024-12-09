@@ -7,14 +7,52 @@ import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.nmath.Vector4f;
 
 public class GraphicConveyor {
+    public static float cos(float angle){
+        return (float) Math.cos(angle);
+    }
 
-    public static Matrix4x4 rotateScaleTranslate() {
-        float[] matrix = new float[]{
-                1, 0, 0, 0,
-                0, 1, 0, 0,
+    public static float sin(float angle){
+        return (float) Math.sin(angle);
+    }
+
+    public static Matrix4x4 scale(float sx, float sy, float sz) {
+        return new Matrix4x4(new float[]{
+                sx, 0, 0, 0,
+                0, sy, 0, 0,
+                0, 0, sz, 0,
+                0, 0, 0,  1
+        });
+    }
+
+    public static Matrix4x4 rotate(float fi, float psi, float theta) {
+        Matrix4x4 rotateZ = new Matrix4x4(new float[]{
+                cos(fi), sin(fi), 0, 0,
+                -sin(fi), cos(fi), 0, 0,
                 0, 0, 1, 0,
-                0, 0, 0, 1};
-        return new Matrix4x4(matrix);
+                0, 0, 0, 1
+        });
+        Matrix4x4 rotateY = new Matrix4x4(new float[]{
+                cos(psi), 0, sin(psi), 0,
+                0, 1, 0, 0,
+                -sin(psi), 0, cos(psi), 0,
+                0, 0, 0, 1
+        });
+        Matrix4x4 rotateX = new Matrix4x4(new float[]{
+                1, 0, 0, 0,
+                0, cos(theta), sin(theta), 0,
+                0, -sin(theta), cos(theta), 0,
+                0, 0, 0, 1
+        });
+        return rotateZ.multiplyMM(rotateY).multiplyMM(rotateX);
+    }
+
+    public static Matrix4x4 transform(float tx, float ty, float tz) {
+        return new Matrix4x4(new float[]{
+                1, 0, 0, tx,
+                0, 1, 0, ty,
+                0, 0, 1, tz,
+                0, 0, 0, 1
+        });
     }
 
     public static Matrix4x4 lookAt(Vector3f eye, Vector3f target) {
@@ -55,25 +93,11 @@ public class GraphicConveyor {
             final float nearPlane,
             final float farPlane) {
         float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
-//        Matrix4x4 result = new Matrix4x4(new float[]{tangentMinusOnDegree, 0, 0, 0,
-//                                                     0, tangentMinusOnDegree / aspectRatio, 0, 0,
-//                                                     0, 0, (farPlane + nearPlane) / (farPlane - nearPlane), 1,
-//                                                     0, 0, 2 * (nearPlane * farPlane) / (nearPlane - farPlane), 0});
         Matrix4x4 result = new Matrix4x4(new float[]{tangentMinusOnDegree, 0, 0, 0,
                 0, tangentMinusOnDegree / aspectRatio, 0, 0,
                 0, 0, (farPlane + nearPlane) / (farPlane - nearPlane), 2 * (nearPlane * farPlane) / (nearPlane - farPlane),
                 0, 0, 1, 0});
         return result;
-    }
-
-    public static Vector3f multiplyMatrix4ByVector3(final Matrix4x4 matrix, final Vector3f vertex) {
-        Vector4f vertex4 = new Vector4f(vertex.x(), vertex.y(), vertex.z(), 1);
-        Vector4f result = matrix.multiplyMV(vertex4);
-//        final float x = (vertex.x() * matrix.get(0, 0)) + (vertex.y() * matrix.get(1, 0)) + (vertex.z() * matrix.get(2, 0)) + matrix.get(3, 0);
-//        final float y = (vertex.x() * matrix.get(0, 1)) + (vertex.y() * matrix.get(1, 1)) + (vertex.z() * matrix.get(2, 1)) + matrix.get(3, 1);
-//        final float z = (vertex.x() * matrix.get(0, 2)) + (vertex.y() * matrix.get(1, 2)) + (vertex.z() * matrix.get(2, 2)) + matrix.get(3, 2);
-//        final float w = (vertex.x() * matrix.get(0, 3)) + (vertex.y() * matrix.get(1, 3)) + (vertex.z() * matrix.get(2, 3)) + matrix.get(3, 3);
-        return new Vector3f(result.x() / result.w(), result.y() / result.w(), result.z() / result.w());
     }
 
     public static Vector2f vertexToPoint(final Vector3f vertex, final int width, final int height) {

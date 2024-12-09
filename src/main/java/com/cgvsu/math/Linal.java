@@ -7,6 +7,9 @@ import com.cgvsu.nmath.Vector3f;
 import java.util.*;
 
 public class Linal {
+    public static final float pi = (float) Math.PI;
+    public static final float pi2 = (float) Math.PI * 2;
+    public static final float pi_half = (float) Math.PI / 2;
     public static final float eps = 1e-7f;
     public static final Vector3f zero = new Vector3f(0f, 0f, 0f);
 

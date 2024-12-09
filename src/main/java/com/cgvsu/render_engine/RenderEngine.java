@@ -8,6 +8,7 @@ import com.cgvsu.model.Polygon;
 import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
+import com.cgvsu.nmath.Vector4f;
 import com.cgvsu.rasterization.Bresenham;
 import com.cgvsu.rasterization.PlainColorTrianglePainter;
 import com.cgvsu.rasterization.PlainColorWithLightningTrianglePainter;
@@ -25,7 +26,7 @@ public class RenderEngine {
             final int width,
             final int height)
     {
-        Matrix4x4 modelMatrix = rotateScaleTranslate();
+        Matrix4x4 modelMatrix = mesh.getModelMatrix();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
 
@@ -38,11 +39,22 @@ public class RenderEngine {
         for (int i = 0; i < mesh.vertices.size(); i++) {
             Vector3f vertex = mesh.vertices.get(i);
             Vector3f normal = mesh.normals.get(i);
-            normals[i] = new Vector3f(normal.x(), normal.y(), normal.z());
-            Vector3f vertexVecmath = new Vector3f(vertex.x(), vertex.y(), vertex.z());
-            Vector3f projectedVertex = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertexVecmath);
+
+            // project vertices
+            Vector4f vertex4 = new Vector4f(vertex.x(), vertex.y(), vertex.z(), 1.0f);
+            vertex4 = modelViewProjectionMatrix.multiplyMV(vertex4);
+            Vector3f projectedVertex = new Vector3f(
+                    vertex4.x() / vertex4.w(),
+                    vertex4.y() / vertex4.w(),
+                    vertex4.z() / vertex4.w()
+            );
             Vector2f resultPoint = vertexToPoint(projectedVertex, width, height);
             resultPoints[i] = new Vector3f(resultPoint.x(), resultPoint.y(), projectedVertex.z());
+
+            //project normals
+            Vector4f normal4 = new Vector4f(normal.x(), normal.y(), normal.z(), 1.0f);
+            normal4 = modelMatrix.multiplyMV(normal4);
+            normals[i] = new Vector3f(normal4.x(), normal4.y(), normal4.z());
         }
 
         fillWithColorAndLightning(pixelWriter, resultPoints, mesh.polygons, normals, mesh.vertices, camera.getPosition(), Color.BLUE);
