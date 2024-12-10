@@ -52,7 +52,7 @@ public class Linal {
 
     public static float getDeterminant3x3(float a, float b, float c,
                                           float d, float e, float f,
-                                          float g, float h, float i){
+                                          float g, float h, float i) {
         return (a * e * i) + (d * h * c) + (b * f * g) - (g * e * c) - (a * f * h) - (d * b * i);
     }
 
@@ -115,6 +115,11 @@ public class Linal {
         }
 
         for (int i = 0; i < vertices.size(); i++) {
+            if (dict.get(i) == null) {
+                normals.add(Linal.zero);
+                continue;
+            }
+
             Pair pair = dict.get(i);
             Vector3f normal = pair.v;
             int amount = pair.c;

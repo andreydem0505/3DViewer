@@ -1,4 +1,4 @@
-package com.cgvsu.io.objreader;
+package com.cgvsu.math;
 
 import com.cgvsu.math.Linal;
 import com.cgvsu.model.Model;

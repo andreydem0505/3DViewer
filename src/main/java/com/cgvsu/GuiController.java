@@ -70,7 +70,8 @@ public class GuiController {
         timeline.getKeyFrames().add(frame);
         timeline.play();
 
-        loadModel("./models/caracal_cube.obj");
+//        loadModel("./models/caracal_cube.obj");
+        loadModel("./models/CorrectedCubeWithRemovedVertices.obj");
     }
 
     @FXML
@@ -103,36 +104,36 @@ public class GuiController {
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
         camerasController.currentCamera.movePosition(new Vector3f(0, 0, -TRANSLATION));
-//        mesh.position.add(new Vector3f(0f, TRANSLATION, 0f));
+//        mesh.scale.add(new Vector3f(0f, TRANSLATION, 0f));
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
         camerasController.currentCamera.movePosition(new Vector3f(0, 0, TRANSLATION));
-//        mesh.position.add(new Vector3f(0f, -TRANSLATION, 0f));
+//        mesh.scale.add(new Vector3f(0f, -TRANSLATION, 0f));
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
         camerasController.currentCamera.movePosition(new Vector3f(TRANSLATION, 0, 0));
-//        mesh.position.add(new Vector3f(TRANSLATION, 0f, 0f));
+//        mesh.rotation.add(new Vector3f(TRANSLATION/100, 0f, 0f));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
         camerasController.currentCamera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
-//        mesh.position.add(new Vector3f(-TRANSLATION, 0f, 0f));
+//        mesh.rotation.add(new Vector3f(-TRANSLATION/100, 0f, 0f));
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
         camerasController.currentCamera.movePosition(new Vector3f(0, TRANSLATION, 0));
-//        mesh.rotation.add(new Vector3f(0f, 0f, TRANSLATION / 100));
+//        mesh.position.add(new Vector3f(0f, TRANSLATION, 0f));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camerasController.currentCamera.movePosition(new Vector3f(0, -TRANSLATION, 0));
-//        mesh.rotation.add(new Vector3f(0f, 0f, -TRANSLATION / 100));
+//        mesh.position.add(new Vector3f(0f, -TRANSLATION, 0f));
     }
 }
