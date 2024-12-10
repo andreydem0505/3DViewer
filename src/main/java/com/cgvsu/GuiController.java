@@ -1,6 +1,7 @@
 package com.cgvsu;
 
 import com.cgvsu.math.Linal;
+import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.CamerasController;
 import com.cgvsu.render_engine.PixelWriter;
@@ -38,9 +39,13 @@ public class GuiController {
 
     private final CamerasController camerasController = new CamerasController(
             new Camera(
-                    new Vector3f(0, 0, 100),
+                    new Vector2f(Linal.pi / 4, Linal.pi / 4),
+                    100f,
                     new Vector3f(0, 0, 0),
-                    1.0F, 1, 0.01F, 100)
+                    1.0F,
+                    1,
+                    0.01F,
+                    100)
     );
 
     private Timeline timeline;
@@ -70,8 +75,8 @@ public class GuiController {
         timeline.getKeyFrames().add(frame);
         timeline.play();
 
-//        loadModel("./models/caracal_cube.obj");
-        loadModel("./models/CorrectedCubeWithRemovedVertices.obj");
+        loadModel("./models/caracal_cube.obj");
+//        loadModel("./models/CorrectedCubeWithRemovedVertices.obj");
     }
 
     @FXML
@@ -103,37 +108,32 @@ public class GuiController {
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        camerasController.currentCamera.movePosition(new Vector3f(0, 0, -TRANSLATION));
-//        mesh.scale.add(new Vector3f(0f, TRANSLATION, 0f));
+        camerasController.currentCamera.moveDistance(-TRANSLATION);
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        camerasController.currentCamera.movePosition(new Vector3f(0, 0, TRANSLATION));
-//        mesh.scale.add(new Vector3f(0f, -TRANSLATION, 0f));
+        camerasController.currentCamera.moveDistance(TRANSLATION);
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camerasController.currentCamera.movePosition(new Vector3f(TRANSLATION, 0, 0));
-//        mesh.rotation.add(new Vector3f(TRANSLATION/100, 0f, 0f));
+        camerasController.currentCamera.moveRotation(new Vector2f(TRANSLATION / 100, 0));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camerasController.currentCamera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
-//        mesh.rotation.add(new Vector3f(-TRANSLATION/100, 0f, 0f));
+        camerasController.currentCamera.moveRotation(new Vector2f(-TRANSLATION / 100, 0));
+
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-        camerasController.currentCamera.movePosition(new Vector3f(0, TRANSLATION, 0));
-//        mesh.position.add(new Vector3f(0f, TRANSLATION, 0f));
+        camerasController.currentCamera.moveRotation(new Vector2f(0, -TRANSLATION / 100));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-        camerasController.currentCamera.movePosition(new Vector3f(0, -TRANSLATION, 0));
-//        mesh.position.add(new Vector3f(0f, -TRANSLATION, 0f));
+        camerasController.currentCamera.moveRotation(new Vector2f(0, TRANSLATION / 100));
     }
 }

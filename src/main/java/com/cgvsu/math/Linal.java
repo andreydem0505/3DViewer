@@ -13,6 +13,14 @@ public class Linal {
     public static final float eps = 1e-7f;
     public static final Vector3f zero = new Vector3f(0f, 0f, 0f);
 
+    public static float cos(float angle){
+        return (float) Math.cos(angle);
+    }
+
+    public static float sin(float angle){
+        return (float) Math.sin(angle);
+    }
+
     public static Vector3f add(Vector3f a, Vector3f b) {
         Vector3f c = new Vector3f(a);
         c.add(b);
