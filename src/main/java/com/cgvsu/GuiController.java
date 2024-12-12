@@ -2,7 +2,6 @@ package com.cgvsu;
 
 import com.cgvsu.math.Linal;
 import com.cgvsu.nmath.Vector3f;
-import com.cgvsu.render_engine.CamerasController;
 import com.cgvsu.render_engine.PixelWriter;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;

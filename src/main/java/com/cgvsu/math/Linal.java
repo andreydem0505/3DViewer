@@ -13,6 +13,10 @@ public class Linal {
     public static final float eps = 1e-7f;
     public static final Vector3f zero = new Vector3f(0f, 0f, 0f);
 
+    public static boolean floatEquals(float a, float b) {
+        return Math.abs(a - b) < 1e-5;
+    }
+
     public static Vector3f add(Vector3f a, Vector3f b) {
         Vector3f c = new Vector3f(a);
         c.add(b);
