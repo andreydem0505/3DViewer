@@ -4,7 +4,7 @@ import com.cgvsu.math.Barycentric;
 import com.cgvsu.math.Linal;
 import com.cgvsu.render_engine.PixelWriter;
 
-public abstract class TrianglePainter {
+public class TrianglePainter {
     protected final PixelWriter pixelWriter;
     protected final int[] arrX;
     protected final int[] arrY;

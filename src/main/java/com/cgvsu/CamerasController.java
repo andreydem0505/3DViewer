@@ -1,4 +1,7 @@
-package com.cgvsu.render_engine;
+package com.cgvsu;
+
+
+import com.cgvsu.render_engine.Camera;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +29,11 @@ public class CamerasController {
     }
 
     public void removeCamera(int index) {
-        if (index >= 0 && index < cameras.size() && cameras.size() > 1)
-            cameras.remove(index);
+        if (index >= 0 && index < cameras.size() && cameras.size() > 1) {
+            if (cameras.remove(index).equals(currentCamera)) {
+                currentCamera = cameras.get(0);
+            }
+        }
     }
 
     public int getCamerasQuantity() {
