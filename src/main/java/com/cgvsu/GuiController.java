@@ -42,6 +42,9 @@ public class GuiController {
     private TreeView<String> camerasTree;
 
     @FXML
+    private TreeView<String> objectsTree;
+
+    @FXML
     private TextField directionX;
 
     @FXML
@@ -65,7 +68,6 @@ public class GuiController {
     @FXML
     private ImageView imageView;
 
-    private Model mesh = null;
 
     private final CamerasController camerasController = new CamerasController(
             new Camera(
@@ -77,6 +79,8 @@ public class GuiController {
                     0.01F,
                     100)
     );
+
+    private final ModelController modelController = new ModelController();
 
     private Timeline timeline;
 
@@ -94,7 +98,7 @@ public class GuiController {
 
         if (camerasController.getCamerasQuantity() == 1) {
             updateCameraTree();
-            setCurrent(0);
+            setCurrentCamera(0);
             System.out.println("lol");
         }
 
@@ -105,19 +109,23 @@ public class GuiController {
             pixelWriter.clearScreen();
             camerasController.currentCamera.setAspectRatio((float) (height / width));
 
-            if (mesh != null) {
-                try {
-//                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-//                            RenderModeFactory.gridPlainColor(Color.BLUE));
-//                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-//                            RenderModeFactory.gridPlainColorLightning(Color.BLUE));
-//                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-//                            RenderModeFactory.plainColorLightning(Color.BLUE));
-                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-                            RenderModeFactory.gridTexture(new File("./models/caracal_texture.png")));
-                } catch (IOException e) {
-                    // TODO обработать ошибки с файлом текстуры
+            if (modelController.getModelsQuantity() > 0) {
+                for (Model mesh : modelController.getModelList()) {
+                    try {
+                        renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+                                RenderModeFactory.gridPlainColor(Color.BLUE));
+    //                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+    //                            RenderModeFactory.gridPlainColorLightning(Color.BLUE));
+    //                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+    //                            RenderModeFactory.plainColorLightning(Color.BLUE));
+    //                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+    //                            RenderModeFactory.gridTexture(new File("./models/caracal_texture.png")));
+                    } catch (IOException e) {
+                        // TODO обработать ошибки с файлом текстуры
+                    }
                 }
+            } else {
+                // Андрей, что делать?
             }
         });
 
@@ -125,6 +133,7 @@ public class GuiController {
         timeline.play();
 
         loadModel("./models/caracal_cube.obj");
+        updateModelTree();
 //        loadModel("./models/CorrectedCubeWithRemovedVertices.obj");
     }
 
@@ -144,13 +153,17 @@ public class GuiController {
 
     private void loadModel(String path) {
         Path fileName = Path.of(path);
-
+        Model newModel;
         try {
             String fileContent = Files.readString(fileName);
-            mesh = ObjReader.read(fileContent);
-            mesh.normals = Linal.calculateVerticesNormals(mesh.vertices, mesh.polygons);
-            for (Polygon polygon : mesh.polygons)
+            newModel = ObjReader.read(fileContent);
+            newModel.normals = Linal.calculateVerticesNormals(newModel.vertices, newModel.polygons);
+            for (Polygon polygon : newModel.polygons)
                 Triangulation.convexPolygonTriangulate(polygon);
+            modelController.addModel(newModel);
+            if (modelController.getModelsQuantity() == 1) {
+                modelController.currentModel = modelController.getModelList().get(0);
+            }
             // todo: обработка ошибок
         } catch (IOException exception) {
             System.err.println("Failed to load model.\nError: " + exception.getLocalizedMessage());
@@ -160,37 +173,69 @@ public class GuiController {
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
         camerasController.currentCamera.moveDistance(-TRANSLATION);
-        updateFields();
+        updateCameraFields();
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
         camerasController.currentCamera.moveDistance(TRANSLATION);
-        updateFields();
+        updateCameraFields();
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
         camerasController.currentCamera.moveRotation(new Vector2f(TRANSLATION / 100, 0));
-        updateFields();
+        updateCameraFields();
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
         camerasController.currentCamera.moveRotation(new Vector2f(-TRANSLATION / 100, 0));
-        updateFields();
+        updateCameraFields();
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
         camerasController.currentCamera.moveRotation(new Vector2f(0, -TRANSLATION / 100));
-        updateFields();
+        updateCameraFields();
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camerasController.currentCamera.moveRotation(new Vector2f(0, TRANSLATION / 100));
-        updateFields();
+        updateCameraFields();
+    }
+
+    @FXML
+    private void addModelToTheScene() {
+        onOpenModelMenuItemClick();
+        updateModelTree();
+    }
+
+    private void updateModelTree() {
+        TreeItem<String> root = new TreeItem<>("Models");
+        objectsTree.setRoot(root);
+        for (int i = 0; i < modelController.getModelsQuantity(); i++) {
+            root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
+        }
+        objectsTree.setShowRoot(false);
+    }
+
+    @FXML
+    private void removeModel() {
+        modelController.removeModel(objectsTree.getSelectionModel().getSelectedIndex());
+        updateModelsTree();
+    }
+
+    @FXML
+    private void handleModelSelection(MouseEvent event) {
+        TreeItem<String> selectedItem = objectsTree.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            int selectedIndex = objectsTree.getRoot().getChildren().indexOf(selectedItem);
+            if (selectedIndex >= 0) {
+                setCurrentCamera(selectedIndex);
+            }
+        }
     }
 
     @FXML
@@ -208,10 +253,10 @@ public class GuiController {
         updateCameraTree();
     }
 
-    private void setCurrent(int index) {
+    private void setCurrentCamera(int index) {
         camerasController.setCurrent(index);
         camerasTree.getSelectionModel().select(index);
-        updateFields();
+        updateCameraFields();
     }
 
     @FXML
@@ -224,7 +269,7 @@ public class GuiController {
         updateCameraTree();
     }
 
-    private void updateFields() {
+    private void updateCameraFields() {
         distance.setText(String.valueOf(camerasController.currentCamera.getDistance()));
 
         cameraX.setText(String.valueOf(camerasController.currentCamera.getRotation().x()));
@@ -244,6 +289,15 @@ public class GuiController {
         camerasTree.setShowRoot(false);
     }
 
+    private void updateModelsTree() {
+        TreeItem<String> root = new TreeItem<>("Models");
+        objectsTree.setRoot(root);
+        for (int i = 0; i < modelController.getModelsQuantity(); i++) {
+            root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
+        }
+        camerasTree.setShowRoot(false);
+    }
+
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -257,7 +311,7 @@ public class GuiController {
         if (selectedItem != null) {
             int selectedIndex = camerasTree.getRoot().getChildren().indexOf(selectedItem);
             if (selectedIndex >= 0) {
-                setCurrent(selectedIndex);
+                setCurrentCamera(selectedIndex);
             }
         }
     }
@@ -267,6 +321,5 @@ public class GuiController {
         camerasController.currentCamera.setTarget(new Vector3f(Float.parseFloat(directionX.getText()), Float.parseFloat(directionX.getText()), Float.parseFloat(directionX.getText())));
         camerasController.currentCamera.setDistance(Float.parseFloat(distance.getText()));
         camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()), Float.parseFloat(cameraY.getText())));
-//        currentCamera.setPosition(parseVector(cameraX.getText(), cameraY.getText(), cameraZ.getText()));
     }
 }
