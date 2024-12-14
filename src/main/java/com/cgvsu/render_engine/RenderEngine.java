@@ -1,7 +1,8 @@
 package com.cgvsu.render_engine;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
 
 import com.cgvsu.model.Model;
@@ -10,23 +11,26 @@ import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.nmath.Vector4f;
-import com.cgvsu.rasterization.Bresenham;
-import com.cgvsu.rasterization.PlainColorTrianglePainter;
-import com.cgvsu.rasterization.PlainColorWithLightningTrianglePainter;
-import com.cgvsu.rasterization.TriangleRasterization;
+import com.cgvsu.rasterization.*;
 
+
+import javax.imageio.ImageIO;
 
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
 public class RenderEngine {
+    private Model mesh;
+    private Vector3f[] resultPoints;
+    private PixelWriter pixelWriter;
+    private Vector3f[] normals;
 
-    public static void render(
+    public void render(
             final PixelWriter pixelWriter,
             final Camera camera,
             final Model mesh,
             final int width,
-            final int height)
-    {
+            final int height,
+            final RenderMode renderMode) throws IOException {
         Matrix4x4 modelMatrix = mesh.getModelMatrix();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
@@ -35,8 +39,10 @@ public class RenderEngine {
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiplyMM(viewMatrix);
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiplyMM(modelMatrix);
 
-        Vector3f[] resultPoints = new Vector3f[mesh.vertices.size()];
-        Vector3f[] normals = new Vector3f[mesh.normals.size()];
+        this.pixelWriter = pixelWriter;
+        this.mesh = mesh;
+        resultPoints = new Vector3f[mesh.vertices.size()];
+        normals = new Vector3f[mesh.normals.size()];
         for (int i = 0; i < mesh.vertices.size(); i++) {
             Vector3f vertex = mesh.vertices.get(i);
             Vector3f normal = mesh.normals.get(i);
@@ -58,24 +64,36 @@ public class RenderEngine {
             normals[i] = new Vector3f(normal4.x(), normal4.y(), normal4.z());
         }
 
-        fillWithColorAndLightning(pixelWriter, resultPoints, mesh.polygons, normals, mesh.vertices, camera.getPosition(), Color.BLUE);
-//        fillWithColor(pixelWriter, resultPoints, mesh.polygons, Color.CYAN);
-
-        for (Polygon curPolygon : mesh.polygons) {
-            List<Integer> polygonVertices = curPolygon.getVertexIndices();
-            final int nVerticesInPolygon = polygonVertices.size();
-
-            for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; vertexInPolygonInd++)
-                drawLine(pixelWriter, resultPoints, polygonVertices, vertexInPolygonInd - 1, vertexInPolygonInd);
-
-            if (nVerticesInPolygon > 0)
-                drawLine(pixelWriter, resultPoints, polygonVertices, nVerticesInPolygon - 1, 0);
+        if (renderMode.color != null) {
+            if (renderMode.light) {
+                fillWithColorAndLightning(camera.getPosition(), renderMode.color);
+            } else {
+                fillWithColor(renderMode.color);
+            }
+        } else if (renderMode.texture != null) {
+            if (renderMode.light) {
+                fillWithTextureAndLightning(camera.getPosition(), ImageIO.read(renderMode.texture));
+            } else {
+                fillWithTexture(ImageIO.read(renderMode.texture));
+            }
         }
+
+        if (renderMode.grid)
+            for (Polygon curPolygon : mesh.polygons) {
+                List<Integer> polygonVertices = curPolygon.getVertexIndices();
+                final int nVerticesInPolygon = polygonVertices.size();
+
+                for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; vertexInPolygonInd++)
+                    drawLine(pixelWriter, resultPoints, polygonVertices, vertexInPolygonInd - 1, vertexInPolygonInd);
+
+                if (nVerticesInPolygon > 0)
+                    drawLine(pixelWriter, resultPoints, polygonVertices, nVerticesInPolygon - 1, 0);
+            }
 
         pixelWriter.draw();
     }
 
-    private static void drawLine(PixelWriter pixelWriter, Vector3f[] resultPoints, List<Integer> vertices, int i, int j) {
+    private void drawLine(PixelWriter pixelWriter, Vector3f[] resultPoints, List<Integer> vertices, int i, int j) {
         Bresenham.drawBresenhamLine(
                 pixelWriter,
                 Math.round(resultPoints[vertices.get(i)].x()),
@@ -87,47 +105,104 @@ public class RenderEngine {
         );
     }
 
-    private static void fillWithColor(PixelWriter pixelWriter, Vector3f[] resultPoints, List<Polygon> polygons, Color color) {
-        for (Polygon curPolygon : polygons) {
-            for (int[] triangle : curPolygon.getTriangles()) {
-                int[] x = Arrays.stream(triangle).map(e -> Math.round(resultPoints[e].x())).toArray();
-                int[] y = Arrays.stream(triangle).map(e -> Math.round(resultPoints[e].y())).toArray();
-                double[] z = Arrays.stream(triangle).mapToDouble(e -> resultPoints[e].z()).toArray();
+    private void fillWithColor(Color color) {
+        int[] x, y;
+        double[] z;
+        for (Polygon curPolygon : mesh.polygons) {
+            for (int[] triangle : curPolygon.getVertexIndicesTriangles()) {
+                x = new int[3];
+                y = new int[3];
+                z = new double[3];
+                for (int i = 0; i < 3; i++) {
+                    x[i] = Math.round(resultPoints[triangle[i]].x());
+                    y[i] = Math.round(resultPoints[triangle[i]].y());
+                    z[i] = resultPoints[triangle[i]].z();
+                }
                 new TriangleRasterization(new PlainColorTrianglePainter(pixelWriter, x, y, z, color))
                         .fillTriangle();
             }
         }
     }
 
-    private static void fillWithColorAndLightning(
-            PixelWriter pixelWriter,
-            Vector3f[] resultPoints,
-            List<Polygon> polygons,
-            Vector3f[] normals,
-            List<Vector3f> vertices,
-            Vector3f lightSource,
-            Color color) {
-        int curVertexIndex;
+    private void fillWithColorAndLightning(Vector3f lightSource, Color color) {
         int[] x, y;
         double[] z;
         Vector3f[] n, v;
-        for (Polygon curPolygon : polygons) {
-            for (int[] triangle : curPolygon.getTriangles()) {
+        for (Polygon curPolygon : mesh.polygons) {
+            for (int[] triangle : curPolygon.getVertexIndicesTriangles()) {
                 x = new int[3];
                 y = new int[3];
                 z = new double[3];
                 n = new Vector3f[3];
                 v = new Vector3f[3];
                 for (int i = 0; i < 3; i++) {
-                    curVertexIndex = triangle[i];
-                    x[i] = Math.round(resultPoints[curVertexIndex].x());
-                    y[i] = Math.round(resultPoints[curVertexIndex].y());
-                    z[i] = resultPoints[curVertexIndex].z();
-                    n[i] = normals[curVertexIndex];
-                    v[i] = vertices.get(curVertexIndex);
+                    x[i] = Math.round(resultPoints[triangle[i]].x());
+                    y[i] = Math.round(resultPoints[triangle[i]].y());
+                    z[i] = resultPoints[triangle[i]].z();
+                    n[i] = normals[triangle[i]];
+                    v[i] = mesh.vertices.get(triangle[i]);
                 }
-                new TriangleRasterization(new PlainColorWithLightningTrianglePainter(pixelWriter, x, y, z, n, v, lightSource, color))
+                new TriangleRasterization(new PlainColorWithLightningTrianglePainter(
+                        pixelWriter, x, y, z, n, v, lightSource, color
+                )).fillTriangle();
+            }
+        }
+    }
+
+    private void fillWithTexture(BufferedImage image) {
+        int nTriangles;
+        int[] x, y, vertexTriangle, textureTriangle;
+        double[] z;
+        Vector2f[] textureV;
+        for (Polygon curPolygon : mesh.polygons) {
+            nTriangles = curPolygon.getVertexIndicesTriangles().size();
+            for (int i = 0; i < nTriangles; i++) {
+                vertexTriangle = curPolygon.getVertexIndicesTriangles().get(i);
+                textureTriangle = curPolygon.getTextureVertexIndicesTriangles().get(i);
+                x = new int[3];
+                y = new int[3];
+                z = new double[3];
+                textureV = new Vector2f[3];
+                for (int j = 0; j < 3; j++) {
+                    x[j] = Math.round(resultPoints[vertexTriangle[j]].x());
+                    y[j] = Math.round(resultPoints[vertexTriangle[j]].y());
+                    z[j] = resultPoints[vertexTriangle[j]].z();
+                    textureV[j] = mesh.textureVertices.get(textureTriangle[j]);
+                }
+                new TriangleRasterization(new TextureTrianglePainter(pixelWriter, x, y, z, textureV, image))
                         .fillTriangle();
+            }
+        }
+    }
+
+    private void fillWithTextureAndLightning(Vector3f lightSource, BufferedImage image) {
+        int nTriangles;
+        int[] x, y, vertexTriangle, textureTriangle;
+        double[] z;
+        Vector2f[] textureV;
+        Vector3f[] n, v;
+        for (Polygon curPolygon : mesh.polygons) {
+            nTriangles = curPolygon.getVertexIndicesTriangles().size();
+            for (int i = 0; i < nTriangles; i++) {
+                vertexTriangle = curPolygon.getVertexIndicesTriangles().get(i);
+                textureTriangle = curPolygon.getTextureVertexIndicesTriangles().get(i);
+                x = new int[3];
+                y = new int[3];
+                z = new double[3];
+                textureV = new Vector2f[3];
+                n = new Vector3f[3];
+                v = new Vector3f[3];
+                for (int j = 0; j < 3; j++) {
+                    x[j] = Math.round(resultPoints[vertexTriangle[j]].x());
+                    y[j] = Math.round(resultPoints[vertexTriangle[j]].y());
+                    z[j] = resultPoints[vertexTriangle[j]].z();
+                    textureV[j] = mesh.textureVertices.get(textureTriangle[j]);
+                    n[j] = normals[vertexTriangle[j]];
+                    v[j] = mesh.vertices.get(vertexTriangle[j]);
+                }
+                new TriangleRasterization(new TextureWithLightningTrianglePainter(
+                        pixelWriter, x, y, z, textureV, image, n, v, lightSource)
+                ).fillTriangle();
             }
         }
     }

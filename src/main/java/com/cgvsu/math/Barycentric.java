@@ -27,4 +27,10 @@ public class Barycentric {
                         barycentric[2] * vectors[2].z()
         );
     }
+
+    public static double getDouble(float[] barycentric, double[] array) {
+        return barycentric[0] * array[0] +
+                barycentric[1] * array[1] +
+                barycentric[2] * array[2];
+    }
 }

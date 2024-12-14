@@ -42,9 +42,7 @@ public class TrianglePainter {
 
     protected InterpolationResult interpolate(int x, int y) {
         float[] barycentricCoordinates = Barycentric.calculate(x, y, arrX, arrY);
-        double z = barycentricCoordinates[0] * arrZ[0] +
-                barycentricCoordinates[1] * arrZ[1] +
-                barycentricCoordinates[2] * arrZ[2];
+        double z = Barycentric.getDouble(barycentricCoordinates, arrZ);
         if (!pixelWriter.isPixelVisible(x, y, z))
             return null;
         return new InterpolationResult(barycentricCoordinates, null, z);

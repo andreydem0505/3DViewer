@@ -1,7 +1,5 @@
 package com.cgvsu.model;
 
-import com.cgvsu.triangulation.Triangulation;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,8 @@ public class Polygon {
     private ArrayList<Integer> vertexIndices;
     private ArrayList<Integer> textureVertexIndices;
     private ArrayList<Integer> normalIndices;
-    private List<int[]> triangles;
+    private List<int[]> vertexIndicesTriangles;
+    private List<int[]> textureVertexIndicesTriangles;
 
 
     public Polygon() {
@@ -22,7 +21,6 @@ public class Polygon {
     public void setVertexIndices(ArrayList<Integer> vertexIndices) {
         assert vertexIndices.size() >= 3;
         this.vertexIndices = vertexIndices;
-        triangles = Triangulation.convexPolygonTriangulate(vertexIndices);
     }
 
     public void setTextureVertexIndices(ArrayList<Integer> textureVertexIndices) {
@@ -47,7 +45,19 @@ public class Polygon {
         return normalIndices;
     }
 
-    public List<int[]> getTriangles() {
-        return triangles;
+    public List<int[]> getVertexIndicesTriangles() {
+        return vertexIndicesTriangles;
+    }
+
+    public void setVertexIndicesTriangles(List<int[]> triangles) {
+        this.vertexIndicesTriangles = triangles;
+    }
+
+    public List<int[]> getTextureVertexIndicesTriangles() {
+        return textureVertexIndicesTriangles;
+    }
+
+    public void setTextureVertexIndicesTriangles(List<int[]> textureVertexIndicesTriangles) {
+        this.textureVertexIndicesTriangles = textureVertexIndicesTriangles;
     }
 }

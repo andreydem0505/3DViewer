@@ -1,10 +1,13 @@
 package com.cgvsu;
 
 import com.cgvsu.math.Linal;
+import com.cgvsu.model.Polygon;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.PixelWriter;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.render_engine.RenderModeFactory;
+import com.cgvsu.triangulation.Triangulation;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -15,6 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+
+import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -59,6 +64,8 @@ public class GuiController {
 
         PixelWriter pixelWriter = new PixelWriter(imageView);
 
+        RenderEngine renderEngine = new RenderEngine();
+
         KeyFrame frame = new KeyFrame(Duration.millis(30), event -> {
             double width = imageView.getFitWidth();
             double height = imageView.getFitHeight();
@@ -67,7 +74,18 @@ public class GuiController {
             camerasController.currentCamera.setAspectRatio((float) (height / width));
 
             if (mesh != null) {
-                RenderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height);
+                try {
+//                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+//                            RenderModeFactory.gridPlainColor(Color.BLUE));
+//                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+//                            RenderModeFactory.gridPlainColorLightning(Color.BLUE));
+//                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+//                            RenderModeFactory.plainColorLightning(Color.BLUE));
+                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
+                            RenderModeFactory.gridTexture(new File("./models/caracal_texture.png")));
+                } catch (IOException e) {
+                    // TODO обработать ошибки с файлом текстуры
+                }
             }
         });
 
@@ -99,6 +117,8 @@ public class GuiController {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
             mesh.normals = Linal.calculateVerticesNormals(mesh.vertices, mesh.polygons);
+            for (Polygon polygon : mesh.polygons)
+                Triangulation.convexPolygonTriangulate(polygon);
             // todo: обработка ошибок
         } catch (IOException exception) {
             System.err.println("Failed to load model.\nError: " + exception.getLocalizedMessage());
