@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.image.ImageView?>
 <AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
         <Menu mnemonicParsing="false" text="File">
@@ -78,26 +77,26 @@
             </TitledPane>
 
             <!-- Меню камер -->
-            <TitledPane expanded="false" focusTraversable="false" text="Cameras">
+            <TitledPane focusTraversable="false" text="Cameras">
                 <VBox spacing="5">
                     <HBox spacing="5">
-                        <Button onAction="#handleCameraBackward" text="+" />
-                        <Button onAction="#handleCameraBackward" text="-" />
+                        <Button onAction="#addCamera" text="+" />
+                        <Button onAction="#removeCamera" text="-" />
                     </HBox>
-                    <TreeView fx:id="camerasTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0">
+                    <TreeView fx:id="camerasTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0" onMouseClicked="#handleCameraSelection">
                         <VBox.margin>
                             <Insets />
                         </VBox.margin>
                     </TreeView>
                     <VBox spacing="5">
-                        <Label text="Active Camera Coordinates:" />
+                         <Label text="Distance:" />
+                         <TextField fx:id="distance" maxWidth="170.0" prefWidth="100.0" />
+                        <Label text="Active Camera Rotation:" />
                         <GridPane hgap="10" vgap="5">
                             <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <TextField fx:id="cameraX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                             <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                             <TextField fx:id="cameraY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                            <TextField fx:id="cameraZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             <columnConstraints>
                                 <ColumnConstraints />
                                 <ColumnConstraints />
@@ -108,7 +107,7 @@
                                 <RowConstraints />
                             </rowConstraints>
                         </GridPane>
-                        <Label text="Direction:" />
+                        <Label text="Target coordinates:" />
                         <GridPane hgap="10" vgap="5">
                             <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <TextField fx:id="directionX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -127,7 +126,7 @@
                             </rowConstraints>
                         </GridPane>
                     </VBox>
-                    <Button mnemonicParsing="false" text="Set" textAlignment="CENTER" />
+                    <Button mnemonicParsing="false" text="Set" onAction="#updateCameraDirectionAndPosition" textAlignment="CENTER" />
                 </VBox>
             </TitledPane>
 
