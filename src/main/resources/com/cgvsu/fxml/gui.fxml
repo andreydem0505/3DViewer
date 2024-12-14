@@ -72,18 +72,18 @@
                         <Button onAction="#addModelToTheScene" text="+" />
                         <Button onAction="#removeModel" text="-" />
                     </HBox>
-                    <TreeView fx:id="objectsTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0" onMouseClicked="#handleModelSelection" />
+                    <TreeView fx:id="objectsTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleModelSelection" prefHeight="100.0" prefWidth="280.0" />
                 </VBox>
             </TitledPane>
 
             <!-- Меню камер -->
-            <TitledPane focusTraversable="false" text="Cameras">
+            <TitledPane expanded="false" focusTraversable="false" text="Cameras">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addCamera" text="+" />
                         <Button onAction="#removeCamera" text="-" />
                     </HBox>
-                    <TreeView fx:id="camerasTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0" onMouseClicked="#handleCameraSelection">
+                    <TreeView fx:id="camerasTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleCameraSelection" prefHeight="100.0" prefWidth="280.0">
                         <VBox.margin>
                             <Insets />
                         </VBox.margin>
@@ -126,7 +126,7 @@
                             </rowConstraints>
                         </GridPane>
                     </VBox>
-                    <Button mnemonicParsing="false" text="Set" onAction="#updateCameraDirectionAndPosition" textAlignment="CENTER" />
+                    <Button mnemonicParsing="false" onAction="#updateCameraDirectionAndPosition" text="Set" textAlignment="CENTER" />
                 </VBox>
             </TitledPane>
 

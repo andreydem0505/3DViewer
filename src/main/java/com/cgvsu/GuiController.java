@@ -125,7 +125,7 @@ public class GuiController {
                     }
                 }
             } else {
-                // Андрей, что делать?
+                imageView.setImage(null); // Я сделал кринжовый фикс?
             }
         });
 
