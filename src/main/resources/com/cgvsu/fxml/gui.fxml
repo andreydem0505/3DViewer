@@ -15,7 +15,11 @@
                 <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
             </accelerator>
             </MenuItem>
-         <MenuItem mnemonicParsing="false" text="Save Model" />
+         <MenuItem mnemonicParsing="false" onAction="#saveModelFile" text="Save Model">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+            </accelerator>
+         </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Switch theme">
          <items>
@@ -56,9 +60,9 @@
                </MenuItem>
         </items>
       </Menu>
-      <Menu mnemonicParsing="false" text="CalcNormals">
+      <Menu mnemonicParsing="false" text="Utils">
         <items>
-          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="NormalsForCurrModel" onAction="#handleNormalsMenuItem"/>
         </items>
       </Menu>
     </MenuBar>
@@ -141,35 +145,28 @@
                 </VBox>
             </TitledPane>
 
-            <!-- Меню освещения -->
-            <TitledPane expanded="false" focusTraversable="false" text="Lighting">
+            <!-- Меню модификаций -->
+            <TitledPane focusTraversable="false" text="Model modification">
                 <VBox spacing="5">
-                    <HBox spacing="5">
-                        <Button onAction="#handleCameraBackward" text="+" />
-                        <Button onAction="#handleCameraBackward" text="-" />
-                    </HBox>
-                    <TreeView fx:id="lightingTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="280.0" />
                     <VBox spacing="5">
-                        <Label text="Active Lighting Direction:" />
-                        <GridPane hgap="10" vgap="5">
-                            <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                            <TextField fx:id="lightingX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                            <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                            <TextField fx:id="lightingY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                            <TextField fx:id="lightingZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                            <columnConstraints>
-                                <ColumnConstraints />
-                                <ColumnConstraints />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                            </rowConstraints>
-                        </GridPane>
+                        <Label text="VertexRemoverTool" />
                     </VBox>
-                    <Button mnemonicParsing="false" text="Set" />
+               <GridPane prefHeight="30.0" prefWidth="173.0">
+                 <columnConstraints>
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="0.0" prefWidth="51.00000762939453" />
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.6666762034098" minWidth="10.0" prefWidth="165.66665903727213" />
+                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.6666762034098" minWidth="10.0" prefWidth="74.66665140787757" />
+                 </columnConstraints>
+                 <rowConstraints>
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                 </rowConstraints>
+                  <children>
+                     <Label text="Vertices:" />
+                     <TextField fx:id="verticesToDeleteTextField" GridPane.columnIndex="1" />
+                     <Button mnemonicParsing="false" onMouseClicked="#readVerticesFromFileChooser" prefWidth="72.0" text="LoadTxt" GridPane.columnIndex="2" />
+                  </children>
+               </GridPane>
+                    <Button mnemonicParsing="false" onMouseClicked="#handleVertexRemover" text="Confirm" />
                 </VBox>
             </TitledPane>
 
@@ -230,7 +227,7 @@
                             <RowConstraints />
                         </rowConstraints>
                     </GridPane>
-                    <Button mnemonicParsing="false" text="Confirm" onMouseClicked="#handleGraphicConveyor" />
+                    <Button mnemonicParsing="false" onMouseClicked="#handleGraphicConveyor" text="Confirm" />
                 </VBox>
             </TitledPane>
         </VBox>

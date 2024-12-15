@@ -1,8 +1,10 @@
 package com.cgvsu.gui;
 
+import com.cgvsu.io.objwriter.ObjWriter;
 import com.cgvsu.math.Linal;
 import com.cgvsu.model.ModelPrepared;
 import com.cgvsu.model.Polygon;
+import com.cgvsu.modelModification.VertexRemoverNextGen;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.*;
@@ -23,10 +25,14 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 import java.awt.*;
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.io.objreader.ObjReader;
@@ -49,6 +55,9 @@ public class GuiController {
 
     @FXML
     private TextField scaleY;
+
+    @FXML
+    private TextField verticesToDeleteTextField;
 
     @FXML
     private TextField scaleZ;
@@ -168,6 +177,70 @@ public class GuiController {
         loadModel("./models/caracal_cube.obj");
         updateModelTree();
 //        loadModel("./models/CorrectedCubeWithRemovedVertices.obj");
+    }
+    @FXML
+    private void handleVertexRemover() {
+        List<Integer> verticesToDelete = new ArrayList<>();
+        String verticesImput = verticesToDeleteTextField.getText().replace(',', ' ');
+        Scanner scanner = new Scanner(verticesImput);
+        while (scanner.hasNext()) {
+            verticesToDelete.add(scanner.nextInt() - 1);
+        }
+        VertexRemoverNextGen.processModelAndCleanEverything(modelController.currentModel.model, verticesToDelete);
+        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+        for (Polygon polygon : modelController.currentModel.model.polygons)
+            Triangulation.convexPolygonTriangulate(polygon);
+    }
+
+    @FXML
+    private void readVerticesFromFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt (*.txt)", "*.txt"));
+        fileChooser.setTitle("Load Vertices");
+
+        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        try {
+            readVerticesFromFile(file);
+        } catch (Exception e) {
+            showAlert(e.getLocalizedMessage(), e.getMessage());
+        }
+    }
+
+    @FXML
+    private void saveModelFile() {
+        ObjWriter objWriter = new ObjWriter();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
+        fileChooser.setTitle("Save model");
+
+        File file = fileChooser.showSaveDialog((Stage) imageView.getScene().getWindow());
+
+        if (file == null) {
+            return;
+        }
+
+        String filename = file.getAbsolutePath();
+
+        try {
+            objWriter.write(modelController.currentModel.model, filename);
+        } catch (Exception e) {
+            showAlert(e.getLocalizedMessage(), e.getMessage());
+        }
+    }
+
+    @FXML
+    public void readVerticesFromFile(File file) throws IOException {
+        List<Integer> readVertices = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new FileReader(file))) {
+            while (scanner.hasNext()) {
+                readVertices.add(scanner.nextInt());
+            }
+        }
+        verticesToDeleteTextField.setText(readVertices.toString().substring(1, readVertices.toString().length() - 1));
     }
 
     @FXML
@@ -302,6 +375,11 @@ public class GuiController {
     }
 
     @FXML
+    private void handleNormalsMenuItem() {
+        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+    }
+
+    @FXML
     private void addModelToTheScene() {
         onOpenModelMenuItemClick();
         updateModelTree();
@@ -390,9 +468,10 @@ public class GuiController {
 
     @FXML
     private void handleColorChoiceBox() {
-        try {
-            modelController.currentModel.setCurrentColorCode(colorPicker.getValue());
-        } catch (Exception ignored) {}
+
+        if (modelController.currentModel.model == null)
+            return;
+        modelController.currentModel.setCurrentColorCode(colorPicker.getValue());
         System.out.println(colorPicker.getValue());
         handleRenderChoiceBoxChoice();
     }
