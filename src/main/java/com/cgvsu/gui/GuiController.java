@@ -14,6 +14,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -26,6 +27,7 @@ import javafx.util.Duration;
 
 import java.awt.*;
 import java.io.FileReader;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -127,8 +129,7 @@ public class GuiController {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue()));
 
-        choiceBoxRenderMode.getItems().addAll("Inactive", "Grid", "GridColor", "GridColorLight", "GridTexture", "GridTextureLight", "ColorLight", "Texture", "TextureLight");
-        choiceBoxRenderMode.setValue("Grid");
+        initializeFields();
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -142,11 +143,7 @@ public class GuiController {
 
         RenderEngine renderEngine = new RenderEngine();
 
-        if (camerasController.getCamerasQuantity() == 1) {
-            updateCameraTree();
-            setCurrentCamera(0);
-            System.out.println("lol");
-        }
+        initializeCamerasController();
 
         KeyFrame frame = new KeyFrame(Duration.millis(30), event -> {
             double width = imageView.getFitWidth();
@@ -178,6 +175,64 @@ public class GuiController {
         updateModelTree();
 //        loadModel("./models/CorrectedCubeWithRemovedVertices.obj");
     }
+
+    @FXML
+    private void switchThemeToDark() {
+        Scene scene = anchorPane.getScene();
+
+        if (scene == null) {
+            return;
+        }
+
+        anchorPane.getStylesheets().clear();
+
+        File style = new File("src/main/resources/styles/darker-theme.css");
+        try {
+            scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
+        } catch (MalformedURLException e) {
+            showAlert("Sth wrong", "idk");
+        }
+    }
+
+    @FXML
+    private void switchThemeToLight() {
+        Scene scene = anchorPane.getScene();
+        if (scene == null) {
+            return;
+        }
+
+        scene.getStylesheets().clear();
+
+        File style = new File("src/main/resources/styles/lighter-theme.css");
+        try {
+            scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
+        } catch (MalformedURLException e) {
+            showAlert("Sth wrong", "idk");
+        }
+    }
+
+    private void initializeCamerasController() {
+        if (camerasController.getCamerasQuantity() == 1) {
+            updateCameraTree();
+            setCurrentCamera(0);
+            System.out.println("lol");
+        }
+    }
+
+    private void initializeFields() {
+        choiceBoxRenderMode.getItems().addAll("Inactive", "Grid", "GridColor", "GridColorLight", "GridTexture", "GridTextureLight", "ColorLight", "Texture", "TextureLight");
+        choiceBoxRenderMode.setValue("Grid");
+        scaleX.setText("1");
+        scaleY.setText("1");
+        scaleZ.setText("1");
+        rotationX.setText("0");
+        rotationY.setText("0");
+        rotationZ.setText("0");
+        positionX.setText("0");
+        positionY.setText("0");
+        positionZ.setText("0");
+    }
+
     @FXML
     private void handleVertexRemover() {
         List<Integer> verticesToDelete = new ArrayList<>();

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.gui.GuiController">
+<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.gui.GuiController" stylesheets="@../../../styles/lighter-theme.css">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#addModelToTheScene" text="Load Model">
@@ -23,7 +23,8 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Switch theme">
          <items>
-          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" onAction="#switchThemeToDark" text="Dark" />
+          <MenuItem mnemonicParsing="false" onAction="#switchThemeToLight" text="Light" />
          </items>
         </Menu>
       <Menu mnemonicParsing="false" text="Controls">
@@ -62,13 +63,13 @@
       </Menu>
       <Menu mnemonicParsing="false" text="Utils">
         <items>
-          <MenuItem mnemonicParsing="false" text="NormalsForCurrModel" onAction="#handleNormalsMenuItem"/>
+          <MenuItem mnemonicParsing="false" onAction="#handleNormalsMenuItem" text="NormalsForCurrModel" />
         </items>
       </Menu>
     </MenuBar>
 
     <ImageView fx:id="imageView" fitHeight="870" fitWidth="1600" onMouseDragEntered="#handleCameraDragStarted" onMouseDragExited="#handleCameraDragEnded" onMouseDragged="#handleCameraDrag" onScroll="#handleCameraScroll" AnchorPane.topAnchor="30.0" />
-    <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
+    <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0" fx:id="scrollPaneMenu">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->
             <TitledPane focusTraversable="false" text="Objects">
@@ -92,7 +93,7 @@
             </TitledPane>
 
             <!-- Меню камер -->
-            <TitledPane expanded="false" focusTraversable="false" text="Cameras">
+            <TitledPane focusTraversable="false" text="Cameras">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addCamera" text="+" />
