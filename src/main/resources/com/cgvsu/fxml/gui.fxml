@@ -5,6 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 
 <AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
@@ -77,20 +78,12 @@
                <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
                   <children>
                      <ChoiceBox fx:id="choiceBoxRenderMode" onAction="#handleRenderChoiceBoxChoice" prefWidth="150.0" />
-                      <ChoiceBox fx:id="choiceBoxColor" onAction="#handleColorChoiceBox" prefWidth="150.0" />
+                     <ColorPicker fx:id="colorPicker" onAction="#handleColorChoiceBox">
+                        <value>
+                           <Color />
+                        </value></ColorPicker>
                   </children>
                </HBox>
-                <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
-                    <children>
-                        <Label text="R: " GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                        <TextField fx:id="redColor" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="50.0"/>
-                        <Label text=" G: " GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                        <TextField fx:id="greenColor" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="50.0"/>
-                        <Label text=" B: " GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                        <TextField fx:id="blueColor" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="50.0"/>
-                        <Button onAction="#handleRenderChoiceBoxChoice" text="Repaint" />
-                    </children>
-                </HBox>
                 </VBox>
             </TitledPane>
 

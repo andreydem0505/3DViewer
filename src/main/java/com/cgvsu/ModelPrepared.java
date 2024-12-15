@@ -3,7 +3,11 @@ package com.cgvsu;
 import com.cgvsu.model.Model;
 import com.cgvsu.render_engine.RenderMode;
 
+import java.awt.*;
 import java.io.File;
+
+import javafx.scene.control.ColorPicker;
+import javafx.scene.paint.Color;
 
 public class ModelPrepared {
     public Model model;
@@ -11,15 +15,15 @@ public class ModelPrepared {
 
     private String currentModeCode = "Grid";
 
-    public String getCurrentColorCode() {
+    public Color getCurrentColorCode() {
         return currentColorCode;
     }
 
-    public void setCurrentColorCode(String currentColorCode) {
+    public void setCurrentColorCode(Color currentColorCode) {
         this.currentColorCode = currentColorCode;
     }
 
-    private String currentColorCode = "Black";
+    private Color currentColorCode = Color.BLACK;
     private File texture = null;
     private boolean renderableFlag = true;
 

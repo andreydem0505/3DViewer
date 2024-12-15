@@ -72,8 +72,11 @@ public class GuiController {
     @FXML
     private ChoiceBox choiceBoxRenderMode;
 
+//    @FXML
+//    private ChoiceBox choiceBoxColor;
+
     @FXML
-    private ChoiceBox choiceBoxColor;
+    private ColorPicker colorPicker;
 
     @FXML
     AnchorPane anchorPane;
@@ -104,13 +107,6 @@ public class GuiController {
 
         choiceBoxRenderMode.getItems().addAll("Inactive", "Grid", "GridColor", "GridColorLight", "GridTexture", "GridTextureLight", "ColorLight", "Texture", "TextureLight");
         choiceBoxRenderMode.setValue("Grid");
-
-        choiceBoxColor.getItems().addAll("RGB", "Black", "Blue", "Red", "Cyan");
-        choiceBoxColor.setValue("Black");
-
-        redColor.setText("0");
-        greenColor.setText("0");
-        blueColor.setText("0");
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -252,8 +248,8 @@ public class GuiController {
         for (int i = 0; i < modelController.getModelsQuantity(); i++) {
             root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
         }
-        objectsTree.getSelectionModel().select(root.getChildren().get(root.getChildren().size() - 1));
         objectsTree.setShowRoot(false);
+        updateChoiceBoxes();
     }
 
     @FXML
@@ -275,9 +271,9 @@ public class GuiController {
     }
 
     private void updateChoiceBoxes() {
-        System.out.println("Set color " + modelController.currentModel.getCurrentColorCode());
+//        System.out.println("Set color " + modelController.currentModel.getCurrentColorCode());
         choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
-        choiceBoxColor.setValue(modelController.currentModel.getCurrentColorCode());
+        colorPicker.setValue(modelController.currentModel.getCurrentColorCode());
     }
 
     @FXML
@@ -290,10 +286,10 @@ public class GuiController {
                 modelController.currentModel.setRenderMode(RenderModeFactory.grid());
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridColor")) {
                 modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(colorChoice(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridColorLight")) {
                 modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(colorChoice(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridTexture")) {
                 modelController.currentModel.setRenderableFlag(true);
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
@@ -302,7 +298,7 @@ public class GuiController {
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
             } else if (choiceBoxRenderMode.getValue().toString().equals("ColorLight")) {
                 modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(colorChoice(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("Texture")) {
                 modelController.currentModel.setRenderableFlag(true);
                 modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
@@ -319,31 +315,21 @@ public class GuiController {
         objectsTree.getSelectionModel().select(index);
     }
 
-    private Color colorChoice(String colorCode) {
-//        modelController.currentModel.setCurrentColorCode(choiceBoxColor.getValue().toString());
-        if (colorCode.equals("RGB")) {
-            return new Color(
-                    (int) Float.parseFloat(redColor.getText()) > 255 || (int) Float.parseFloat(redColor.getText()) < 0 ? 100 : (int) Float.parseFloat(redColor.getText()),
-                    (int) Float.parseFloat(greenColor.getText()) > 255 || (int) Float.parseFloat(greenColor.getText()) < 0 ? 100 : (int) Float.parseFloat(greenColor.getText()),
-                    (int) Float.parseFloat(blueColor.getText()) > 255 || (int) Float.parseFloat(blueColor.getText()) < 0 ? 100 : (int) Float.parseFloat(blueColor.getText())
-                    );
-        } else if (colorCode.equals("Black")) {
-            return Color.BLACK;
-        } else if (colorCode.equals("Blue")) {
-            return Color.BLUE;
-        } else if (colorCode.equals("Red")) {
-            return Color.RED;
-        } else if (colorCode.equals("Cyan")) {
-            return Color.CYAN;
-        }
-        return Color.BLACK;
+    private Color convertColor(javafx.scene.paint.Color colorCode) {
+        java.awt.Color awtColor = new java.awt.Color(
+                (float) colorCode.getRed(),
+                (float) colorCode.getGreen(),
+                (float) colorCode.getBlue(),
+                (float) colorCode.getOpacity());
+        return awtColor;
     }
 
     @FXML
     private void handleColorChoiceBox() {
         try {
-            modelController.currentModel.setCurrentColorCode(choiceBoxColor.getValue().toString());
+            modelController.currentModel.setCurrentColorCode(colorPicker.getValue());
         } catch (Exception ignored) {}
+        System.out.println(colorPicker.getValue());
         handleRenderChoiceBoxChoice();
     }
 
