@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
+<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.gui.GuiController">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#addModelToTheScene" text="Load Model">
@@ -63,7 +63,7 @@
       </Menu>
     </MenuBar>
 
-    <ImageView fx:id="imageView" fitHeight="870" fitWidth="1600" AnchorPane.topAnchor="30.0" onMouseDragEntered="#handleCameraDragStarted" onMouseDragExited="#handleCameraDragEnded" onMouseDragged="#handleCameraDrag" onScroll="#handleCameraScroll"/>
+    <ImageView fx:id="imageView" fitHeight="870" fitWidth="1600" onMouseDragEntered="#handleCameraDragStarted" onMouseDragExited="#handleCameraDragEnded" onMouseDragged="#handleCameraDrag" onScroll="#handleCameraScroll" AnchorPane.topAnchor="30.0" />
     <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->
@@ -174,7 +174,7 @@
             </TitledPane>
 
             <!-- Меню редактирования модели -->
-            <TitledPane expanded="false" focusTraversable="false" text="Model Transformation">
+            <TitledPane focusTraversable="false" text="Model Transformation">
                 <VBox spacing="5">
                     <Label text="Scale:" />
                     <GridPane hgap="10" vgap="5">
@@ -230,7 +230,7 @@
                             <RowConstraints />
                         </rowConstraints>
                     </GridPane>
-                    <Button mnemonicParsing="false" text="Confirm" />
+                    <Button mnemonicParsing="false" text="Confirm" onMouseClicked="#handleGraphicConveyor" />
                 </VBox>
             </TitledPane>
         </VBox>

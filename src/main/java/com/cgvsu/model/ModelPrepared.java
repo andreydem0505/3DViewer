@@ -1,4 +1,4 @@
-package com.cgvsu;
+package com.cgvsu.model;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.render_engine.RenderMode;

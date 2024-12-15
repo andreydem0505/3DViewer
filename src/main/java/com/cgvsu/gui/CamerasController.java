@@ -1,4 +1,4 @@
-package com.cgvsu;
+package com.cgvsu.gui;
 
 
 import com.cgvsu.render_engine.Camera;

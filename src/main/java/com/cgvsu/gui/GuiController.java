@@ -1,12 +1,11 @@
-package com.cgvsu;
+package com.cgvsu.gui;
 
 import com.cgvsu.math.Linal;
+import com.cgvsu.model.ModelPrepared;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
-import com.cgvsu.render_engine.PixelWriter;
-import com.cgvsu.render_engine.RenderEngine;
-import com.cgvsu.render_engine.RenderModeFactory;
+import com.cgvsu.render_engine.*;
 import com.cgvsu.triangulation.Triangulation;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -31,7 +30,6 @@ import java.io.File;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.io.objreader.ObjReader;
-import com.cgvsu.render_engine.Camera;
 
 public class GuiController {
 
@@ -45,6 +43,32 @@ public class GuiController {
 
     @FXML
     private TextField directionX;
+
+    @FXML
+    private TextField scaleX;
+
+    @FXML
+    private TextField scaleY;
+
+    @FXML
+    private TextField scaleZ;
+
+    @FXML
+    private TextField rotationX;
+
+    @FXML
+    private TextField rotationY;
+
+    @FXML
+    private TextField rotationZ;
+
+    @FXML
+    private TextField positionX;
+
+    @FXML
+    private TextField positionY;
+    @FXML
+    private TextField positionZ;
 
     @FXML
     private TextField directionY;
@@ -267,6 +291,14 @@ public class GuiController {
     public void handleCameraScroll(ScrollEvent mouseEvent){
         camerasController.currentCamera.moveDistance((float) -mouseEvent.getDeltaY() / 10);
         updateCameraFields();
+    }
+
+    @FXML
+    private void handleGraphicConveyor() {
+        modelController.currentModel.model.scale = new Vector3f(Float.parseFloat(scaleX.getText()), Float.parseFloat(scaleY.getText()), Float.parseFloat(scaleZ.getText()));
+        modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()), Float.parseFloat(rotationY.getText()), Float.parseFloat(rotationZ.getText()));
+        modelController.currentModel.model.position = new Vector3f(Float.parseFloat(positionX.getText()), Float.parseFloat(positionY.getText()), Float.parseFloat(positionZ.getText()));
+        modelController.currentModel.model.getModelMatrix();
     }
 
     @FXML

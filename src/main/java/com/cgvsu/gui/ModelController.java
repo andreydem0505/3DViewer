@@ -1,7 +1,6 @@
-package com.cgvsu;
+package com.cgvsu.gui;
 
-import com.cgvsu.model.Model;
-import com.cgvsu.render_engine.Camera;
+import com.cgvsu.model.ModelPrepared;
 
 import java.util.ArrayList;
 import java.util.List;
