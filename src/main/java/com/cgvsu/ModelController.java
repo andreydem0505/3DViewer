@@ -28,6 +28,7 @@ public class ModelController {
 
     public void addModel(ModelPrepared modelPrepared) {
         modelList.add(modelPrepared);
+
     }
     public void setCurrent(int index) {
         if (index >= 0 && index < modelList.size())

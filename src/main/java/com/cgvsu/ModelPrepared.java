@@ -10,6 +10,16 @@ public class ModelPrepared {
     private RenderMode renderMode;
 
     private String currentModeCode = "Grid";
+
+    public String getCurrentColorCode() {
+        return currentColorCode;
+    }
+
+    public void setCurrentColorCode(String currentColorCode) {
+        this.currentColorCode = currentColorCode;
+    }
+
+    private String currentColorCode = "Black";
     private File texture = null;
     private boolean renderableFlag = true;
 

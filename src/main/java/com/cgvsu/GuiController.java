@@ -182,7 +182,7 @@ public class GuiController {
         }
 
         modelController.currentModel.setTexture(file);
-        handleChoiceBoxChoice();
+        handleRenderChoiceBoxChoice();
     }
 
     private void loadModel(String path) {
@@ -252,6 +252,7 @@ public class GuiController {
         for (int i = 0; i < modelController.getModelsQuantity(); i++) {
             root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
         }
+        objectsTree.getSelectionModel().select(root.getChildren().get(root.getChildren().size() - 1));
         objectsTree.setShowRoot(false);
     }
 
@@ -274,16 +275,13 @@ public class GuiController {
     }
 
     private void updateChoiceBoxes() {
+        System.out.println("Set color " + modelController.currentModel.getCurrentColorCode());
         choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
-    }
-
-    private void setCurrentModel(int index) {
-        modelController.setCurrent(index);
-        objectsTree.getSelectionModel().select(index);
+        choiceBoxColor.setValue(modelController.currentModel.getCurrentColorCode());
     }
 
     @FXML
-    private void handleChoiceBoxChoice() {
+    private void handleRenderChoiceBoxChoice() {
         if (modelController.currentModel != null) {
             if (choiceBoxRenderMode.getValue().toString().equals("Inactive")) {
                 modelController.currentModel.setRenderableFlag(false);
@@ -292,10 +290,10 @@ public class GuiController {
                 modelController.currentModel.setRenderMode(RenderModeFactory.grid());
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridColor")) {
                 modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(colorChoice()));
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(colorChoice(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridColorLight")) {
                 modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(colorChoice()));
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(colorChoice(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridTexture")) {
                 modelController.currentModel.setRenderableFlag(true);
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
@@ -304,7 +302,7 @@ public class GuiController {
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
             } else if (choiceBoxRenderMode.getValue().toString().equals("ColorLight")) {
                 modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(colorChoice()));
+                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(colorChoice(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("Texture")) {
                 modelController.currentModel.setRenderableFlag(true);
                 modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
@@ -316,23 +314,37 @@ public class GuiController {
         }
     }
 
-    private Color colorChoice() {
-        if (choiceBoxColor.getValue().toString().equals("RGB")) {
+    private void setCurrentModel(int index) {
+        modelController.setCurrent(index);
+        objectsTree.getSelectionModel().select(index);
+    }
+
+    private Color colorChoice(String colorCode) {
+//        modelController.currentModel.setCurrentColorCode(choiceBoxColor.getValue().toString());
+        if (colorCode.equals("RGB")) {
             return new Color(
                     (int) Float.parseFloat(redColor.getText()) > 255 || (int) Float.parseFloat(redColor.getText()) < 0 ? 100 : (int) Float.parseFloat(redColor.getText()),
                     (int) Float.parseFloat(greenColor.getText()) > 255 || (int) Float.parseFloat(greenColor.getText()) < 0 ? 100 : (int) Float.parseFloat(greenColor.getText()),
                     (int) Float.parseFloat(blueColor.getText()) > 255 || (int) Float.parseFloat(blueColor.getText()) < 0 ? 100 : (int) Float.parseFloat(blueColor.getText())
                     );
-        } else if (choiceBoxColor.getValue().toString().equals("Black")) {
+        } else if (colorCode.equals("Black")) {
             return Color.BLACK;
-        } else if (choiceBoxColor.getValue().toString().equals("Blue")) {
+        } else if (colorCode.equals("Blue")) {
             return Color.BLUE;
-        } else if (choiceBoxColor.getValue().toString().equals("Red")) {
+        } else if (colorCode.equals("Red")) {
             return Color.RED;
-        } else if (choiceBoxColor.getValue().toString().equals("Cyan")) {
+        } else if (colorCode.equals("Cyan")) {
             return Color.CYAN;
         }
         return Color.BLACK;
+    }
+
+    @FXML
+    private void handleColorChoiceBox() {
+        try {
+            modelController.currentModel.setCurrentColorCode(choiceBoxColor.getValue().toString());
+        } catch (Exception ignored) {}
+        handleRenderChoiceBoxChoice();
     }
 
     @FXML

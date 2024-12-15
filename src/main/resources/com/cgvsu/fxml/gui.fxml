@@ -76,8 +76,8 @@
                     <TreeView fx:id="objectsTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleModelSelection" prefHeight="100.0" prefWidth="280.0" />
                <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
                   <children>
-                     <ChoiceBox fx:id="choiceBoxRenderMode" onAction="#handleChoiceBoxChoice" prefWidth="150.0" />
-                      <ChoiceBox fx:id="choiceBoxColor" prefWidth="150.0" />
+                     <ChoiceBox fx:id="choiceBoxRenderMode" onAction="#handleRenderChoiceBoxChoice" prefWidth="150.0" />
+                      <ChoiceBox fx:id="choiceBoxColor" onAction="#handleColorChoiceBox" prefWidth="150.0" />
                   </children>
                </HBox>
                 <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
@@ -88,7 +88,7 @@
                         <TextField fx:id="greenColor" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="50.0"/>
                         <Label text=" B: " GridPane.columnIndex="3" GridPane.rowIndex="0" />
                         <TextField fx:id="blueColor" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="50.0"/>
-                        <Button onAction="#handleChoiceBoxChoice" text="Repaint" />
+                        <Button onAction="#handleRenderChoiceBoxChoice" text="Repaint" />
                     </children>
                 </HBox>
                 </VBox>
