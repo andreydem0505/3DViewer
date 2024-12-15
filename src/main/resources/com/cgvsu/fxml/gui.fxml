@@ -5,6 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 
 <AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
@@ -66,13 +67,23 @@
     <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->
-            <TitledPane expanded="false" focusTraversable="false" text="Objects">
+            <TitledPane focusTraversable="false" text="Objects">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addModelToTheScene" text="+" />
                         <Button onAction="#removeModel" text="-" />
+                        <Button onAction="#loadTextureForModel" text="Load Texture" />
                     </HBox>
                     <TreeView fx:id="objectsTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleModelSelection" prefHeight="100.0" prefWidth="280.0" />
+               <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
+                  <children>
+                     <ChoiceBox fx:id="choiceBoxRenderMode" onAction="#handleRenderChoiceBoxChoice" prefWidth="150.0" />
+                     <ColorPicker fx:id="colorPicker" onAction="#handleColorChoiceBox">
+                        <value>
+                           <Color />
+                        </value></ColorPicker>
+                  </children>
+               </HBox>
                 </VBox>
             </TitledPane>
 

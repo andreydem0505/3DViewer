@@ -15,4 +15,12 @@ public class RenderMode {
         this.texture = texture;
         this.light = light;
     }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public File getTexture() {
+        return texture;
+    }
 }

@@ -13,9 +13,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -23,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.nio.file.Files;
@@ -58,10 +56,28 @@ public class GuiController {
     private TextField cameraX;
 
     @FXML
+    private TextField redColor;
+
+    @FXML
+    private TextField greenColor;
+
+    @FXML
+    private TextField blueColor;
+
+    @FXML
     private TextField cameraY;
 
     @FXML
     private TextField distance;
+
+    @FXML
+    private ChoiceBox choiceBoxRenderMode;
+
+//    @FXML
+//    private ChoiceBox choiceBoxColor;
+
+    @FXML
+    private ColorPicker colorPicker;
 
     @FXML
     AnchorPane anchorPane;
@@ -90,6 +106,9 @@ public class GuiController {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue()));
 
+        choiceBoxRenderMode.getItems().addAll("Inactive", "Grid", "GridColor", "GridColorLight", "GridTexture", "GridTextureLight", "ColorLight", "Texture", "TextureLight");
+        choiceBoxRenderMode.setValue("Grid");
+
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
@@ -115,17 +134,13 @@ public class GuiController {
             pixelWriter.clearScreen();
             camerasController.currentCamera.setAspectRatio((float) (height / width));
 
-            if (modelController.getModelsQuantity() > 0) {
-                for (Model mesh : modelController.getModelList()) {
+            if (modelController.hasRenderableModels()) {
+                for (ModelPrepared modelPrepared : modelController.getModelList()) {
                     try {
-                        renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-                                RenderModeFactory.gridPlainColor(Color.BLUE));
-    //                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-    //                            RenderModeFactory.gridPlainColorLightning(Color.BLUE));
-    //                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-    //                            RenderModeFactory.plainColorLightning(Color.BLUE));
-    //                    renderEngine.render(pixelWriter, camerasController.currentCamera, mesh, (int) width, (int) height,
-    //                            RenderModeFactory.gridTexture(new File("./models/caracal_texture.png")));
+                        if (modelPrepared.isRenderableFlag()) {
+                            renderEngine.render(pixelWriter, camerasController.currentCamera, modelPrepared.model, (int) width, (int) height,
+                                    modelPrepared.getRenderMode());
+                        }
                     } catch (IOException e) {
                         // TODO обработать ошибки с файлом текстуры
                     }
@@ -157,6 +172,21 @@ public class GuiController {
         loadModel(file.getAbsolutePath());
     }
 
+    @FXML
+    private void loadTextureForModel() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texture (*.png)", "*.png"));
+        fileChooser.setTitle("Load texture");
+
+        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        modelController.currentModel.setTexture(file);
+        handleRenderChoiceBoxChoice();
+    }
+
     private void loadModel(String path) {
         Path fileName = Path.of(path);
         Model newModel;
@@ -166,7 +196,7 @@ public class GuiController {
             newModel.normals = Linal.calculateVerticesNormals(newModel.vertices, newModel.polygons);
             for (Polygon polygon : newModel.polygons)
                 Triangulation.convexPolygonTriangulate(polygon);
-            modelController.addModel(newModel);
+            modelController.addModel(new ModelPrepared(newModel, RenderModeFactory.grid()));
             if (modelController.getModelsQuantity() == 1) {
                 modelController.currentModel = modelController.getModelList().get(0);
             }
@@ -263,6 +293,7 @@ public class GuiController {
             root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
         }
         objectsTree.setShowRoot(false);
+        updateChoiceBoxes();
     }
 
     @FXML
@@ -277,9 +308,73 @@ public class GuiController {
         if (selectedItem != null) {
             int selectedIndex = objectsTree.getRoot().getChildren().indexOf(selectedItem);
             if (selectedIndex >= 0) {
-                setCurrentCamera(selectedIndex);
+                setCurrentModel(selectedIndex);
             }
         }
+        updateChoiceBoxes();
+    }
+
+    private void updateChoiceBoxes() {
+//        System.out.println("Set color " + modelController.currentModel.getCurrentColorCode());
+        choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
+        colorPicker.setValue(modelController.currentModel.getCurrentColorCode());
+    }
+
+    @FXML
+    private void handleRenderChoiceBoxChoice() {
+        if (modelController.currentModel != null) {
+            if (choiceBoxRenderMode.getValue().toString().equals("Inactive")) {
+                modelController.currentModel.setRenderableFlag(false);
+            } else if (choiceBoxRenderMode.getValue().toString().equals("Grid")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.grid());
+            } else if (choiceBoxRenderMode.getValue().toString().equals("GridColor")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
+            } else if (choiceBoxRenderMode.getValue().toString().equals("GridColorLight")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+            } else if (choiceBoxRenderMode.getValue().toString().equals("GridTexture")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
+            } else if (choiceBoxRenderMode.getValue().toString().equals("GridTextureLight")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
+            } else if (choiceBoxRenderMode.getValue().toString().equals("ColorLight")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+            } else if (choiceBoxRenderMode.getValue().toString().equals("Texture")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
+            } else if (choiceBoxRenderMode.getValue().toString().equals("TextureLight")) {
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
+            }
+            modelController.currentModel.setCurrentModeCode(choiceBoxRenderMode.getValue().toString());
+        }
+    }
+
+    private void setCurrentModel(int index) {
+        modelController.setCurrent(index);
+        objectsTree.getSelectionModel().select(index);
+    }
+
+    private Color convertColor(javafx.scene.paint.Color colorCode) {
+        java.awt.Color awtColor = new java.awt.Color(
+                (float) colorCode.getRed(),
+                (float) colorCode.getGreen(),
+                (float) colorCode.getBlue(),
+                (float) colorCode.getOpacity());
+        return awtColor;
+    }
+
+    @FXML
+    private void handleColorChoiceBox() {
+        try {
+            modelController.currentModel.setCurrentColorCode(colorPicker.getValue());
+        } catch (Exception ignored) {}
+        System.out.println(colorPicker.getValue());
+        handleRenderChoiceBoxChoice();
     }
 
     @FXML
