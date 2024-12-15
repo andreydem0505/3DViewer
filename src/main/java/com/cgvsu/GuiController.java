@@ -318,7 +318,7 @@ public class GuiController {
 
     @FXML
     private void updateCameraDirectionAndPosition() {
-        camerasController.currentCamera.setTarget(new Vector3f(Float.parseFloat(directionX.getText()), Float.parseFloat(directionX.getText()), Float.parseFloat(directionX.getText())));
+        camerasController.currentCamera.setTarget(new Vector3f(Float.parseFloat(directionX.getText()), Float.parseFloat(directionY.getText()), Float.parseFloat(directionZ.getText())));
         camerasController.currentCamera.setDistance(Float.parseFloat(distance.getText()));
         camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()), Float.parseFloat(cameraY.getText())));
     }
