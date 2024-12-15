@@ -66,13 +66,31 @@
     <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->
-            <TitledPane expanded="false" focusTraversable="false" text="Objects">
+            <TitledPane focusTraversable="false" text="Objects">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addModelToTheScene" text="+" />
                         <Button onAction="#removeModel" text="-" />
+                        <Button onAction="#loadTextureForModel" text="Load Texture" />
                     </HBox>
                     <TreeView fx:id="objectsTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleModelSelection" prefHeight="100.0" prefWidth="280.0" />
+               <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
+                  <children>
+                     <ChoiceBox fx:id="choiceBoxRenderMode" onAction="#handleChoiceBoxChoice" prefWidth="150.0" />
+                      <ChoiceBox fx:id="choiceBoxColor" prefWidth="150.0" />
+                  </children>
+               </HBox>
+                <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
+                    <children>
+                        <Label text="R: " GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="redColor" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="50.0"/>
+                        <Label text=" G: " GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <TextField fx:id="greenColor" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="50.0"/>
+                        <Label text=" B: " GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <TextField fx:id="blueColor" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="50.0"/>
+                        <Button onAction="#handleChoiceBoxChoice" text="Repaint" />
+                    </children>
+                </HBox>
                 </VBox>
             </TitledPane>
 

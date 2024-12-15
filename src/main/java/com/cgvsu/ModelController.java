@@ -7,18 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModelController {
-    public Model currentModel;
+    public ModelPrepared currentModel;
 
-    public List<Model> getModelList() {
+    public List<ModelPrepared> getModelList() {
         return modelList;
     }
 
-    private final List<Model> modelList;
+    private final List<ModelPrepared> modelList;
 
-    public ModelController(Model model) {
+    public ModelController(ModelPrepared modelPrepared) {
         modelList = new ArrayList<>();
-        modelList.add(model);
-        currentModel = model;
+        modelList.add(modelPrepared);
+        currentModel = modelPrepared;
     }
 
     public ModelController() {
@@ -26,8 +26,8 @@ public class ModelController {
         currentModel = null;
     }
 
-    public void addModel(Model model) {
-        modelList.add(model);
+    public void addModel(ModelPrepared modelPrepared) {
+        modelList.add(modelPrepared);
     }
     public void setCurrent(int index) {
         if (index >= 0 && index < modelList.size())
@@ -47,5 +47,16 @@ public class ModelController {
 
     public int getModelsQuantity() {
         return modelList.size();
+    }
+
+    public boolean hasRenderableModels() {
+        if (modelList.size() > 0) {
+            for (ModelPrepared modelPrepared: modelList) {
+                if (modelPrepared.isRenderableFlag()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
