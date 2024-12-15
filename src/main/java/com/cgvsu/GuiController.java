@@ -56,15 +56,6 @@ public class GuiController {
     private TextField cameraX;
 
     @FXML
-    private TextField redColor;
-
-    @FXML
-    private TextField greenColor;
-
-    @FXML
-    private TextField blueColor;
-
-    @FXML
     private TextField cameraY;
 
     @FXML
@@ -72,9 +63,6 @@ public class GuiController {
 
     @FXML
     private ChoiceBox choiceBoxRenderMode;
-
-//    @FXML
-//    private ChoiceBox choiceBoxColor;
 
     @FXML
     private ColorPicker colorPicker;
@@ -316,7 +304,6 @@ public class GuiController {
     }
 
     private void updateChoiceBoxes() {
-//        System.out.println("Set color " + modelController.currentModel.getCurrentColorCode());
         choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
         colorPicker.setValue(modelController.currentModel.getCurrentColorCode());
     }
