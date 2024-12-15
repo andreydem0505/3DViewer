@@ -278,6 +278,7 @@ public class GuiController {
     @FXML
     public void handleCameraScroll(ScrollEvent mouseEvent){
         camerasController.currentCamera.moveDistance((float) -mouseEvent.getDeltaY() / 10);
+        updateCameraFields();
     }
 
     @FXML
