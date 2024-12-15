@@ -18,6 +18,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -91,6 +92,11 @@ public class GuiController {
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
+
+        imageView.setPickOnBounds(true); //schizophrenia, don't touch!
+        imageView.setOnDragDetected(e -> {
+            imageView.startFullDrag();
+        });
 
         PixelWriter pixelWriter = new PixelWriter(imageView);
 
@@ -204,6 +210,44 @@ public class GuiController {
     public void handleCameraDown(ActionEvent actionEvent) {
         camerasController.currentCamera.moveRotation(new Vector2f(0, TRANSLATION / 100));
         updateCameraFields();
+    }
+
+    float prevX;
+    float prevY;
+    boolean dragging = false;
+    @FXML
+    public void handleCameraDragStarted(MouseEvent mouseEvent){
+        prevX = (float) mouseEvent.getX();
+        prevY = (float) mouseEvent.getY();
+        dragging = true;
+    }
+
+    @FXML
+    public void handleCameraDragEnded(MouseEvent mouseEvent){
+        dragging = false;
+    }
+
+    @FXML
+    public void handleCameraDrag(MouseEvent mouseEvent){
+        if (!dragging)
+            return;
+
+        float currX = (float) mouseEvent.getX();
+        float currY = (float) mouseEvent.getY();
+
+        float deltax = currX - prevX;
+        float deltay = currY - prevY;
+
+        camerasController.currentCamera.moveRotation(new Vector2f(deltax / 100, -deltay / 100));
+        updateCameraFields();
+
+        prevX = currX;
+        prevY = currY;
+    }
+
+    @FXML
+    public void handleCameraScroll(ScrollEvent mouseEvent){
+        camerasController.currentCamera.moveDistance((float) -mouseEvent.getDeltaY() / 10);
     }
 
     @FXML
