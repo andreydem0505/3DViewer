@@ -4,7 +4,8 @@ import com.cgvsu.io.objwriter.ObjWriter;
 import com.cgvsu.math.Linal;
 import com.cgvsu.model.ModelPrepared;
 import com.cgvsu.model.Polygon;
-import com.cgvsu.modelModification.VertexRemoverNextGen;
+import com.cgvsu.model_modification.PolygonRemover;
+import com.cgvsu.model_modification.VertexRemoverNextGen;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.*;
@@ -60,6 +61,9 @@ public class GuiController {
 
     @FXML
     private TextField verticesToDeleteTextField;
+
+    @FXML
+    private TextField polygonsToDeleteTextField;
 
     @FXML
     private TextField scaleZ;
@@ -233,14 +237,27 @@ public class GuiController {
         positionZ.setText("0");
     }
 
-    @FXML
-    private void handleVertexRemover() {
+    private List<Integer> readNumbersFromTextField(TextField textField) {
         List<Integer> verticesToDelete = new ArrayList<>();
-        String verticesImput = verticesToDeleteTextField.getText().replace(',', ' ');
-        Scanner scanner = new Scanner(verticesImput);
+        String verticesInput = textField.getText().replace(',', ' ');
+        Scanner scanner = new Scanner(verticesInput);
         while (scanner.hasNext()) {
             verticesToDelete.add(scanner.nextInt() - 1);
         }
+        return verticesToDelete;
+    }
+
+    private List<Integer> readVerticesToDelete() {
+        return readNumbersFromTextField(verticesToDeleteTextField);
+    }
+
+    private List<Integer> readPolygonsToDelete() {
+        return readNumbersFromTextField(polygonsToDeleteTextField);
+    }
+
+    @FXML
+    private void handleVertexRemover() {
+        List<Integer> verticesToDelete = readVerticesToDelete();
         VertexRemoverNextGen.processModelAndCleanEverything(modelController.currentModel.model, verticesToDelete);
         modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
         for (Polygon polygon : modelController.currentModel.model.polygons)
@@ -248,21 +265,59 @@ public class GuiController {
     }
 
     @FXML
-    private void readVerticesFromFileChooser() {
+    private void handlePolygonsRemover() {
+        List<Integer> polygonsToDelete = readPolygonsToDelete();
+        PolygonRemover.processModelAndCleanPolygons(modelController.currentModel.model, polygonsToDelete, true, true, true);
+        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+        for (Polygon polygon : modelController.currentModel.model.polygons)
+            Triangulation.convexPolygonTriangulate(polygon);
+    }
+
+    @FXML
+    private File readPolygonsVerticesFromFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt (*.txt)", "*.txt"));
         fileChooser.setTitle("Load Vertices");
 
-        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
-        if (file == null) {
+        return fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
+    }
+
+    @FXML
+    private void handleVerticesFromTxt() {
+        File verticesFile = readPolygonsVerticesFromFileChooser();
+        if (verticesFile == null) {
             return;
         }
-
         try {
-            readVerticesFromFile(file);
+            readVerticesFromFile(verticesFile);
         } catch (Exception e) {
             showAlert(e.getLocalizedMessage(), e.getMessage());
         }
+    }
+
+    @FXML
+    private void handlePolygonsFromTxt() {
+        File polygonsFile = readPolygonsVerticesFromFileChooser();
+        if (polygonsFile == null) {
+            return;
+        }
+        try {
+            readPolygonsFromFile(polygonsFile);
+        } catch (Exception e) {
+            showAlert(e.getLocalizedMessage(), e.getMessage());
+        }
+    }
+
+
+    @FXML
+    public void readPolygonsFromFile(File file) throws IOException {
+        List<Integer> readPolygons = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new FileReader(file))) {
+            while (scanner.hasNext()) {
+                readPolygons.add(scanner.nextInt());
+            }
+        }
+        polygonsToDeleteTextField.setText(readPolygons.toString().substring(1, readPolygons.toString().length() - 1));
     }
 
     @FXML

@@ -1,13 +1,10 @@
-package com.cgvsu.modelModification;
+package com.cgvsu.model_modification;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class VertexRemoverNextGen {
