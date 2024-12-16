@@ -21,7 +21,7 @@ public class Lightning {
         n.normalize();
         Vector3f ray = GraphicConveyor.getRay(lightSource, Barycentric.getVector(barycentricCoordinates, vertices));
         ray.normalize();
-        float l = Math.abs(n.dotProduct(ray));
+        float l = Math.max(0, n.dotProduct(ray));
         Color color = interpolation.color;
         return new InterpolationResult(
                 barycentricCoordinates,
