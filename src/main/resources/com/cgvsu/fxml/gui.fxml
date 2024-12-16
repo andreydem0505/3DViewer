@@ -72,7 +72,7 @@
     <ScrollPane fx:id="scrollPaneMenu" focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->
-            <TitledPane expanded="false" focusTraversable="false" text="Objects">
+            <TitledPane focusTraversable="false" text="Objects">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addModelToTheScene" text="+" />
@@ -83,7 +83,7 @@
                <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
                   <children>
                      <ChoiceBox fx:id="choiceBoxRenderMode" onAction="#handleRenderChoiceBoxChoice" prefWidth="150.0" />
-                     <ColorPicker fx:id="colorPicker" onAction="#handleColorChoiceBox">
+                     <ColorPicker fx:id="colorPicker" onAction="#handleColorPicker">
                         <value>
                            <Color />
                         </value></ColorPicker>
@@ -93,7 +93,7 @@
             </TitledPane>
 
             <!-- Меню камер -->
-            <TitledPane expanded="false" focusTraversable="false" text="Cameras">
+            <TitledPane focusTraversable="false" text="Cameras">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addCamera" text="+" />
@@ -167,7 +167,7 @@
                      <Button mnemonicParsing="false" onMouseClicked="#handleVerticesFromTxt" prefWidth="72.0" text="LoadTxt" GridPane.columnIndex="2" />
                   </children>
                </GridPane>
-               <Button mnemonicParsing="false" prefWidth="125.0" text="RemoveVertices" onMouseClicked="#handleVertexRemover"/>
+               <Button mnemonicParsing="false" onMouseClicked="#handleVertexRemover" prefWidth="125.0" text="RemoveVertices" />
                     <GridPane prefHeight="30.0" prefWidth="173.0">
                         <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="0.0" prefWidth="57.66665903727213" />
@@ -188,7 +188,7 @@
             </TitledPane>
 
             <!-- Меню редактирования модели -->
-            <TitledPane expanded="false" focusTraversable="false" text="Model Transformation">
+            <TitledPane focusTraversable="false" text="Model Transformation">
                 <VBox spacing="5">
                     <Label text="Scale:" />
                     <GridPane hgap="10" vgap="5">
@@ -244,7 +244,7 @@
                             <RowConstraints />
                         </rowConstraints>
                     </GridPane>
-                    <Button mnemonicParsing="false" onMouseClicked="#handleGraphicConveyor" text="Confirm" />
+                    <Button mnemonicParsing="false" onMouseClicked="#handleModelTransformation" text="Confirm" />
                 </VBox>
             </TitledPane>
         </VBox>

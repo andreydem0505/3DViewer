@@ -82,6 +82,7 @@ public class GuiController {
 
     @FXML
     private TextField positionY;
+
     @FXML
     private TextField positionZ;
 
@@ -164,7 +165,7 @@ public class GuiController {
                                     modelPrepared.getRenderMode());
                         }
                     } catch (IOException e) {
-                        // TODO обработать ошибки с файлом текстуры
+                        showError("TextureError", "texture not found");
                     }
                 }
             } else {
@@ -177,42 +178,6 @@ public class GuiController {
 
         loadModel("./models/caracal_cube.obj");
         updateModelTree();
-//        loadModel("./models/CorrectedCubeWithRemovedVertices.obj");
-    }
-
-    @FXML
-    private void switchThemeToDark() {
-        Scene scene = anchorPane.getScene();
-
-        if (scene == null) {
-            return;
-        }
-
-        anchorPane.getStylesheets().clear();
-
-        File style = new File("src/main/resources/styles/darker-theme.css");
-        try {
-            scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
-        } catch (MalformedURLException e) {
-            showAlert("Sth wrong", "idk");
-        }
-    }
-
-    @FXML
-    private void switchThemeToLight() {
-        Scene scene = anchorPane.getScene();
-        if (scene == null) {
-            return;
-        }
-
-        scene.getStylesheets().clear();
-
-        File style = new File("src/main/resources/styles/lighter-theme.css");
-        try {
-            scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
-        } catch (MalformedURLException e) {
-            showAlert("Sth wrong", "idk");
-        }
     }
 
     private void initializeCamerasController() {
@@ -237,87 +202,44 @@ public class GuiController {
         positionZ.setText("0");
     }
 
-    private List<Integer> readNumbersFromTextField(TextField textField) {
-        List<Integer> verticesToDelete = new ArrayList<>();
-        String verticesInput = textField.getText().replace(',', ' ');
-        Scanner scanner = new Scanner(verticesInput);
-        while (scanner.hasNext()) {
-            verticesToDelete.add(scanner.nextInt() - 1);
-        }
-        return verticesToDelete;
-    }
-
-    private List<Integer> readVerticesToDelete() {
-        return readNumbersFromTextField(verticesToDeleteTextField);
-    }
-
-    private List<Integer> readPolygonsToDelete() {
-        return readNumbersFromTextField(polygonsToDeleteTextField);
-    }
-
     @FXML
-    private void handleVertexRemover() {
-        List<Integer> verticesToDelete = readVerticesToDelete();
-        VertexRemoverNextGen.processModelAndCleanEverything(modelController.currentModel.model, verticesToDelete);
-        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
-        for (Polygon polygon : modelController.currentModel.model.polygons)
-            Triangulation.convexPolygonTriangulate(polygon);
-    }
+    private void switchThemeToDark() {
+        Scene scene = anchorPane.getScene();
 
-    @FXML
-    private void handlePolygonsRemover() {
-        List<Integer> polygonsToDelete = readPolygonsToDelete();
-        PolygonRemover.processModelAndCleanPolygons(modelController.currentModel.model, polygonsToDelete, true, true, true);
-        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
-        for (Polygon polygon : modelController.currentModel.model.polygons)
-            Triangulation.convexPolygonTriangulate(polygon);
-    }
-
-    @FXML
-    private File readPolygonsVerticesFromFileChooser() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt (*.txt)", "*.txt"));
-        fileChooser.setTitle("Load Vertices");
-
-        return fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
-    }
-
-    @FXML
-    private void handleVerticesFromTxt() {
-        File verticesFile = readPolygonsVerticesFromFileChooser();
-        if (verticesFile == null) {
+        if (scene == null) {
             return;
         }
+
+        anchorPane.getStylesheets().clear();
+
+        File style = new File("src/main/resources/styles/darker-theme.css");
         try {
-            readVerticesFromFile(verticesFile);
-        } catch (Exception e) {
-            showAlert(e.getLocalizedMessage(), e.getMessage());
+            scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
+        } catch (MalformedURLException e) {
+            showError("Error", "Couldn`t find darker-theme.css file");
         }
     }
 
     @FXML
-    private void handlePolygonsFromTxt() {
-        File polygonsFile = readPolygonsVerticesFromFileChooser();
-        if (polygonsFile == null) {
+    private void switchThemeToLight() {
+        Scene scene = anchorPane.getScene();
+        if (scene == null) {
             return;
         }
+
+        scene.getStylesheets().clear();
+
+        File style = new File("src/main/resources/styles/lighter-theme.css");
         try {
-            readPolygonsFromFile(polygonsFile);
-        } catch (Exception e) {
-            showAlert(e.getLocalizedMessage(), e.getMessage());
+            scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
+        } catch (MalformedURLException e) {
+            showError("Error", "Couldn`t find lighter-theme.css file");
         }
     }
 
-
     @FXML
-    public void readPolygonsFromFile(File file) throws IOException {
-        List<Integer> readPolygons = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new FileReader(file))) {
-            while (scanner.hasNext()) {
-                readPolygons.add(scanner.nextInt());
-            }
-        }
-        polygonsToDeleteTextField.setText(readPolygons.toString().substring(1, readPolygons.toString().length() - 1));
+    private void handleNormalsMenuItem() {
+        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
     }
 
     @FXML
@@ -338,33 +260,8 @@ public class GuiController {
         try {
             objWriter.write(modelController.currentModel.model, filename);
         } catch (Exception e) {
-            showAlert(e.getLocalizedMessage(), e.getMessage());
+            showError("Error", "Error while writing file");
         }
-    }
-
-    @FXML
-    public void readVerticesFromFile(File file) throws IOException {
-        List<Integer> readVertices = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new FileReader(file))) {
-            while (scanner.hasNext()) {
-                readVertices.add(scanner.nextInt());
-            }
-        }
-        verticesToDeleteTextField.setText(readVertices.toString().substring(1, readVertices.toString().length() - 1));
-    }
-
-    @FXML
-    private void onOpenModelMenuItemClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
-        fileChooser.setTitle("Load Model");
-
-        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
-        if (file == null) {
-            return;
-        }
-
-        loadModel(file.getAbsolutePath());
     }
 
     @FXML
@@ -382,6 +279,20 @@ public class GuiController {
         handleRenderChoiceBoxChoice();
     }
 
+    @FXML
+    private void onOpenModelMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
+        fileChooser.setTitle("Load Model");
+
+        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        loadModel(file.getAbsolutePath());
+    }
+
     private void loadModel(String path) {
         Path fileName = Path.of(path);
         Model newModel;
@@ -395,9 +306,8 @@ public class GuiController {
             if (modelController.getModelsQuantity() == 1) {
                 modelController.currentModel = modelController.getModelList().get(0);
             }
-            // todo: обработка ошибок
         } catch (IOException exception) {
-            System.err.println("Failed to load model.\nError: " + exception.getLocalizedMessage());
+            showError("Error loading the model","Failed to load model.\nError: " + exception.getLocalizedMessage());
         }
     }
 
@@ -477,18 +387,79 @@ public class GuiController {
     }
 
     @FXML
-    private void handleGraphicConveyor() {
-        modelController.currentModel.model.scale = new Vector3f(Float.parseFloat(scaleX.getText()), Float.parseFloat(scaleY.getText()), Float.parseFloat(scaleZ.getText()));
-        modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()), Float.parseFloat(rotationY.getText()), Float.parseFloat(rotationZ.getText()));
-        modelController.currentModel.model.position = new Vector3f(Float.parseFloat(positionX.getText()), Float.parseFloat(positionY.getText()), Float.parseFloat(positionZ.getText()));
-        modelController.currentModel.model.getModelMatrix();
+    private void addCamera() {
+        camerasController.addCamera(
+                new Camera(
+                        new Vector2f(Linal.pi / 4, Linal.pi / 4),
+                        100f,
+                        new Vector3f(0, 0, 0),
+                        1.0F,
+                        1,
+                        0.01F,
+                        100)
+        );
+        updateCameraTree();
+    }
+
+    private void setCurrentCamera(int index) {
+        camerasController.setCurrent(index);
+        camerasTree.getSelectionModel().select(index);
+        updateCameraFields();
     }
 
     @FXML
-    private void handleNormalsMenuItem() {
-        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+    private void removeCamera() {
+        if (camerasController.getCamerasQuantity() == 1) {
+            showWarning("Last camera", "U can`t delete the last camera");
+            return;
+        }
+        camerasController.removeCamera(camerasTree.getSelectionModel().getSelectedIndex());
+        updateCameraTree();
     }
 
+    private void updateCameraFields() {
+        distance.setText(String.valueOf(camerasController.currentCamera.getDistance()));
+
+        cameraX.setText(String.valueOf(camerasController.currentCamera.getRotation().x()));
+        cameraY.setText(String.valueOf(camerasController.currentCamera.getRotation().y()));
+
+        directionX.setText(String.valueOf(camerasController.currentCamera.getTarget().x()));
+        directionY.setText(String.valueOf(camerasController.currentCamera.getTarget().y()));
+        directionZ.setText(String.valueOf(camerasController.currentCamera.getTarget().y()));
+    }
+
+    private void updateCameraTree() {
+        TreeItem<String> root = new TreeItem<>("Cameras");
+        camerasTree.setRoot(root);
+        for (int i = 0; i < camerasController.getCamerasQuantity(); i++) {
+            root.getChildren().add(new TreeItem<>("Camera " + (i + 1)));
+        }
+        camerasTree.setShowRoot(false);
+    }
+
+    @FXML
+    private void handleCameraSelection(MouseEvent event) {
+        TreeItem<String> selectedItem = camerasTree.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            int selectedIndex = camerasTree.getRoot().getChildren().indexOf(selectedItem);
+            if (selectedIndex >= 0) {
+                setCurrentCamera(selectedIndex);
+            }
+        }
+    }
+
+    @FXML
+    private void updateCameraDirectionAndPosition() {
+        try {
+            camerasController.currentCamera.setTarget(new Vector3f(Float.parseFloat(directionX.getText()), Float.parseFloat(directionY.getText()), Float.parseFloat(directionZ.getText())));
+            camerasController.currentCamera.setDistance(Float.parseFloat(distance.getText()));
+            camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()), Float.parseFloat(cameraY.getText())));
+        } catch (Exception e) {
+            showNumberAlertTextField();
+        }
+    }
+
+    // Меню моделей
     @FXML
     private void addModelToTheScene() {
         onOpenModelMenuItemClick();
@@ -508,7 +479,7 @@ public class GuiController {
     @FXML
     private void removeModel() {
         modelController.removeModel(objectsTree.getSelectionModel().getSelectedIndex());
-        updateModelsTree();
+        updateModelTree();
     }
 
     @FXML
@@ -577,8 +548,7 @@ public class GuiController {
     }
 
     @FXML
-    private void handleColorChoiceBox() {
-
+    private void handleColorPicker() {
         if (modelController.currentModel.model == null)
             return;
         modelController.currentModel.setCurrentColorCode(colorPicker.getValue());
@@ -586,88 +556,127 @@ public class GuiController {
         handleRenderChoiceBoxChoice();
     }
 
-    @FXML
-    private void addCamera() {
-        camerasController.addCamera(
-                new Camera(
-                        new Vector2f(Linal.pi / 4, Linal.pi / 4),
-                        100f,
-                        new Vector3f(0, 0, 0),
-                        1.0F,
-                        1,
-                        0.01F,
-                        100)
-        );
-        updateCameraTree();
+    private List<Integer> readNumbersFromTextField(TextField textField) {
+        List<Integer> verticesToDelete = new ArrayList<>();
+        String verticesInput = textField.getText().replace(',', ' ');
+        Scanner scanner = new Scanner(verticesInput);
+        while (scanner.hasNext()) {
+            verticesToDelete.add(scanner.nextInt() - 1);
+        }
+        return verticesToDelete;
     }
 
-    private void setCurrentCamera(int index) {
-        camerasController.setCurrent(index);
-        camerasTree.getSelectionModel().select(index);
-        updateCameraFields();
+    private List<Integer> readVerticesToDelete() {
+        return readNumbersFromTextField(verticesToDeleteTextField);
+    }
+
+    private List<Integer> readPolygonsToDelete() {
+        return readNumbersFromTextField(polygonsToDeleteTextField);
     }
 
     @FXML
-    private void removeCamera() {
-        if (camerasController.getCamerasQuantity() == 1) {
-            showAlert("Cringe", "Нельзя удалить последнюю камеру");
+    private void handleVertexRemover() {
+        List<Integer> verticesToDelete = readVerticesToDelete();
+        VertexRemoverNextGen.processModelAndCleanEverything(modelController.currentModel.model, verticesToDelete);
+        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+        for (Polygon polygon : modelController.currentModel.model.polygons)
+            Triangulation.convexPolygonTriangulate(polygon);
+    }
+
+    @FXML
+    private void handlePolygonsRemover() {
+        List<Integer> polygonsToDelete = readPolygonsToDelete();
+        PolygonRemover.processModelAndCleanPolygons(modelController.currentModel.model, polygonsToDelete, true, true, true);
+        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+        for (Polygon polygon : modelController.currentModel.model.polygons)
+            Triangulation.convexPolygonTriangulate(polygon);
+    }
+
+    @FXML
+    private File readPolygonsVerticesFromFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt (*.txt)", "*.txt"));
+        fileChooser.setTitle("Load Vertices");
+
+        return fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
+    }
+
+    @FXML
+    private void handleVerticesFromTxt() {
+        File verticesFile = readPolygonsVerticesFromFileChooser();
+        if (verticesFile == null) {
             return;
         }
-        camerasController.removeCamera(camerasTree.getSelectionModel().getSelectedIndex());
-        updateCameraTree();
-    }
-
-    private void updateCameraFields() {
-        distance.setText(String.valueOf(camerasController.currentCamera.getDistance()));
-
-        cameraX.setText(String.valueOf(camerasController.currentCamera.getRotation().x()));
-        cameraY.setText(String.valueOf(camerasController.currentCamera.getRotation().y()));
-
-        directionX.setText(String.valueOf(camerasController.currentCamera.getTarget().x()));
-        directionY.setText(String.valueOf(camerasController.currentCamera.getTarget().y()));
-        directionZ.setText(String.valueOf(camerasController.currentCamera.getTarget().y()));
-    }
-
-    private void updateCameraTree() {
-        TreeItem<String> root = new TreeItem<>("Cameras");
-        camerasTree.setRoot(root);
-        for (int i = 0; i < camerasController.getCamerasQuantity(); i++) {
-            root.getChildren().add(new TreeItem<>("Camera " + (i + 1)));
+        try {
+            readVerticesFromFile(verticesFile);
+        } catch (Exception e) {
+            showError("Error", "Make sure ur file consists of vertex numbers separated by space");
         }
-        camerasTree.setShowRoot(false);
     }
 
-    private void updateModelsTree() {
-        TreeItem<String> root = new TreeItem<>("Models");
-        objectsTree.setRoot(root);
-        for (int i = 0; i < modelController.getModelsQuantity(); i++) {
-            root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
+    @FXML
+    private void handlePolygonsFromTxt() {
+        File polygonsFile = readPolygonsVerticesFromFileChooser();
+        if (polygonsFile == null) {
+            return;
         }
-        camerasTree.setShowRoot(false);
+        try {
+            readPolygonsFromFile(polygonsFile);
+        } catch (Exception e) {
+            showError("Error", "Make sure ur file consists of polygon numbers separated by space");
+        }
     }
 
-    private void showAlert(String title, String content) {
+
+    @FXML
+    public void readPolygonsFromFile(File file) throws IOException {
+        List<Integer> readPolygons = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new FileReader(file))) {
+            while (scanner.hasNext()) {
+                readPolygons.add(scanner.nextInt());
+            }
+        }
+        polygonsToDeleteTextField.setText(readPolygons.toString().substring(1, readPolygons.toString().length() - 1));
+    }
+
+    @FXML
+    public void readVerticesFromFile(File file) throws IOException {
+        List<Integer> readVertices = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new FileReader(file))) {
+            while (scanner.hasNext()) {
+                readVertices.add(scanner.nextInt());
+            }
+        }
+        verticesToDeleteTextField.setText(readVertices.toString().substring(1, readVertices.toString().length() - 1));
+    }
+
+    @FXML
+    private void handleModelTransformation() {
+        try {
+            modelController.currentModel.model.scale = new Vector3f(Float.parseFloat(scaleX.getText()), Float.parseFloat(scaleY.getText()), Float.parseFloat(scaleZ.getText()));
+            modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()), Float.parseFloat(rotationY.getText()), Float.parseFloat(rotationZ.getText()));
+            modelController.currentModel.model.position = new Vector3f(Float.parseFloat(positionX.getText()), Float.parseFloat(positionY.getText()), Float.parseFloat(positionZ.getText()));
+            modelController.currentModel.model.getModelMatrix();
+        } catch (Exception e) {
+            showNumberAlertTextField();
+        }
+    }
+
+    private void showWarning(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
     }
 
-    @FXML
-    private void handleCameraSelection(MouseEvent event) {
-        TreeItem<String> selectedItem = camerasTree.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            int selectedIndex = camerasTree.getRoot().getChildren().indexOf(selectedItem);
-            if (selectedIndex >= 0) {
-                setCurrentCamera(selectedIndex);
-            }
-        }
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
-    @FXML
-    private void updateCameraDirectionAndPosition() {
-        camerasController.currentCamera.setTarget(new Vector3f(Float.parseFloat(directionX.getText()), Float.parseFloat(directionY.getText()), Float.parseFloat(directionZ.getText())));
-        camerasController.currentCamera.setDistance(Float.parseFloat(distance.getText()));
-        camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()), Float.parseFloat(cameraY.getText())));
+    private void showNumberAlertTextField() {
+        showError("Wrong input", "Use float numbers for each field");
     }
 }
