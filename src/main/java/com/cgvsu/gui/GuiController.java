@@ -518,38 +518,17 @@ public class GuiController {
                 modelController.currentModel.setRenderableFlag(true);
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridTexture")) {
-                if (modelController.currentModel.getTexture() == null) {
-                    showErrorRunLater("TextureError", "texture not found");
-                    modelController.currentModel.setRenderableFlag(false);
-                    modelController.currentModel.setCurrentModeCode("Inactive");
-                    updateChoiceBoxes();
-                } else {
-                    modelController.currentModel.setRenderableFlag(true);
-                    modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
-                }
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
             } else if (choiceBoxRenderMode.getValue().toString().equals("GridTextureLight")) {
-                if (modelController.currentModel.getTexture() == null) {
-                    showErrorRunLater("TextureError", "texture not found");
-                    modelController.currentModel.setRenderableFlag(false);
-                    modelController.currentModel.setCurrentModeCode("Inactive");
-                    updateChoiceBoxes();
-                } else {
-                    modelController.currentModel.setRenderableFlag(true);
-                    modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
-                }
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
             } else if (choiceBoxRenderMode.getValue().toString().equals("ColorLight")) {
                 modelController.currentModel.setRenderableFlag(true);
                 modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
             } else if (choiceBoxRenderMode.getValue().toString().equals("Texture")) {
-                if (modelController.currentModel.getTexture() == null) {
-                    showErrorRunLater("TextureError", "texture not found");
-                    modelController.currentModel.setRenderableFlag(false);
-                    modelController.currentModel.setCurrentModeCode("Inactive");
-                    updateChoiceBoxes();
-                } else {
-                    modelController.currentModel.setRenderableFlag(true);
-                    modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
-                }
+                modelController.currentModel.setRenderableFlag(true);
+                modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
             } else if (choiceBoxRenderMode.getValue().toString().equals("TextureLight")) {
                 modelController.currentModel.setRenderableFlag(true);
                 modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
