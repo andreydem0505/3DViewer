@@ -10,6 +10,7 @@ import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.*;
 import com.cgvsu.triangulation.Triangulation;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -165,7 +166,10 @@ public class GuiController {
                                     modelPrepared.getRenderMode());
                         }
                     } catch (IOException e) {
-                        showError("TextureError", "texture not found");
+                        showErrorRunLater("TextureError", "texture not found");
+                        modelController.currentModel.setRenderableFlag(false);
+                        modelController.currentModel.setCurrentModeCode("Inactive");
+                        updateChoiceBoxes();
                     }
                 }
             } else {
@@ -674,6 +678,15 @@ public class GuiController {
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void showErrorRunLater(String title, String content) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setContentText(content);
+            alert.showAndWait();
+        });
     }
 
     private void showNumberAlertTextField() {
