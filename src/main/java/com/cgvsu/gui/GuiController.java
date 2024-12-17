@@ -499,8 +499,10 @@ public class GuiController {
     }
 
     private void updateChoiceBoxes() {
-        choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
-        colorPicker.setValue(modelController.currentModel.getCurrentColorCode());
+        try {
+            choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
+            colorPicker.setValue(modelController.currentModel.getCurrentColorCode());
+        } catch (Exception ignored) {}
     }
 
     @FXML
