@@ -35,7 +35,7 @@ public class TextureTrianglePainter extends TrianglePainter {
 
         try {
             interpolation.color = new Color(image.getRGB(
-                    (int) (textureX * width),
+                    (int) ((1 - textureX) * width),
                     (int) ((1 - textureY) * height))
             );
         } catch (ArrayIndexOutOfBoundsException e) {
