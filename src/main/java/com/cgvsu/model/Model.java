@@ -113,7 +113,7 @@ public class Model {
     }
 
     private Matrix4x4 getRotateMatrix() {
-        return GraphicConveyor.rotate(rotation.x(), rotation.y(), rotation.z());
+        return GraphicConveyor.rotate(rotation.z(), rotation.y(), rotation.x());
     }
 
     private Matrix4x4 getTransformMatrix() {
