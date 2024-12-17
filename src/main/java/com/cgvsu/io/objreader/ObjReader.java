@@ -30,6 +30,12 @@ public class ObjReader {
 
 	protected ObjReader() {}
 
+	public static Model readFromFilePath(String path) throws IOException {
+		Path filename = Path.of(path);
+		String fileContent = Files.readString(filename);
+		return ObjReader.read(fileContent);
+	}
+
 	public static Model read(File file) {
 		return read(String.valueOf(file), true);
 	}
