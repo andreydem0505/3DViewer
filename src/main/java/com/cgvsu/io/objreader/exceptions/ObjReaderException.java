@@ -1,4 +1,4 @@
-package com.cgvsu.io.objreader;
+package com.cgvsu.io.objreader.exceptions;
 
 public class ObjReaderException extends RuntimeException {
     public ObjReaderException(String errorMessage, int lineInd) {

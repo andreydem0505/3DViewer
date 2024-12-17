@@ -1,11 +1,8 @@
 package com.cgvsu.model_modification;
 
-import com.cgvsu.io.objreader.ObjReader;
+import com.cgvsu.io.objreaderObsolete.ObjReaderObsolete;
 import com.cgvsu.io.objwriter.ObjWriter;
 import com.cgvsu.model.Model;
-import com.cgvsu.model.Polygon;
-import com.cgvsu.nmath.Vector2f;
-import com.cgvsu.nmath.Vector3f;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +27,7 @@ class VertexRemoverNextGenTest {
                 """;
         String expectedOutput = (
                 "").trim();
-        Model inputModel = ObjReader.read(inputFile);
+        Model inputModel = ObjReaderObsolete.read(inputFile);
 
         VertexRemoverNextGen.processModel(inputModel, List.of(0, 1, 2), true, false, true, true, false);
 
@@ -58,7 +55,7 @@ class VertexRemoverNextGenTest {
                         "vt 0.3 0.4" + separator +
                         "vn 0.0 0.0 1.0" + separator +
                         "vn 1.0 0.0 0.0").trim();
-        Model inputModel = ObjReader.read(inputFile);
+        Model inputModel = ObjReaderObsolete.read(inputFile);
 
         VertexRemoverNextGen.processModel(inputModel, List.of(0, 1, 2), false, true, false, false, false);
 
@@ -83,7 +80,7 @@ class VertexRemoverNextGenTest {
         String expectedOutput = (
                 "vn 0.0 0.0 1.0" + separator +
                         "vn 1.0 0.0 0.0").trim();
-        Model inputModel = ObjReader.read(inputFile);
+        Model inputModel = ObjReaderObsolete.read(inputFile);
 
         VertexRemoverNextGen.processModel(inputModel, List.of(0, 1, 2), false, true, false, true, false);
 
@@ -108,7 +105,7 @@ class VertexRemoverNextGenTest {
         String expectedOutput = (
                 "vt 0.1 0.2" + separator +
                         "vt 0.3 0.4").trim();
-        Model inputModel = ObjReader.read(inputFile);
+        Model inputModel = ObjReaderObsolete.read(inputFile);
 
         VertexRemoverNextGen.processModel(inputModel, List.of(0, 1, 2), false, true, true, false, false);
 

@@ -4,6 +4,7 @@ import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.GraphicConveyor;
+import com.cgvsu.model.Group;
 
 import java.util.*;
 
@@ -50,10 +51,56 @@ public class Model {
         this.polygons = polygons;
     }
 
+    public ArrayList<Group> getGroups() {
+        return groups;
+    }
+
+    public void addVertex(Vector3f vertex) {
+        vertices.add(vertex);
+    }
+
+    public void addTextureVertex(Vector2f textureVertex) {
+        textureVertices.add(textureVertex);
+    }
+
+    public void addNormal(Vector3f normal) {
+        normals.add(normal);
+    }
+
+    public void addPolygon(Polygon polygon) {
+        polygons.add(polygon);
+    }
+
+    public void addGroup(Group group) {
+        groups.add(group);
+    }
+
+    public Polygon getFirstPolygon() {
+        return polygons.get(0);
+    }
+
+
+    public int getVerticesSize() {
+        return vertices.size();
+    }
+
+    public int getTextureVerticesSize() {
+        return textureVertices.size();
+    }
+
+    public int getNormalsSize() {
+        return normals.size();
+    }
+
+    public int getPolygonsSize() {
+        return polygons.size();
+    }
+
     public ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
     public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+    private ArrayList<Group> groups = new ArrayList<>();
 
     public Matrix4x4 getModelMatrix() {
         return getTransformMatrix()

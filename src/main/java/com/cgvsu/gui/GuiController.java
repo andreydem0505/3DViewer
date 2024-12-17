@@ -1,5 +1,6 @@
 package com.cgvsu.gui;
 
+import com.cgvsu.io.objreader.ObjReader;
 import com.cgvsu.io.objwriter.ObjWriter;
 import com.cgvsu.math.Linal;
 import com.cgvsu.model.ModelPrepared;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.cgvsu.model.Model;
-import com.cgvsu.io.objreader.ObjReader;
+import com.cgvsu.io.objreaderObsolete.ObjReaderObsolete;
 
 public class GuiController {
 
@@ -166,7 +167,7 @@ public class GuiController {
                                     modelPrepared.getRenderMode());
                         }
                     } catch (IOException e) {
-                        showErrorRunLater("TextureError", "texture not found");
+                        showErrorRunLater(e.getClass().toString(), "texture not found");
                         modelController.currentModel.setRenderableFlag(false);
                         modelController.currentModel.setCurrentModeCode("Inactive");
                         updateChoiceBoxes();
@@ -188,7 +189,6 @@ public class GuiController {
         if (camerasController.getCamerasQuantity() == 1) {
             updateCameraTree();
             setCurrentCamera(0);
-            System.out.println("lol");
         }
     }
 
@@ -556,7 +556,6 @@ public class GuiController {
         if (modelController.currentModel.model == null)
             return;
         modelController.currentModel.setCurrentColorCode(colorPicker.getValue());
-        System.out.println(colorPicker.getValue());
         handleRenderChoiceBoxChoice();
     }
 
