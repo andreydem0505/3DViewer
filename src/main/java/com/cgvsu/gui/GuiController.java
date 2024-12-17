@@ -214,8 +214,15 @@ public class GuiController {
             return;
         }
 
-        anchorPane.getStylesheets().clear();
         File style = new File("./styles/darker-theme.css");
+
+        if (!style.exists()) {
+            showError("Error", "Couldn`t find darker-theme.css file");
+            return;
+        }
+
+        anchorPane.getStylesheets().clear();
+
         try {
             scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
@@ -230,9 +237,15 @@ public class GuiController {
             return;
         }
 
+        File style = new File("./styles/lighter-theme.css");
+
+        if (!style.exists()) {
+            showError("Error", "Couldn`t find darker-theme.css file");
+            return;
+        }
+
         scene.getStylesheets().clear();
 
-        File style = new File("./styles/lighter-theme.css");
         try {
             scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
