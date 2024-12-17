@@ -461,16 +461,20 @@ public class GuiController {
 
     @FXML
     private void handleLightningCoefChange() {
-        if (Float.parseFloat(lightningCoeffTextField.getText()) > 1) {
-            Lightning.setK(1);
-            lightningCoeffTextField.setText("1");
-            showWarning("Wrong input", "Maximum coefficient is 1");
-        } else if (Float.parseFloat(lightningCoeffTextField.getText()) <= 0.009) {
-            Lightning.setK(0.01f);
-            lightningCoeffTextField.setText("0.01");
-            showWarning("Wrong input", "Minimum coefficient is 0.01");
-        } else
-            Lightning.setK(Float.parseFloat(lightningCoeffTextField.getText()));
+        try {
+            if (Float.parseFloat(lightningCoeffTextField.getText()) > 1) {
+                Lightning.setK(1);
+                lightningCoeffTextField.setText("1");
+                showWarning("Wrong input", "Maximum coefficient is 1");
+            } else if (Float.parseFloat(lightningCoeffTextField.getText()) <= 0.009) {
+                Lightning.setK(0.01f);
+                lightningCoeffTextField.setText("0.01");
+                showWarning("Wrong input", "Minimum coefficient is 0.01");
+            } else
+                Lightning.setK(Float.parseFloat(lightningCoeffTextField.getText()));
+        } catch (Exception e) {
+            showNumberAlertTextField();
+        }
     }
 
     @FXML
