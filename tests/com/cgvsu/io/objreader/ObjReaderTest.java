@@ -123,9 +123,10 @@ public class ObjReaderTest {
 
     @Test
     void testParseFaceArgumentsSizeException() {
+        ObjReader objReader = new ObjReader();
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1/1", "2/2"));
         try {
-            ObjReader.parseFace(wordsInLineWithoutToken, 10);
+            objReader.parseFace(wordsInLineWithoutToken, 10);
             Assertions.fail();
         } catch (ArgumentsException exception) {
             String expectedMessage = "Error parsing OBJ file on line: 10. Too few face arguments.";
@@ -135,9 +136,10 @@ public class ObjReaderTest {
 
     @Test
     void testParseFaceTypeException() {
+        ObjReader objReader = new ObjReader();
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1", "2/2", "3/3/3"));
         try {
-            ObjReader.parseFace(wordsInLineWithoutToken, 10);
+            objReader.parseFace(wordsInLineWithoutToken, 10);
             Assertions.fail();
         } catch (FaceTypeException exception) {
             String expectedMessage = "Error parsing OBJ file on line: 10. Several argument types in one polygon.";

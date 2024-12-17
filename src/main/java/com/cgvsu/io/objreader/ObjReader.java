@@ -6,7 +6,6 @@ import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.model.Group;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
-import com.cgvsu.io.objreader.exceptions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +24,7 @@ public class ObjReader {
 
 	private final Model model = new Model();
 	protected static boolean force = true;
-	private static int lineInd = 0;
+	private int lineInd = 0;
 	private Group currentGroup = null;
 
 	protected ObjReader() {}
@@ -115,8 +114,8 @@ public class ObjReader {
 		return line;
 	}
 
-	protected Vector3f parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
-		checkForErrors(wordsInLineWithoutToken, lineInd, 3);
+	protected Vector3f parseVertex(final ArrayList<String> wordsInLineWithoutToken, int index) throws ObjReaderException {
+		checkForErrors(wordsInLineWithoutToken, index, 3);
 		try {
 			return new Vector3f(
 					Float.parseFloat(wordsInLineWithoutToken.get(0)),
@@ -124,24 +123,24 @@ public class ObjReader {
 					Float.parseFloat(wordsInLineWithoutToken.get(2)));
 
 		} catch (ParsingException e) {
-			throw new ParsingException("float", lineInd);
+			throw new ParsingException("float", index);
 		}
 	}
 
-	protected Vector2f parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
-		checkForErrors(wordsInLineWithoutToken, lineInd, 2);
+	protected Vector2f parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int index) {
+		checkForErrors(wordsInLineWithoutToken, index, 2);
 		try {
 			return new Vector2f(
 					Float.parseFloat(wordsInLineWithoutToken.get(0)),
 					Float.parseFloat(wordsInLineWithoutToken.get(1)));
 
 		} catch (ParsingException e) {
-			throw new ParsingException("float", lineInd);
+			throw new ParsingException("float", index);
 		}
 	}
 
-	protected Vector3f parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
-		checkForErrors(wordsInLineWithoutToken, lineInd, 3);
+	protected Vector3f parseNormal(final ArrayList<String> wordsInLineWithoutToken, int index) {
+		checkForErrors(wordsInLineWithoutToken, index, 3);
 		try {
 			return new Vector3f(
 					Float.parseFloat(wordsInLineWithoutToken.get(0)),
@@ -149,25 +148,25 @@ public class ObjReader {
 					Float.parseFloat(wordsInLineWithoutToken.get(2)));
 
 		} catch (ParsingException e) {
-			throw new ParsingException("float", lineInd);
+			throw new ParsingException("float", index);
 		}
 	}
 
-	protected static Polygon parseFace(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+	protected Polygon parseFace(final ArrayList<String> wordsInLineWithoutToken, int index) {
 		List<FaceWord> faceWords = new ArrayList<>();
 		Set<WordType> types = new HashSet<>();
 
 		for (String word : wordsInLineWithoutToken) {
-			FaceWord faceWord = FaceWord.parse(word, lineInd, force);
+			FaceWord faceWord = FaceWord.parse(word, index, force);
 			types.add(faceWord.getWordType());
 			faceWords.add(faceWord);
 		}
 
 		if (faceWords.size() < 3) {
-			throw new ArgumentsException(ArgumentsErrorType.FEW_IN_POLYGON, lineInd);
+			throw new ArgumentsException(ArgumentsErrorType.FEW_IN_POLYGON, index);
 		}
 		if (types.size() > 1) {
-			throw new FaceTypeException(lineInd);
+			throw new FaceTypeException(index);
 		}
 
 		return createPolygon(faceWords.toArray(new FaceWord[0]));
@@ -206,7 +205,7 @@ public class ObjReader {
 		currentGroup = new Group(sb.toString());
 	}
 
-	protected static Polygon createPolygon(FaceWord[] faceWords) {
+	protected Polygon createPolygon(FaceWord[] faceWords) {
 		Polygon polygon = new Polygon();
 		ArrayList<Integer> vertexIndices = new ArrayList<>();
 		ArrayList<Integer> textureVertexIndices = new ArrayList<>();
@@ -235,22 +234,22 @@ public class ObjReader {
 		return polygon;
 	}
 
-	private void checkForErrors(final ArrayList<String> wordsInLineWithoutToken, int lineInd, int size) {
+	private void checkForErrors(final ArrayList<String> wordsInLineWithoutToken, int index, int size) {
 		if (!force && wordsInLineWithoutToken == null) {
-			throw new ArgumentsException(ArgumentsErrorType.NULL, lineInd);
+			throw new ArgumentsException(ArgumentsErrorType.NULL, index);
 		}
-		checkSize(wordsInLineWithoutToken.size(), size);
+		checkSize(wordsInLineWithoutToken.size(), size, index);
 	}
 
-	private void checkSize(int wordCount, int vectorSize) {
+	private void checkSize(int wordCount, int vectorSize, int index) {
 		if (wordCount == vectorSize) {
 			return;
 		}
 		if (wordCount < vectorSize) {
-			throw new ArgumentsException(ArgumentsErrorType.FEW, lineInd);
+			throw new ArgumentsException(ArgumentsErrorType.FEW, index);
 		}
 		if (!force) {
-			throw new ArgumentsException(ArgumentsErrorType.MANY, lineInd);
+			throw new ArgumentsException(ArgumentsErrorType.MANY, index);
 		}
 	}
 }
