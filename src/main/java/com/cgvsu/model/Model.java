@@ -1,5 +1,6 @@
 package com.cgvsu.model;
 
+import com.cgvsu.math.Linal;
 import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
@@ -15,7 +16,7 @@ public class Model {
 
     public Model() {
         position = new Vector3f(0f, 0f, 0f);
-        rotation = new Vector3f(0, 0, 0);
+        rotation = new Vector3f(0, 0, 0f);
         scale = new Vector3f(1f, 1f, 1f);
     }
 

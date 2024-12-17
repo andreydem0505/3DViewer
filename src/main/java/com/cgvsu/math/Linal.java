@@ -46,8 +46,8 @@ public class Linal {
     }
 
     public static Vector3f crossProduct(Vector3f a, Vector3f b) {
-        Vector3f c = new Vector3f(a);
-        c = c.crossProduct(b);
+        Vector3f c = new Vector3f(b);
+        c = c.crossProduct(a);
 
         return c;
     }
@@ -104,7 +104,7 @@ public class Linal {
 
         Vector3f a = subtract(prevVertex, currVertex);
         Vector3f b = subtract(nextVertex, currVertex);
-        Vector3f normal = b.crossProduct(a).normalize();
+        Vector3f normal = crossProduct(b, a).normalize();
 
         if (!dict.containsKey(indices.get(currIndex))) {
             Pair pair = new Pair();
@@ -161,7 +161,7 @@ public class Linal {
 
             Vector3f a = subtract(vertices.get(indices.get(0)), vertices.get(indices.get(1)));
             Vector3f b = subtract(vertices.get(indices.get(2)), vertices.get(indices.get(1)));
-            Vector3f normal = b.crossProduct(a).normalize();
+            Vector3f normal = Linal.crossProduct(b, a).normalize();
 
             normals.add(normal);
         }

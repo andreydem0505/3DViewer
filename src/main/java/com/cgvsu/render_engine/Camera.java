@@ -90,9 +90,9 @@ public class Camera {
         float upPhi = phi + Linal.pi;
         float upTheta = -theta - Linal.pi_half;
         Vector3f up = new Vector3f(
-                -Linal.sin(upPhi) * Linal.sin(upTheta),
-                -Linal.cos(upTheta),
-                -Linal.cos(upPhi) * Linal.sin(upTheta)
+                Linal.sin(upPhi) * Linal.sin(upTheta),
+                Linal.cos(upTheta),
+                Linal.cos(upPhi) * Linal.sin(upTheta)
         );
         return GraphicConveyor.lookAt(getPosition(), target, up);
     }
