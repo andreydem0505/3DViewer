@@ -89,6 +89,13 @@
                         </value></ColorPicker>
                   </children>
                </HBox>
+               <HBox prefHeight="25.0" prefWidth="200.0">
+                  <children>
+                     <Label contentDisplay="CENTER" text="Lightning coefficient: " textAlignment="CENTER" />
+                     <TextField prefHeight="25.0" prefWidth="116.0" fx:id="lightningCoeffTextField"/>
+                     <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="43.0" text="Set" onMouseClicked="#handleLightningCoefChange"/>
+                  </children>
+               </HBox>
                 </VBox>
             </TitledPane>
 

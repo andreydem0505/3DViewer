@@ -9,6 +9,7 @@ import com.cgvsu.model_modification.PolygonRemover;
 import com.cgvsu.model_modification.VertexRemoverNextGen;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
+import com.cgvsu.rasterization.Lightning;
 import com.cgvsu.render_engine.*;
 import com.cgvsu.triangulation.Triangulation;
 import javafx.application.Platform;
@@ -92,6 +93,8 @@ public class GuiController {
 
     @FXML
     private TextField directionY;
+    @FXML
+    private TextField lightningCoeffTextField;
 
     @FXML
     private TextField directionZ;
@@ -206,6 +209,7 @@ public class GuiController {
         positionX.setText("0");
         positionY.setText("0");
         positionZ.setText("0");
+        lightningCoeffTextField.setText(Float.toString(Lightning.getK()));
     }
 
     @FXML
@@ -453,6 +457,20 @@ public class GuiController {
             root.getChildren().add(new TreeItem<>("Camera " + (i + 1)));
         }
         camerasTree.setShowRoot(false);
+    }
+
+    @FXML
+    private void handleLightningCoefChange() {
+        if (Float.parseFloat(lightningCoeffTextField.getText()) > 1) {
+            Lightning.setK(1);
+            lightningCoeffTextField.setText("1");
+            showWarning("Wrong input", "Maximum coefficient is 1");
+        } else if (Float.parseFloat(lightningCoeffTextField.getText()) <= 0.009) {
+            Lightning.setK(0.01f);
+            lightningCoeffTextField.setText("0.01");
+            showWarning("Wrong input", "Minimum coefficient is 0.01");
+        } else
+            Lightning.setK(Float.parseFloat(lightningCoeffTextField.getText()));
     }
 
     @FXML
