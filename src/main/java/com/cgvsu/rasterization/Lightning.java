@@ -7,7 +7,7 @@ import com.cgvsu.render_engine.GraphicConveyor;
 import java.awt.*;
 
 public class Lightning {
-    private final static float k = 0.95f;
+    public static float k = 0.95f;
 
     public static InterpolationResult light(
             InterpolationResult interpolation, Vector3f[] normals,
