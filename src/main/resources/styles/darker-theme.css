@@ -1,7 +1,7 @@
 .root {
     -fx-accent: #1e74c6;
     -fx-focus-color: -fx-accent;
-    -fx-base: #000000; /* Чисто чёрный фон */
+    -fx-base: #0e0e0e; /* Чисто чёрный фон */
     -fx-control-inner-background: #121212; /* Глубокий тёмный фон для элементов */
     -fx-control-inner-background-alt: #1a1a1a; /* Немного светлее для выделения */
 }
