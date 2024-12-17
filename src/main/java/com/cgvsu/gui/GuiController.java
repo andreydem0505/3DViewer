@@ -166,16 +166,9 @@ public class GuiController {
 
             if (modelController.hasRenderableModels()) {
                 for (ModelPrepared modelPrepared : modelController.getModelList()) {
-                    try {
-                        if (modelPrepared.isRenderableFlag()) {
-                            renderEngine.render(pixelWriter, camerasController.currentCamera, modelPrepared.model, (int) width, (int) height,
-                                    modelPrepared.getRenderMode());
-                        }
-                    } catch (IOException e) {
-                        showErrorRunLater(e.getClass().toString(), "texture not found");
-                        modelController.currentModel.setRenderableFlag(false);
-                        modelController.currentModel.setCurrentModeCode("Inactive");
-                        updateChoiceBoxes();
+                    if (modelPrepared.isRenderableFlag()) {
+                        renderEngine.render(pixelWriter, camerasController.currentCamera,
+                                modelPrepared.model, (int) width, (int) height, modelPrepared.getRenderMode());
                     }
                 }
             } else {
@@ -697,7 +690,6 @@ public class GuiController {
             modelController.currentModel.model.scale = new Vector3f(Float.parseFloat(scaleX.getText()), Float.parseFloat(scaleY.getText()), Float.parseFloat(scaleZ.getText()));
             modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()), Float.parseFloat(rotationY.getText()), Float.parseFloat(rotationZ.getText()));
             modelController.currentModel.model.position = new Vector3f(Float.parseFloat(positionX.getText()), Float.parseFloat(positionY.getText()), Float.parseFloat(positionZ.getText()));
-            modelController.currentModel.model.getModelMatrix();
         } catch (Exception e) {
             showNumberAlertTextField();
         }

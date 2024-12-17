@@ -27,7 +27,7 @@ public class RenderEngine {
             final Model mesh,
             final int width,
             final int height,
-            final RenderMode renderMode) throws IOException {
+            final RenderMode renderMode) {
         Matrix4x4 modelMatrix = mesh.getModelMatrix();
         Matrix4x4 viewMatrix = camera.getViewMatrix();
         Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
@@ -40,24 +40,27 @@ public class RenderEngine {
         this.mesh = mesh;
         resultPoints = new Vector3f[mesh.vertices.size()];
         normals = new Vector3f[mesh.normals.size()];
+        Vector4f vertex4, normal4;
+        Vector3f vertex, normal, projectedVertex;
+        Vector2f resultPoint;
         for (int i = 0; i < mesh.vertices.size(); i++) {
-            Vector3f vertex = mesh.vertices.get(i);
-            Vector3f normal = mesh.normals.get(i);
+            vertex = mesh.vertices.get(i);
+            normal = mesh.normals.get(i);
 
             // project vertices
-            Vector4f vertex4 = new Vector4f(vertex.x(), vertex.y(), vertex.z(), 1.0f);
-            vertex4 = modelViewProjectionMatrix.multiplyMV(vertex4);
-            Vector3f projectedVertex = new Vector3f(
+            vertex4 = modelViewProjectionMatrix.multiplyMV(
+                    new Vector4f(vertex.x(), vertex.y(), vertex.z(), 1.0f)
+            );
+            projectedVertex = new Vector3f(
                     vertex4.x() / vertex4.w(),
                     vertex4.y() / vertex4.w(),
                     vertex4.z() / vertex4.w()
             );
-            Vector2f resultPoint = vertexToPoint(projectedVertex, width, height);
+            resultPoint = vertexToPoint(projectedVertex, width, height);
             resultPoints[i] = new Vector3f(resultPoint.x(), resultPoint.y(), projectedVertex.z());
 
             //project normals
-            Vector4f normal4 = new Vector4f(normal.x(), normal.y(), normal.z(), 1.0f);
-            normal4 = modelMatrix.multiplyMV(normal4);
+            normal4 = modelMatrix.multiplyMV(new Vector4f(normal.x(), normal.y(), normal.z(), 1.0f));
             normals[i] = new Vector3f(normal4.x(), normal4.y(), normal4.z());
         }
 
@@ -75,10 +78,12 @@ public class RenderEngine {
             }
         }
 
-        if (renderMode.grid)
+        if (renderMode.grid) {
+            int nVerticesInPolygon;
+            List<Integer> polygonVertices;
             for (Polygon curPolygon : mesh.polygons) {
-                List<Integer> polygonVertices = curPolygon.getVertexIndices();
-                final int nVerticesInPolygon = polygonVertices.size();
+                polygonVertices = curPolygon.getVertexIndices();
+                nVerticesInPolygon = polygonVertices.size();
 
                 for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; vertexInPolygonInd++)
                     drawLine(pixelWriter, resultPoints, polygonVertices, vertexInPolygonInd - 1, vertexInPolygonInd);
@@ -86,6 +91,7 @@ public class RenderEngine {
                 if (nVerticesInPolygon > 0)
                     drawLine(pixelWriter, resultPoints, polygonVertices, nVerticesInPolygon - 1, 0);
             }
+        }
 
         pixelWriter.draw();
     }
