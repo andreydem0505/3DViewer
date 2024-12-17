@@ -21,6 +21,14 @@ public class Linal {
         return (float) Math.sin(angle);
     }
 
+    public static float tan(float angle) {
+        return (float) Math.tan(angle);
+    }
+
+    public static float atan(float angle) {
+        return (float) Math.atan(angle);
+    }
+
     public static boolean floatEquals(float a, float b) {
         return Math.abs(a - b) < 1e-5;
     }

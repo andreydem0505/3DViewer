@@ -14,6 +14,8 @@ public class Camera {
     private float aspectRatio;
     private float nearPlane;
     private float farPlane;
+    private Vector3f upVector = new Vector3f(0f, 1f, 0f);
+    private Vector3f downVector = new Vector3f(0f, -1f, 0f);
 
     public Camera(
             final Vector2f rotation,
@@ -82,7 +84,17 @@ public class Camera {
     }
 
     Matrix4x4 getViewMatrix() {
-        return GraphicConveyor.lookAt(getPosition(), target);
+        float phi = rotation.x();
+        float theta = rotation.y();
+
+        float upPhi = phi + Linal.pi;
+        float upTheta = -theta - Linal.pi_half;
+        Vector3f up = new Vector3f(
+                -Linal.sin(upPhi) * Linal.sin(upTheta),
+                -Linal.cos(upTheta),
+                -Linal.cos(upPhi) * Linal.sin(upTheta)
+        );
+        return GraphicConveyor.lookAt(getPosition(), target, up);
     }
 
     Matrix4x4 getProjectionMatrix() {
