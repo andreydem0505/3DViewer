@@ -1,12 +1,9 @@
 package com.cgvsu.model;
 
-import com.cgvsu.model.Model;
 import com.cgvsu.render_engine.RenderMode;
 
-import java.awt.*;
-import java.io.File;
+import java.awt.image.BufferedImage;
 
-import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 
 public class ModelPrepared {
@@ -24,7 +21,7 @@ public class ModelPrepared {
     }
 
     private Color currentColorCode = Color.BLACK;
-    private File texture = null;
+    private BufferedImage texture = null;
     private boolean renderableFlag = true;
 
     public ModelPrepared(Model model, RenderMode renderModeFactory) {
@@ -40,11 +37,11 @@ public class ModelPrepared {
         this.currentModeCode = currentModeCode;
     }
 
-    public File getTexture() {
+    public BufferedImage getTexture() {
         return texture;
     }
 
-    public void setTexture(File texture) {
+    public void setTexture(BufferedImage texture) {
         this.texture = texture;
     }
 

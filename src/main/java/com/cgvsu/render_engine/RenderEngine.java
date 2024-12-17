@@ -13,9 +13,6 @@ import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.nmath.Vector4f;
 import com.cgvsu.rasterization.*;
 
-
-import javax.imageio.ImageIO;
-
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
 public class RenderEngine {
@@ -72,9 +69,9 @@ public class RenderEngine {
             }
         } else if (renderMode.texture != null) {
             if (renderMode.light) {
-                fillWithTextureAndLightning(camera.getPosition(), ImageIO.read(renderMode.texture));
+                fillWithTextureAndLightning(camera.getPosition(), renderMode.texture);
             } else {
-                fillWithTexture(ImageIO.read(renderMode.texture));
+                fillWithTexture(renderMode.texture);
             }
         }
 

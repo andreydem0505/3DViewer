@@ -1,15 +1,15 @@
 package com.cgvsu.render_engine;
 
 import java.awt.*;
-import java.io.File;
+import java.awt.image.BufferedImage;
 
 public class RenderMode {
     public final boolean grid;
     public final Color color;
-    public final File texture;
+    public final BufferedImage texture;
     public final boolean light;
 
-    RenderMode(boolean grid, Color color, File texture, boolean light) {
+    RenderMode(boolean grid, Color color, BufferedImage texture, boolean light) {
         this.grid = grid;
         this.color = color;
         this.texture = texture;
@@ -20,7 +20,7 @@ public class RenderMode {
         return color;
     }
 
-    public File getTexture() {
+    public BufferedImage getTexture() {
         return texture;
     }
 }

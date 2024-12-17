@@ -1,7 +1,7 @@
 package com.cgvsu.render_engine;
 
 import java.awt.*;
-import java.io.File;
+import java.awt.image.BufferedImage;
 
 public class RenderModeFactory {
     public static RenderMode grid() {
@@ -16,23 +16,23 @@ public class RenderModeFactory {
         return new RenderMode(true, color, null, true);
     }
 
-    public static RenderMode gridTexture(File file) {
-        return new RenderMode(true, null, file, false);
+    public static RenderMode gridTexture(BufferedImage image) {
+        return new RenderMode(true, null, image, false);
     }
 
-    public static RenderMode gridTextureLightning(File file) {
-        return new RenderMode(true, null, file, true);
+    public static RenderMode gridTextureLightning(BufferedImage image) {
+        return new RenderMode(true, null, image, true);
     }
 
     public static RenderMode plainColorLightning(Color color) {
         return new RenderMode(false, color, null, true);
     }
 
-    public static RenderMode texture(File file) {
-        return new RenderMode(false, null, file, false);
+    public static RenderMode texture(BufferedImage image) {
+        return new RenderMode(false, null, image, false);
     }
 
-    public static RenderMode textureLightning(File file) {
-        return new RenderMode(false, null, file, true);
+    public static RenderMode textureLightning(BufferedImage image) {
+        return new RenderMode(false, null, image, true);
     }
 }

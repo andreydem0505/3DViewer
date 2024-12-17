@@ -42,6 +42,8 @@ import java.util.Scanner;
 import com.cgvsu.model.Model;
 import com.cgvsu.io.objreaderObsolete.ObjReaderObsolete;
 
+import javax.imageio.ImageIO;
+
 public class GuiController {
 
     final private float TRANSLATION = 2F;
@@ -281,7 +283,7 @@ public class GuiController {
     }
 
     @FXML
-    private void loadTextureForModel() {
+    private void loadTextureForModel() throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texture (*.png)", "*.png"));
         fileChooser.setTitle("Load texture");
@@ -291,7 +293,7 @@ public class GuiController {
             return;
         }
 
-        modelController.currentModel.setTexture(file);
+        modelController.currentModel.setTexture(ImageIO.read(file));
         handleRenderChoiceBoxChoice();
     }
 
