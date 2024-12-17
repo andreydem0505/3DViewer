@@ -25,7 +25,7 @@ public class Lightning {
         float[] barycentricCoordinates = interpolation.barycentricCoordinates;
 
         Vector3f n = Barycentric.getVector(barycentricCoordinates, normals);
-        n.scale(-1);
+//        n.scale(-1);
         n.normalize();
         Vector3f ray = GraphicConveyor.getRay(lightSource, Barycentric.getVector(barycentricCoordinates, vertices));
         ray.normalize();

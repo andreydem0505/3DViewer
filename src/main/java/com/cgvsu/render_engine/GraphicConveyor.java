@@ -65,12 +65,13 @@ public class GraphicConveyor {
         Vector3f resultZ;
 
         resultZ = Linal.subtract(target, eye);
-        resultX = Linal.crossProduct(up, resultZ);
-        resultY = Linal.crossProduct(resultZ, resultX);
+        resultX = Linal.crossProduct(resultZ, up);
+        resultY = Linal.crossProduct(resultX, resultZ);
 
         resultX.normalize();
         resultY.normalize();
         resultZ.normalize();
+        resultY.scale(-1);
 
         float[] matrix = new float[]{
                 resultX.x(), resultX.y(), resultX.z(), -resultX.dotProduct(eye),

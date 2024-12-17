@@ -306,6 +306,7 @@ public class GuiController {
         }
 
         loadModel(file.getAbsolutePath());
+        updateModelTree();
     }
 
     private void loadModel(String path) {
@@ -340,13 +341,13 @@ public class GuiController {
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camerasController.currentCamera.moveRotation(new Vector2f(TRANSLATION / 100, 0));
+        camerasController.currentCamera.moveRotation(new Vector2f(-TRANSLATION / 100, 0));
         updateCameraFields();
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camerasController.currentCamera.moveRotation(new Vector2f(-TRANSLATION / 100, 0));
+        camerasController.currentCamera.moveRotation(new Vector2f(TRANSLATION / 100, 0));
         updateCameraFields();
     }
 
@@ -388,7 +389,7 @@ public class GuiController {
         float deltax = currX - prevX;
         float deltay = currY - prevY;
 
-        camerasController.currentCamera.moveRotation(new Vector2f(deltax / 100, -deltay / 100));
+        camerasController.currentCamera.moveRotation(new Vector2f(-deltax / 100, -deltay / 100));
         updateCameraFields();
 
         prevX = currX;
