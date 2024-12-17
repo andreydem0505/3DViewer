@@ -1,11 +1,9 @@
 package com.cgvsu.model;
 
-import com.cgvsu.math.Linal;
 import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.render_engine.GraphicConveyor;
-import com.cgvsu.model.Group;
 
 import java.util.*;
 

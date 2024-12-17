@@ -7,15 +7,7 @@ import com.cgvsu.render_engine.GraphicConveyor;
 import java.awt.*;
 
 public class Lightning {
-    public static float getK() {
-        return k;
-    }
-
-    public static void setK(float k) {
-        Lightning.k = k;
-    }
-
-    private static float k = 0.95f;
+    public static float k = 0.95f;
 
     public static InterpolationResult light(
             InterpolationResult interpolation, Vector3f[] normals,
@@ -25,7 +17,6 @@ public class Lightning {
         float[] barycentricCoordinates = interpolation.barycentricCoordinates;
 
         Vector3f n = Barycentric.getVector(barycentricCoordinates, normals);
-//        n.scale(-1);
         n.normalize();
         Vector3f ray = GraphicConveyor.getRay(lightSource, Barycentric.getVector(barycentricCoordinates, vertices));
         ray.normalize();

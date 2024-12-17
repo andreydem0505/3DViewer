@@ -1,6 +1,5 @@
-package com.cgvsu;
+package com.cgvsu.gui;
 
-import com.cgvsu.gui.CamerasController;
 import com.cgvsu.math.Linal;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;

@@ -1,14 +1,9 @@
 package com.cgvsu.math;
 
-import com.cgvsu.math.Linal;
-import com.cgvsu.model.Model;
-import com.cgvsu.model.Polygon;
 import com.cgvsu.nmath.Vector3f;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-import java.util.Locale;
 
 public class LinalTest {
     @Test
@@ -16,7 +11,7 @@ public class LinalTest {
         Vector3f a = new Vector3f(1f, 0f, 0f);
         Vector3f b = new Vector3f(0f, 1f, 0f);
 
-        Vector3f c = Linal.crossProduct(a, b);
+        Vector3f c = Linal.crossProduct(b, a);
         Vector3f expected = new Vector3f(0f, 0f, 1f);
         Assertions.assertTrue(c.equals(expected));
     }
@@ -26,7 +21,7 @@ public class LinalTest {
         Vector3f a = new Vector3f(1f, 0f, 0f);
         Vector3f b = new Vector3f(1f, 0f, 0f);
 
-        Vector3f c = Linal.crossProduct(a, b);
+        Vector3f c = Linal.crossProduct(b, a);
         Vector3f expected = new Vector3f(0f, 0f, 0f);
         Assertions.assertTrue(c.equals(expected));
     }

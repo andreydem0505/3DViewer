@@ -9,11 +9,14 @@ public class Bresenham {
         return Integer.compare(x, 0);
     }
 
-    public static void drawBresenhamLine(PixelWriter pixelWriter, int xstart, int ystart, double zStart, int xend, int yend, double zEnd) {
+    public static void drawBresenhamLine(
+            PixelWriter pixelWriter, int xStart, int yStart, double zStart,
+            int xEnd, int yEnd, double zEnd
+    ) {
         int x, y, dx, dy, incx, incy, pdx, pdy, es, el, err;
 
-        dx = xend - xstart;
-        dy = yend - ystart;
+        dx = xEnd - xStart;
+        dy = yEnd - yStart;
 
         incx = sign(dx);
         incy = sign(dy);
@@ -33,8 +36,8 @@ public class Bresenham {
             el = dy;
         }
 
-        x = xstart;
-        y = ystart;
+        x = xStart;
+        y = yStart;
         err = el / 2;
         pixelWriter.putPixel(x, y, zStart, Color.BLACK);
 

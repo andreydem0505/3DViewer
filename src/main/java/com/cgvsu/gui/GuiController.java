@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.cgvsu.model.Model;
-import com.cgvsu.io.objreaderObsolete.ObjReaderObsolete;
 
 import javax.imageio.ImageIO;
 
@@ -186,7 +185,6 @@ public class GuiController {
     private void initializeCamerasController() {
         if (camerasController.getCamerasQuantity() == 1) {
             updateCameraTree();
-            setCurrentCamera(0);
         }
     }
 
@@ -202,7 +200,7 @@ public class GuiController {
         positionX.setText("0");
         positionY.setText("0");
         positionZ.setText("0");
-        lightningCoeffTextField.setText(Float.toString(Lightning.getK()));
+        lightningCoeffTextField.setText(Float.toString(Lightning.k));
     }
 
     @FXML
@@ -457,15 +455,15 @@ public class GuiController {
     private void handleLightningCoefChange() {
         try {
             if (Float.parseFloat(lightningCoeffTextField.getText()) > 1) {
-                Lightning.setK(1);
+                Lightning.k = 1;
                 lightningCoeffTextField.setText("1");
                 showWarning("Wrong input", "Maximum coefficient is 1");
             } else if (Float.parseFloat(lightningCoeffTextField.getText()) <= 0.009) {
-                Lightning.setK(0.01f);
+                Lightning.k = 0.01f;
                 lightningCoeffTextField.setText("0.01");
                 showWarning("Wrong input", "Minimum coefficient is 0.01");
             } else
-                Lightning.setK(Float.parseFloat(lightningCoeffTextField.getText()));
+                Lightning.k = Float.parseFloat(lightningCoeffTextField.getText());
         } catch (Exception e) {
             showNumberAlertTextField();
         }
@@ -538,32 +536,35 @@ public class GuiController {
     @FXML
     private void handleRenderChoiceBoxChoice() {
         if (modelController.currentModel != null) {
-            if (choiceBoxRenderMode.getValue().toString().equals("Inactive")) {
-                modelController.currentModel.setRenderableFlag(false);
-            } else if (choiceBoxRenderMode.getValue().toString().equals("Grid")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.grid());
-            } else if (choiceBoxRenderMode.getValue().toString().equals("GridColor")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
-            } else if (choiceBoxRenderMode.getValue().toString().equals("GridColorLight")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
-            } else if (choiceBoxRenderMode.getValue().toString().equals("GridTexture")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
-            } else if (choiceBoxRenderMode.getValue().toString().equals("GridTextureLight")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
-            } else if (choiceBoxRenderMode.getValue().toString().equals("ColorLight")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
-            } else if (choiceBoxRenderMode.getValue().toString().equals("Texture")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
-            } else if (choiceBoxRenderMode.getValue().toString().equals("TextureLight")) {
-                modelController.currentModel.setRenderableFlag(true);
-                modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
+            modelController.currentModel.setRenderableFlag(true);
+            switch (choiceBoxRenderMode.getValue().toString()) {
+                case "Grid":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.grid());
+                    break;
+                case "GridColor":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
+                    break;
+                case "GridColorLight":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+                    break;
+                case "GridTexture":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
+                    break;
+                case "GridTextureLight":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
+                    break;
+                case "ColorLight":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+                    break;
+                case "Texture":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
+                    break;
+                case "TextureLight":
+                    modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
+                    break;
+                default:
+                    modelController.currentModel.setRenderableFlag(false);
+                    break;
             }
             modelController.currentModel.setCurrentModeCode(choiceBoxRenderMode.getValue().toString());
         }
