@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane fx:id="anchorPane" stylesheets="@../../../styles/lighter-theme.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.gui.GuiController">
+<AnchorPane fx:id="anchorPane" stylesheets="@../../../../../../styles/lighter-theme.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.gui.GuiController">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#addModelToTheScene" text="Load Model">

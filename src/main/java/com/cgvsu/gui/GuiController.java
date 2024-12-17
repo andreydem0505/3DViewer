@@ -215,8 +215,7 @@ public class GuiController {
         }
 
         anchorPane.getStylesheets().clear();
-
-        File style = new File("src/main/resources/styles/darker-theme.css");
+        File style = new File("./styles/darker-theme.css");
         try {
             scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
@@ -233,7 +232,7 @@ public class GuiController {
 
         scene.getStylesheets().clear();
 
-        File style = new File("src/main/resources/styles/lighter-theme.css");
+        File style = new File("./styles/lighter-theme.css");
         try {
             scene.getStylesheets().add(style.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {

@@ -1,0 +1,90 @@
+.root {
+    -fx-accent: #1e74c6;
+    -fx-focus-color: -fx-accent;
+    -fx-base: #ffffff; /* Чисто белый фон */
+    -fx-control-inner-background: #f4f4f4; /* Светлый фон для элементов */
+    -fx-control-inner-background-alt: #e0e0e0; /* Немного темнее для выделения */
+}
+
+.label {
+    -fx-text-fill: #333333; /* Тёмный текст для читаемости */
+}
+
+.text-field {
+    -fx-prompt-text-fill: #888888; /* Серый текст для подсказок */
+}
+
+.titulo {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-text-fill: #000000; /* Чёрный текст для заголовков */
+}
+
+.button {
+    -fx-focus-traversable: false;
+    -fx-background-color: #e0e0e0; /* Светлый фон кнопки */
+    -fx-text-fill: #000000; /* Чёрный текст */
+}
+
+.button:hover {
+    -fx-background-color: #cccccc; /* Ярче при наведении */
+    -fx-text-fill: #000000;
+}
+
+.separator *.line {
+    -fx-background-color: #cccccc; /* Светлый цвет для разделителей */
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+}
+
+.scroll-bar {
+    -fx-background-color: #f4f4f4; /* Светлый фон для скроллбара */
+}
+
+.button:default {
+    -fx-base: -fx-accent;
+}
+
+.table-view {
+    -fx-background-color: #ffffff; /* Белый фон таблицы */
+    -fx-selection-bar-non-focused: #e0e0e0; /* Более светлый для выделений */
+}
+
+.table-view .column-header .label {
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-weight: none;
+    -fx-text-fill: #333333; /* Тёмный текст в заголовке */
+}
+
+.list-cell:even,
+.list-cell:odd,
+.table-row-cell:even,
+.table-row-cell:odd {
+    -fx-control-inner-background: #f4f4f4; /* Светлый фон ячеек */
+}
+
+.list-cell:empty,
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+}
+
+.list-cell,
+.table-row-cell {
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.scroll-pane:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tree-cell:focused {
+    -fx-background-color: #e0e0e0; /* Светлый фон кнопки */
+    -fx-text-fill: #000000; /* Чёрный текст */
+}
+
+.tree-cell:selected {
+    -fx-background-color: #e0e0e0; /* Светлый фон кнопки */
+    -fx-text-fill: #000000; /* Чёрный текст */
+}
