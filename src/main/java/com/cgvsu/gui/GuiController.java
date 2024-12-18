@@ -152,7 +152,7 @@ public class GuiController {
 
         PixelWriter pixelWriter = new PixelWriter(imageView);
 
-        RenderEngine renderEngine = new RenderEngine();
+        RenderEngine renderEngine = new RenderEngine(pixelWriter);
 
         initializeCamerasController();
 
@@ -166,7 +166,7 @@ public class GuiController {
             if (modelController.hasRenderableModels()) {
                 for (ModelPrepared modelPrepared : modelController.getModelList()) {
                     if (modelPrepared.isRenderableFlag()) {
-                        renderEngine.render(pixelWriter, camerasController.currentCamera,
+                        renderEngine.render(camerasController.currentCamera,
                                 modelPrepared.model, (int) width, (int) height, modelPrepared.getRenderMode());
                     }
                 }

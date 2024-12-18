@@ -2,7 +2,6 @@ package com.cgvsu.render_engine;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.List;
 
 import com.cgvsu.model.Model;
@@ -18,11 +17,14 @@ import static com.cgvsu.render_engine.GraphicConveyor.*;
 public class RenderEngine {
     private Model mesh;
     private Vector3f[] resultPoints;
-    private PixelWriter pixelWriter;
+    private final PixelWriter pixelWriter;
     private Vector3f[] normals;
 
+    public RenderEngine(final PixelWriter pixelWriter) {
+        this.pixelWriter = pixelWriter;
+    }
+
     public void render(
-            final PixelWriter pixelWriter,
             final Camera camera,
             final Model mesh,
             final int width,
@@ -36,7 +38,6 @@ public class RenderEngine {
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiplyMM(viewMatrix);
         modelViewProjectionMatrix = modelViewProjectionMatrix.multiplyMM(modelMatrix);
 
-        this.pixelWriter = pixelWriter;
         this.mesh = mesh;
         resultPoints = new Vector3f[mesh.vertices.size()];
         normals = new Vector3f[mesh.normals.size()];
