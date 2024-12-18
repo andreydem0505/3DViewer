@@ -185,6 +185,7 @@ public class GuiController {
     private void initializeCamerasController() {
         if (camerasController.getCamerasQuantity() == 1) {
             updateCameraTree();
+            setCurrentCamera(0);
         }
     }
 
