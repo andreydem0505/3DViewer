@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane fx:id="anchorPane" stylesheets="@../../../../../../styles/lighter-theme.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.gui.GuiController">
+<AnchorPane fx:id="anchorPane" prefHeight="900.0" stylesheets="@../../../../../../styles/lighter-theme.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.gui.GuiController">
     <MenuBar prefHeight="25.0" prefWidth="300.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#addModelToTheScene" text="Load Model">
@@ -69,7 +69,7 @@
     </MenuBar>
 
     <ImageView fx:id="imageView" fitHeight="870" fitWidth="1600" onMouseDragEntered="#handleCameraDragStarted" onMouseDragExited="#handleCameraDragEnded" onMouseDragged="#handleCameraDrag" onScroll="#handleCameraScroll" AnchorPane.topAnchor="30.0" />
-    <ScrollPane fx:id="scrollPaneMenu" focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0">
+    <ScrollPane fx:id="scrollPaneMenu" focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="25.0">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->
             <TitledPane focusTraversable="false" text="Objects">
@@ -92,8 +92,8 @@
                <HBox prefHeight="25.0" prefWidth="200.0">
                   <children>
                      <Label contentDisplay="CENTER" text="Lightning coefficient: " textAlignment="CENTER" />
-                     <TextField prefHeight="25.0" prefWidth="116.0" fx:id="lightningCoeffTextField"/>
-                     <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="43.0" text="Set" onMouseClicked="#handleLightningCoefChange"/>
+                     <TextField fx:id="lightningCoeffTextField" prefHeight="25.0" prefWidth="116.0" />
+                     <Button mnemonicParsing="false" onMouseClicked="#handleLightningCoefChange" prefHeight="25.0" prefWidth="43.0" text="Set" />
                   </children>
                </HBox>
                 </VBox>
