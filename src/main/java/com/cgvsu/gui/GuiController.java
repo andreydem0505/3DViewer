@@ -537,7 +537,7 @@ public class GuiController {
         try {
             camerasController.currentCamera.setTarget(new Vector3f(Float.parseFloat(directionX.getText()), Float.parseFloat(directionY.getText()), Float.parseFloat(directionZ.getText())));
             camerasController.currentCamera.setDistance(Float.parseFloat(distance.getText()));
-            camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()) / Linal.pi * 180, Float.parseFloat(cameraY.getText()) / Linal.pi * 180));
+            camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()) / 180 * Linal.pi, Float.parseFloat(cameraY.getText()) / 180 * Linal.pi));
         } catch (Exception e) {
             showNumberAlertTextField();
         }
@@ -755,7 +755,7 @@ public class GuiController {
     private void handleModelTransformation() {
         try {
             modelController.currentModel.model.scale = new Vector3f(Float.parseFloat(scaleX.getText()), Float.parseFloat(scaleY.getText()), Float.parseFloat(scaleZ.getText()));
-            modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()), Float.parseFloat(rotationY.getText()), Float.parseFloat(rotationZ.getText()));
+            modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()) / 180 * Linal.pi, Float.parseFloat(rotationY.getText()) / 180 * Linal.pi, Float.parseFloat(rotationZ.getText()) * 180 / Linal.pi);
             modelController.currentModel.model.position = new Vector3f(Float.parseFloat(positionX.getText()), Float.parseFloat(positionY.getText()), Float.parseFloat(positionZ.getText()));
         } catch (Exception e) {
             showNumberAlertTextField();
