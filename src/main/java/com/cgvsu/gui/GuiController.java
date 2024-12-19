@@ -318,8 +318,8 @@ public class GuiController {
             for (Polygon polygon : newModel.polygons)
                 Triangulation.convexPolygonTriangulate(polygon);
             modelController.addModel(new ModelPrepared(newModel, RenderModeFactory.grid()));
-            if (modelController.getModelsQuantity() == 1) {
-                modelController.currentModel = modelController.getModelList().get(0);
+            if (modelController.getModelsQuantity() >= 1) {
+                modelController.currentModel = modelController.getModelList().get(modelController.getModelsQuantity() - 1);
             }
         } catch (IOException exception) {
             showError("Error loading the model","Failed to load model.\nError: " + exception.getLocalizedMessage());
@@ -506,6 +506,7 @@ public class GuiController {
             root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
         }
         objectsTree.setShowRoot(false);
+        setCurrentModel(root.getChildren().size() - 1);
         updateChoiceBoxes();
     }
 
