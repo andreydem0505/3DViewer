@@ -99,7 +99,7 @@ public class Model {
     public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
-    private ArrayList<Group> groups = new ArrayList<>();
+    public ArrayList<Group> groups = new ArrayList<>();
 
     public Matrix4x4 getModelMatrix() {
         return getTransformMatrix()

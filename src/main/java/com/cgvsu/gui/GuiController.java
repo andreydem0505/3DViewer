@@ -7,8 +7,10 @@ import com.cgvsu.model.ModelPrepared;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.model_modification.PolygonRemover;
 import com.cgvsu.model_modification.VertexRemoverNextGen;
+import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
+import com.cgvsu.nmath.Vector4f;
 import com.cgvsu.rasterization.Lightning;
 import com.cgvsu.render_engine.*;
 import com.cgvsu.triangulation.Triangulation;
@@ -37,6 +39,7 @@ import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -324,6 +327,25 @@ public class GuiController {
         } catch (IOException exception) {
             showError("Error loading the model","Failed to load model.\nError: " + exception.getLocalizedMessage());
         }
+    }
+
+    private Model getTransformedModel(Model model) {
+        Model newModel = new Model();
+        newModel.vertices = new ArrayList<>();
+
+        Matrix4x4 modelMatrix = model.getModelMatrix();
+        for (Vector3f vertex : model.vertices){
+            Vector4f vertex4 = new Vector4f(vertex.x(), vertex.y(), vertex.z(), 1f);
+            vertex4 = modelMatrix.multiplyMV(vertex4);
+
+            newModel.vertices.add(new Vector3f(vertex4.x(), vertex4.y(), vertex.z()));
+        }
+        newModel.textureVertices = new ArrayList<>(model.textureVertices);
+        newModel.normals = new ArrayList<>(model.normals);
+        newModel.polygons = new ArrayList<>(model.polygons);
+        newModel.groups = new ArrayList<>(model.groups);
+
+        return newModel;
     }
 
     @FXML
