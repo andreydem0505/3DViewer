@@ -30,6 +30,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -39,10 +40,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.cgvsu.model.Model;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 
 public class GuiController {
 
@@ -119,6 +123,9 @@ public class GuiController {
     @FXML
     private ImageView imageView;
 
+    private volatile boolean musicPlaying = false;
+    private ExecutorService service = Executors.newFixedThreadPool(4);
+    private Clip clip;
 
     private final CamerasController camerasController = new CamerasController(
             new Camera(
@@ -724,5 +731,49 @@ public class GuiController {
 
     private void showNumberAlertTextField() {
         showError("Wrong input", "Use float numbers for each field");
+    }
+
+    @FXML
+    private void musicChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Song (*.wav)", "*.wav"));
+        fileChooser.setTitle("Load Music");
+
+        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        musicPlaying = true;
+
+        service.submit(new Runnable() {
+            public void run() {
+                playMusic(file);
+            }
+        });
+    }
+
+    private void playMusic(File file) {
+        try(AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file)) {
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+
+            clip.start();
+            while (musicPlaying) {
+                Thread.onSpinWait();
+            }
+
+        } catch (FileNotFoundException e) {
+            showError("Music", "File not found");
+        }catch (UnsupportedAudioFileException e) {
+            showError("Music", "File is not supported");
+        } catch (IOException | LineUnavailableException e) {
+            showError("Sth", "Bruh, sth went wrong");
+        }
+    }
+    @FXML
+    private void musicStop() {
+        musicPlaying = false;
+        clip.stop();
     }
 }

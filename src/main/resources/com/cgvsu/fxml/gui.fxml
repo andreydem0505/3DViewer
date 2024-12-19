@@ -64,6 +64,8 @@
       <Menu mnemonicParsing="false" text="Utils">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#handleNormalsMenuItem" text="NormalsForCurrModel" />
+            <MenuItem mnemonicParsing="false" onAction="#musicChooser" text="Load and play music" />
+            <MenuItem mnemonicParsing="false" onAction="#musicStop" text="Stop Music" />
         </items>
       </Menu>
     </MenuBar>
