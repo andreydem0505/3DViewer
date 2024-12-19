@@ -282,6 +282,28 @@ public class GuiController {
     }
 
     @FXML
+    private void saveModifiedModelFile() {
+        ObjWriter objWriter = new ObjWriter();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
+        fileChooser.setTitle("Save model");
+
+        File file = fileChooser.showSaveDialog((Stage) imageView.getScene().getWindow());
+
+        if (file == null) {
+            return;
+        }
+
+        String filename = file.getAbsolutePath();
+
+        try {
+            objWriter.write(getTransformedModel(modelController.currentModel.model), filename);
+        } catch (Exception e) {
+            showError("Error", "Error while writing file");
+        }
+    }
+
+    @FXML
     private void loadTextureForModel() throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texture (*.png)", "*.png"));
@@ -636,7 +658,13 @@ public class GuiController {
 
     @FXML
     private void handleVertexRemover() {
-        List<Integer> verticesToDelete = readVerticesToDelete();
+        List<Integer> verticesToDelete;
+        try {
+            verticesToDelete = readVerticesToDelete();
+        } catch (Exception e) {
+            showNumberAlertTextField();
+            return;
+        }
         VertexRemoverNextGen.processModelAndCleanEverything(modelController.currentModel.model, verticesToDelete);
         modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
         for (Polygon polygon : modelController.currentModel.model.polygons)
@@ -645,7 +673,13 @@ public class GuiController {
 
     @FXML
     private void handlePolygonsRemover() {
-        List<Integer> polygonsToDelete = readPolygonsToDelete();
+        List<Integer> polygonsToDelete;
+        try {
+            polygonsToDelete = readPolygonsToDelete();
+        } catch (Exception e) {
+            showNumberAlertTextField();
+            return;
+        }
         PolygonRemover.processModelAndCleanPolygons(modelController.currentModel.model, polygonsToDelete, true, true, true);
         modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
         for (Polygon polygon : modelController.currentModel.model.polygons)
