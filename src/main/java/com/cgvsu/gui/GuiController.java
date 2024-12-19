@@ -755,7 +755,7 @@ public class GuiController {
     private void handleModelTransformation() {
         try {
             modelController.currentModel.model.scale = new Vector3f(Float.parseFloat(scaleX.getText()), Float.parseFloat(scaleY.getText()), Float.parseFloat(scaleZ.getText()));
-            modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()) / 180 * Linal.pi, Float.parseFloat(rotationY.getText()) / 180 * Linal.pi, Float.parseFloat(rotationZ.getText()) * 180 / Linal.pi);
+            modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()) / 180 * Linal.pi, Float.parseFloat(rotationY.getText()) / 180 * Linal.pi, Float.parseFloat(rotationZ.getText()) / 180 * Linal.pi);
             modelController.currentModel.model.position = new Vector3f(Float.parseFloat(positionX.getText()), Float.parseFloat(positionY.getText()), Float.parseFloat(positionZ.getText()));
         } catch (Exception e) {
             showNumberAlertTextField();
