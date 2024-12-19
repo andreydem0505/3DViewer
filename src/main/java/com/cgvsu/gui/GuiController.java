@@ -537,7 +537,7 @@ public class GuiController {
         try {
             camerasController.currentCamera.setTarget(new Vector3f(Float.parseFloat(directionX.getText()), Float.parseFloat(directionY.getText()), Float.parseFloat(directionZ.getText())));
             camerasController.currentCamera.setDistance(Float.parseFloat(distance.getText()));
-            camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()), Float.parseFloat(cameraY.getText())));
+            camerasController.currentCamera.setRotation(new Vector2f(Float.parseFloat(cameraX.getText()) / Linal.pi * 180, Float.parseFloat(cameraY.getText()) / Linal.pi * 180));
         } catch (Exception e) {
             showNumberAlertTextField();
         }
