@@ -20,7 +20,7 @@
                 <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
             </accelerator>
          </MenuItem>
-         <MenuItem mnemonicParsing="false" text="Save Modified" onAction="#saveModifiedModelFile"/>
+         <MenuItem mnemonicParsing="false" onAction="#saveModifiedModelFile" text="Save Modified" />
         </Menu>
         <Menu mnemonicParsing="false" text="Switch theme">
          <items>
@@ -94,7 +94,10 @@
                </HBox>
                <HBox prefHeight="25.0" prefWidth="200.0">
                   <children>
-                     <Label contentDisplay="CENTER" text="Lightning coefficient: " textAlignment="CENTER" />
+                     <Label contentDisplay="CENTER" text="Lightning coefficient: " textAlignment="CENTER">
+                        <padding>
+                           <Insets top="3.0" />
+                        </padding></Label>
                      <TextField fx:id="lightningCoeffTextField" prefHeight="25.0" prefWidth="116.0" />
                      <Button mnemonicParsing="false" onMouseClicked="#handleLightningCoefChange" prefHeight="25.0" prefWidth="43.0" text="Set" />
                   </children>
