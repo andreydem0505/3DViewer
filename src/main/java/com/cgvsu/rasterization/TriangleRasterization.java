@@ -39,8 +39,8 @@ public class TriangleRasterization {
             drawLine(arrX[0], arrX[1], arrY[1]);
         } else {
             for (int y = arrY[0]; y <= arrY[1]; y++) {
-                int x1 = k1 != 0 ? (int) ((y - c1) / k1) : arrX[0];
-                int x2 = k2 != 0 ? (int) ((y - c2) / k2) : arrX[0];
+                int x1 = k1 != 0 ? Math.round((y - c1) / k1) : arrX[0];
+                int x2 = k2 != 0 ? Math.round((y - c2) / k2) : arrX[0];
                 drawLine(x1, x2, y);
             }
         }
@@ -48,8 +48,8 @@ public class TriangleRasterization {
             drawLine(arrX[1], arrX[2], arrY[1]);
         } else {
             for (int y = arrY[1]; y <= arrY[2]; y++) {
-                int x1 = k3 != 0 ? (int) ((y - c3) / k3) : arrX[1];
-                int x2 = k2 != 0 ? (int) ((y - c2) / k2) : arrX[0];
+                int x1 = k3 != 0 ? Math.round((y - c3) / k3) : arrX[1];
+                int x2 = k2 != 0 ? Math.round((y - c2) / k2) : arrX[0];
                 drawLine(x1, x2, y);
             }
         }

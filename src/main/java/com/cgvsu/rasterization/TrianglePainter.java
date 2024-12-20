@@ -20,12 +20,15 @@ public class TrianglePainter {
     public void putPixel(int x, int y) {
         InterpolationResult result = interpolate(x, y);
         if (result == null) return;
+        boolean success = false;
         for (float coordinate : result.barycentricCoordinates) {
-            if (Math.abs(coordinate) > Linal.eps) {
-                pixelWriter.forcePutPixel(x, y, result.z, result.color);
-                break;
+            if (coordinate < 0) return;
+            if (coordinate > Linal.eps) {
+                success = true;
             }
         }
+        if (success)
+            pixelWriter.forcePutPixel(x, y, result.z, result.color);
     }
 
     protected void sort() {
