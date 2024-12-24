@@ -15,22 +15,26 @@ public class PixelWriter {
     private final ImageView imageView;
     private double[][] zBuffer;
     private int width;
+    private int height;
 
     public PixelWriter(final ImageView imageView) {
         this.imageView = imageView;
-        clearScreen();
+        clearScreen((int) imageView.getFitWidth(), (int) imageView.getFitHeight());
     }
 
-    public void clearScreen() {
-        int height = (int) imageView.getFitHeight();
-        width = (int) imageView.getFitWidth();
-        IntBuffer buffer = IntBuffer.allocate(width * height);
-        pixels = buffer.array();
-        pixelBuffer = new PixelBuffer<>(width, height, buffer, PixelFormat.getIntArgbPreInstance());
-        zBuffer = new double[height][width];
+    public void clearScreen(int width, int height) {
+        if (width != this.width || height != this.height) {
+            this.width = width;
+            this.height = height;
+            IntBuffer buffer = IntBuffer.allocate(width * height);
+            pixels = buffer.array();
+            pixelBuffer = new PixelBuffer<>(width, height, buffer, PixelFormat.getIntArgbPreInstance());
+            zBuffer = new double[height][width];
+        }
         for (int y = 0; y < height; y++) {
             Arrays.fill(zBuffer[y], Double.MAX_VALUE);
         }
+        Arrays.fill(pixels, 0);
     }
 
     public void putPixel(final int x, final int y, final double z, final Color color) {

@@ -20,15 +20,7 @@ public class TrianglePainter {
     public void putPixel(int x, int y) {
         InterpolationResult result = interpolate(x, y);
         if (result == null) return;
-        boolean success = false;
-        for (float coordinate : result.barycentricCoordinates) {
-            if (coordinate < 0) return;
-            if (coordinate > Linal.eps) {
-                success = true;
-            }
-        }
-        if (success)
-            pixelWriter.forcePutPixel(x, y, result.z, result.color);
+        pixelWriter.forcePutPixel(x, y, result.z, result.color);
     }
 
     protected void sort() {
@@ -45,6 +37,14 @@ public class TrianglePainter {
 
     protected InterpolationResult interpolate(int x, int y) {
         float[] barycentricCoordinates = Barycentric.calculate(x, y, arrX, arrY);
+        boolean success = false;
+        for (float coordinate : barycentricCoordinates) {
+            if (coordinate < 0) return null;
+            if (coordinate > Linal.eps) {
+                success = true;
+            }
+        }
+        if (!success) return null;
         double z = Barycentric.getDouble(barycentricCoordinates, arrZ);
         if (!pixelWriter.isPixelVisible(x, y, z))
             return null;

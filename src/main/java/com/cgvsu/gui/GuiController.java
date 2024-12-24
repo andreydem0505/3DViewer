@@ -170,7 +170,7 @@ public class GuiController {
             double width = imageView.getFitWidth();
             double height = imageView.getFitHeight();
 
-            pixelWriter.clearScreen();
+            pixelWriter.clearScreen((int) width, (int) height);
             camerasController.currentCamera.setAspectRatio((float) (height / width));
 
             if (modelController.hasRenderableModels()) {
