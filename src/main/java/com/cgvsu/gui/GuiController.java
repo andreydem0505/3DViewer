@@ -24,6 +24,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -40,7 +42,6 @@ import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -494,8 +495,8 @@ public class GuiController {
     private void updateCameraFields() {
         distance.setText(String.valueOf(camerasController.currentCamera.getDistance()));
 
-        cameraX.setText(String.valueOf(camerasController.currentCamera.getRotation().x()));
-        cameraY.setText(String.valueOf(camerasController.currentCamera.getRotation().y()));
+        cameraX.setText(String.valueOf(camerasController.currentCamera.getRotation().x() * 180 / Linal.pi));
+        cameraY.setText(String.valueOf(camerasController.currentCamera.getRotation().y() * 180 / Linal.pi));
 
         directionX.setText(String.valueOf(camerasController.currentCamera.getTarget().x()));
         directionY.setText(String.valueOf(camerasController.currentCamera.getTarget().y()));
@@ -551,7 +552,21 @@ public class GuiController {
         }
     }
 
+    @FXML
+    private void handleCameraFieldUpdate(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            updateCameraDirectionAndPosition();
+        }
+    }
+
     // Меню моделей
+    @FXML
+    private void handleCoefChange(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            handleLightningCoefChange();
+        }
+    }
+
     @FXML
     private void addModelToTheScene() {
         onOpenModelMenuItemClick();
@@ -593,94 +608,40 @@ public class GuiController {
             colorPicker.setValue(modelController.currentModel.getCurrentColorCode());
             switch (modelController.currentModel.getCurrentModeCode()) {
                 case "Grid":
-                    gridCheckbox.setSelected(true);
-                    colorCheckbox.setSelected(false);
-                    textureCheckbox.setSelected(false);
-                    lightCheckbox.setSelected(false);
-
-                    lightCheckbox.setDisable(true);
-                    colorCheckbox.setDisable(false);
-                    textureCheckbox.setDisable(false);
+                    handleCheckboxSelection(true, false,false,false);
+                    handleSetDisabledCheckboxes(false, false, true);
                     break;
                 case "GridColor":
-                    gridCheckbox.setSelected(true);
-                    colorCheckbox.setSelected(true);
-                    textureCheckbox.setSelected(false);
-                    lightCheckbox.setSelected(false);
-
-                    textureCheckbox.setDisable(true);
-                    colorCheckbox.setDisable(false);
-                    lightCheckbox.setDisable(false);
+                    handleCheckboxSelection(true, true, false, false);
+                    handleSetDisabledCheckboxes(false, true, false);
                     break;
                 case "GridColorLight":
-                    gridCheckbox.setSelected(true);
-                    colorCheckbox.setSelected(true);
-                    textureCheckbox.setSelected(false);
-                    lightCheckbox.setSelected(true);
-
-                    textureCheckbox.setDisable(true);
-                    colorCheckbox.setDisable(false);
-                    lightCheckbox.setDisable(false);
+                    handleCheckboxSelection(true, true, false, true);
+                    handleSetDisabledCheckboxes(false, true, false);
                     break;
                 case "GridTexture":
-                    gridCheckbox.setSelected(true);
-                    colorCheckbox.setSelected(false);
-                    textureCheckbox.setSelected(true);
-                    lightCheckbox.setSelected(false);
-
-                    textureCheckbox.setDisable(false);
-                    colorCheckbox.setDisable(true);
-                    lightCheckbox.setDisable(false);
+                    handleCheckboxSelection(true, false, true, false);
+                    handleSetDisabledCheckboxes(true, false, false);
                     break;
                 case "GridTextureLight":
-                    gridCheckbox.setSelected(true);
-                    colorCheckbox.setSelected(false);
-                    textureCheckbox.setSelected(true);
-                    lightCheckbox.setSelected(true);
-
-                    textureCheckbox.setDisable(false);
-                    colorCheckbox.setDisable(true);
-                    lightCheckbox.setDisable(false);
+                    handleCheckboxSelection(true, false, true, true);
+                    handleSetDisabledCheckboxes(true, false, false);
                     break;
                 case "ColorLight":
-                    gridCheckbox.setSelected(false);
-                    colorCheckbox.setSelected(true);
-                    textureCheckbox.setSelected(false);
-                    lightCheckbox.setSelected(true);
-
-                    textureCheckbox.setDisable(true);
-                    colorCheckbox.setDisable(false);
-                    lightCheckbox.setDisable(false);
+                    handleCheckboxSelection(false, true, false, true);
+                    handleSetDisabledCheckboxes(false, true, false);
                     break;
                 case "Texture":
-                    gridCheckbox.setSelected(false);
-                    colorCheckbox.setSelected(false);
-                    textureCheckbox.setSelected(true);
-                    lightCheckbox.setSelected(false);
-
-                    textureCheckbox.setDisable(false);
-                    colorCheckbox.setDisable(true);
-                    lightCheckbox.setDisable(false);
+                    handleCheckboxSelection(false, false, true, false);
+                    handleSetDisabledCheckboxes(true, false, false);
                     break;
                 case "TextureLight":
-                    gridCheckbox.setSelected(false);
-                    colorCheckbox.setSelected(false);
-                    textureCheckbox.setSelected(true);
-                    lightCheckbox.setSelected(true);
-
-                    textureCheckbox.setDisable(false);
-                    colorCheckbox.setDisable(true);
-                    lightCheckbox.setDisable(false);
+                    handleCheckboxSelection(false, false, true, true);
+                    handleSetDisabledCheckboxes(true, false, false);
                     break;
                 default:
-                    gridCheckbox.setSelected(false);
-                    colorCheckbox.setSelected(false);
-                    textureCheckbox.setSelected(false);
-                    lightCheckbox.setSelected(false);
-
-                    textureCheckbox.setDisable(false);
-                    colorCheckbox.setDisable(false);
-                    lightCheckbox.setDisable(true);
+                    handleCheckboxSelection(false, false, false, false);
+                    handleSetDisabledCheckboxes(false, false, true);
                     break;
             }
         } catch (Exception ignored) {}
@@ -697,54 +658,56 @@ public class GuiController {
             if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.grid());
                 modelController.currentModel.setCurrentModeCode("Grid");
-                lightCheckbox.setDisable(true);
-                colorCheckbox.setDisable(false);
-                textureCheckbox.setDisable(false);
+                handleSetDisabledCheckboxes(false, false, true);
             } else if (gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
                 modelController.currentModel.setCurrentModeCode("GridColor");
-                lightCheckbox.setDisable(false);
-                textureCheckbox.setDisable(true);
+                handleSetDisabledCheckboxes(false, true, false);
             } else if (gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
                 modelController.currentModel.setCurrentModeCode("GridColorLight");
-                lightCheckbox.setDisable(false);
-                textureCheckbox.setDisable(true);
+                handleSetDisabledCheckboxes(false, true, false);
             } else if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("GridTexture");
-                lightCheckbox.setDisable(false);
-                colorCheckbox.setDisable(true);
+                handleSetDisabledCheckboxes(true, false, false);
             } else if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("GridTextureLight");
-                lightCheckbox.setDisable(false);
-                colorCheckbox.setDisable(true);
+                handleSetDisabledCheckboxes(true, false, false);
             } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
                 modelController.currentModel.setCurrentModeCode("ColorLight");
-                lightCheckbox.setDisable(false);
-                textureCheckbox.setDisable(true);
+                handleSetDisabledCheckboxes(false, true, false);
             } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("Texture");
-                lightCheckbox.setDisable(false);
-                colorCheckbox.setDisable(true);
+                handleSetDisabledCheckboxes(true, false, false);
             } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("TextureLight");
-                lightCheckbox.setDisable(false);
-                colorCheckbox.setDisable(true);
+                handleSetDisabledCheckboxes(true, false, false);
             } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderableFlag(false);
-                lightCheckbox.setDisable(false);
+                handleSetDisabledCheckboxes(false, true, false);
             } else {
                 modelController.currentModel.setRenderableFlag(false);
-                lightCheckbox.setDisable(true);
-                textureCheckbox.setDisable(false);
-                colorCheckbox.setDisable(false);
+                handleSetDisabledCheckboxes(false, false, true);
             }
         }
+    }
+
+    private void handleCheckboxSelection(boolean gridCheck, boolean colorCheck, boolean textureCheck, boolean lightCheck) {
+        gridCheckbox.setSelected(gridCheck);
+        colorCheckbox.setSelected(colorCheck);
+        textureCheckbox.setSelected(textureCheck);
+        lightCheckbox.setSelected(lightCheck);
+    }
+
+    private void handleSetDisabledCheckboxes(boolean colorCheck, boolean textureCheck, boolean lightCheck) {
+        colorCheckbox.setDisable(colorCheck);
+        textureCheckbox.setDisable(textureCheck);
+        lightCheckbox.setDisable(lightCheck);
     }
 
     private void setCurrentModel(int index) {
@@ -800,6 +763,20 @@ public class GuiController {
         modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
         for (Polygon polygon : modelController.currentModel.model.polygons)
             Triangulation.convexPolygonTriangulate(polygon);
+    }
+
+    @FXML
+    private void handleVertexRemoverField(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            handleVertexRemover();
+        }
+    }
+
+    @FXML
+    private void handlePolygonRemoverField(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            handlePolygonsRemover();
+        }
     }
 
     @FXML
@@ -883,6 +860,13 @@ public class GuiController {
             modelController.currentModel.model.position = new Vector3f(Float.parseFloat(positionX.getText()), Float.parseFloat(positionY.getText()), Float.parseFloat(positionZ.getText()));
         } catch (Exception e) {
             showNumberAlertTextField();
+        }
+    }
+
+    @FXML
+    private void handleModelTransformationField(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            handleModelTransformation();
         }
     }
 
