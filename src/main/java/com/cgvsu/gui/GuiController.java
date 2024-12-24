@@ -1,5 +1,10 @@
 package com.cgvsu.gui;
 
+import com.cgvsu.Configs;
+import com.cgvsu.animation.AnimationController;
+import com.cgvsu.animation.Frame;
+import com.cgvsu.animation.ModelAnimation;
+import com.cgvsu.animation.State;
 import com.cgvsu.io.objreader.ObjReader;
 import com.cgvsu.io.objwriter.ObjWriter;
 import com.cgvsu.math.Linal;
@@ -46,6 +51,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import com.cgvsu.model.Model;
 
@@ -138,6 +144,7 @@ public class GuiController {
     private volatile boolean musicPlaying = false;
     private ExecutorService service = Executors.newFixedThreadPool(4);
     private Clip clip;
+    private AnimationController animationController;
 
     private final CamerasController camerasController = new CamerasController(
             new Camera(
@@ -175,12 +182,18 @@ public class GuiController {
 
         initializeCamerasController();
 
-        KeyFrame frame = new KeyFrame(Duration.millis(30), event -> {
+        animationController = new AnimationController();
+
+        KeyFrame frame = new KeyFrame(Duration.millis(Configs.FRAME_TIME), event -> {
             double width = imageView.getFitWidth();
             double height = imageView.getFitHeight();
 
             pixelWriter.clearScreen((int) width, (int) height);
             camerasController.currentCamera.setAspectRatio((float) (height / width));
+
+            if (!animationController.isOver()) {
+                animationController.animate();
+            }
 
             if (modelController.hasRenderableModels()) {
                 for (ModelPrepared modelPrepared : modelController.getModelList()) {
@@ -199,6 +212,22 @@ public class GuiController {
 
         loadModel("./models/caracal_cube.obj");
         updateModelTree();
+        ModelAnimation animation = new ModelAnimation();
+        animation.addFrame(
+                new Frame(
+                        new State(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
+                        new State(new Vector3f(8, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
+                        TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS)
+                )
+        );
+        animation.addFrame(
+                new Frame(
+                        new State(new Vector3f(8, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
+                        new State(new Vector3f(8, 0, 0), new Vector3f(Linal.pi / 4, 0, 0), new Vector3f(1, 1, 1)),
+                        TimeUnit.MILLISECONDS.convert(3, TimeUnit.SECONDS)
+                )
+        );
+        animationController.animations.put(modelController.currentModel.model, animation);
     }
 
     private void initializeCamerasController() {
