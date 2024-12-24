@@ -113,7 +113,6 @@ public class RenderEngine {
         int[] x = new int[3];
         int[] y = new int[3];
         double[] z = new double[3];
-        TriangleRasterization rasterization = new TriangleRasterization();
         for (Polygon curPolygon : mesh.polygons) {
             for (int[] triangle : curPolygon.getVertexIndicesTriangles()) {
                 for (int i = 0; i < 3; i++) {
@@ -121,8 +120,7 @@ public class RenderEngine {
                     y[i] = Math.round(resultPoints[triangle[i]].y());
                     z[i] = resultPoints[triangle[i]].z();
                 }
-                rasterization.with(new PlainColorTrianglePainter(pixelWriter, x, y, z, color))
-                        .fillTriangle();
+                TriangleRasterization.fillTriangle(new PlainColorTrianglePainter(pixelWriter, x, y, z, color));
             }
         }
     }
@@ -133,7 +131,6 @@ public class RenderEngine {
         double[] z = new double[3];
         Vector3f[] n = new Vector3f[3];
         Vector3f[] v = new Vector3f[3];
-        TriangleRasterization rasterization = new TriangleRasterization();
         for (Polygon curPolygon : mesh.polygons) {
             for (int[] triangle : curPolygon.getVertexIndicesTriangles()) {
                 for (int i = 0; i < 3; i++) {
@@ -143,9 +140,9 @@ public class RenderEngine {
                     n[i] = normals[triangle[i]];
                     v[i] = mesh.vertices.get(triangle[i]);
                 }
-                rasterization.with(new PlainColorWithLightningTrianglePainter(
+                TriangleRasterization.fillTriangle(new PlainColorWithLightningTrianglePainter(
                         pixelWriter, x, y, z, n, v, lightSource, color
-                )).fillTriangle();
+                ));
             }
         }
     }
@@ -156,7 +153,6 @@ public class RenderEngine {
         int[] y = new int[3];
         double[] z = new double[3];
         Vector2f[] textureV = new Vector2f[3];
-        TriangleRasterization rasterization = new TriangleRasterization();
         for (Polygon curPolygon : mesh.polygons) {
             nTriangles = curPolygon.getVertexIndicesTriangles().size();
             for (int i = 0; i < nTriangles; i++) {
@@ -168,8 +164,7 @@ public class RenderEngine {
                     z[j] = resultPoints[vertexTriangle[j]].z();
                     textureV[j] = mesh.textureVertices.get(textureTriangle[j]);
                 }
-                rasterization.with(new TextureTrianglePainter(pixelWriter, x, y, z, textureV, image))
-                        .fillTriangle();
+                TriangleRasterization.fillTriangle(new TextureTrianglePainter(pixelWriter, x, y, z, textureV, image));
             }
         }
     }
@@ -182,7 +177,6 @@ public class RenderEngine {
         Vector2f[] textureV = new Vector2f[3];
         Vector3f[] n = new Vector3f[3];
         Vector3f[] v = new Vector3f[3];
-        TriangleRasterization rasterization = new TriangleRasterization();
         for (Polygon curPolygon : mesh.polygons) {
             nTriangles = curPolygon.getVertexIndicesTriangles().size();
             for (int i = 0; i < nTriangles; i++) {
@@ -196,9 +190,9 @@ public class RenderEngine {
                     n[j] = normals[vertexTriangle[j]];
                     v[j] = mesh.vertices.get(vertexTriangle[j]);
                 }
-                rasterization.with(new TextureWithLightningTrianglePainter(
-                        pixelWriter, x, y, z, textureV, image, n, v, lightSource)
-                ).fillTriangle();
+                TriangleRasterization.fillTriangle(new TextureWithLightningTrianglePainter(
+                        pixelWriter, x, y, z, textureV, image, n, v, lightSource
+                ));
             }
         }
     }

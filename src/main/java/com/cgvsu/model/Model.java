@@ -1,5 +1,6 @@
 package com.cgvsu.model;
 
+import com.cgvsu.animation.State;
 import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
@@ -117,5 +118,11 @@ public class Model {
 
     private Matrix4x4 getTransformMatrix() {
         return GraphicConveyor.transform(position.x(), position.y(), position.z());
+    }
+
+    public void setState(State state) {
+        position = state.getPosition();
+        rotation = state.getRotation();
+        scale = state.getScale();
     }
 }
