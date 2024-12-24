@@ -2,11 +2,12 @@ package com.cgvsu.rasterization;
 
 
 public class TriangleRasterization {
-    private final TrianglePainter trianglePainter;
+    private TrianglePainter trianglePainter;
 
-    public TriangleRasterization(TrianglePainter trianglePainter) {
+    public TriangleRasterization with(TrianglePainter trianglePainter) {
         trianglePainter.sort();
         this.trianglePainter = trianglePainter;
+        return this;
     }
 
     private float countK(int x1, int y1, int x2, int y2) {
