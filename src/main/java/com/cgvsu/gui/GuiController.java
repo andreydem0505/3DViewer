@@ -486,8 +486,8 @@ public class GuiController {
     private void updateCameraFields() {
         distance.setText(String.valueOf(camerasController.currentCamera.getDistance()));
 
-        cameraX.setText(String.valueOf(camerasController.currentCamera.getRotation().x()));
-        cameraY.setText(String.valueOf(camerasController.currentCamera.getRotation().y()));
+        cameraX.setText(String.valueOf(camerasController.currentCamera.getRotation().x() / Linal.pi * 180));
+        cameraY.setText(String.valueOf(camerasController.currentCamera.getRotation().y() / Linal.pi * 180));
 
         directionX.setText(String.valueOf(camerasController.currentCamera.getTarget().x()));
         directionY.setText(String.valueOf(camerasController.currentCamera.getTarget().y()));
