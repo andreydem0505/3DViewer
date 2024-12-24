@@ -17,7 +17,7 @@ public class Frame {
 
     protected State next() {
         lasted += Configs.FRAME_TIME;
-        return initialState.interpolate(destinationState, (float) lasted / duration);
+        return initialState.interpolate(destinationState, Math.min(1, (float) lasted / duration));
     }
 
     protected boolean isOver() {
