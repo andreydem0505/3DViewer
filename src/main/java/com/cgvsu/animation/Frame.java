@@ -15,12 +15,12 @@ public class Frame {
         lasted = 0;
     }
 
-    public State next() {
+    protected State next() {
         lasted += Configs.FRAME_TIME;
         return initialState.interpolate(destinationState, (float) lasted / duration);
     }
 
-    public boolean isOver() {
+    protected boolean isOver() {
         return lasted >= duration;
     }
 }

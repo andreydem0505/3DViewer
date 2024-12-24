@@ -16,7 +16,7 @@ public class ModelAnimation {
         frames.add(frame);
     }
 
-    public State animate() {
+    protected State animate() {
         if (isOver()) return null;
         Frame frame = frames.get(currentFrame);
         State state = frame.next();
@@ -24,7 +24,7 @@ public class ModelAnimation {
         return state;
     }
 
-    public boolean isOver() {
+    protected boolean isOver() {
         return currentFrame >= frames.size();
     }
 }

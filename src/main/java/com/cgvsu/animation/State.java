@@ -13,7 +13,7 @@ public class State {
         this.scale = scale;
     }
 
-    public State interpolate(State another, float t) {
+    protected State interpolate(State another, float t) {
         return new State(
                 new Vector3f(
                         position.x() + (another.position.x() - position.x()) * t,
