@@ -6,7 +6,7 @@ public class Frame {
     private final State initialState;
     private final State destinationState;
     private final long duration;
-    transient private long lasted = 0;
+    private long lasted = 0;
 
     public Frame(State initialState, State destinationState, long duration) {
         this.initialState = initialState;

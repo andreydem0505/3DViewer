@@ -6,7 +6,7 @@ import java.util.List;
 public class ModelAnimation {
     private final List<Frame> frames;
 
-    transient private int currentFrame = 0;
+    private int currentFrame = 0;
 
     public ModelAnimation() {
         frames = new ArrayList<>();

@@ -229,7 +229,12 @@ public class GuiController {
                 )
         );
         animationController.animations.put(modelController.currentModel, animation);
-        AnimationWriter.writeAnimationController(animationController.animations);
+
+        try {
+            AnimationWriter.writeAnimationController(animationController.animations, "animation_dump.json");
+        }catch (IOException e){
+            System.err.println("Unable to save animation dump." + e.getLocalizedMessage());
+        }
     }
 
     private void initializeCamerasController() {

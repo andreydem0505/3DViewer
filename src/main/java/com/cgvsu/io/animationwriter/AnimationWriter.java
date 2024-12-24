@@ -3,31 +3,44 @@ package com.cgvsu.io.animationwriter;
 import com.cgvsu.animation.Frame;
 import com.cgvsu.animation.ModelAnimation;
 import com.cgvsu.animation.State;
+import com.cgvsu.io.animationreader.FrameSerializer;
+import com.cgvsu.io.animationreader.ModelAnimationSerializer;
+import com.cgvsu.io.animationreader.StateSerializer;
+import com.cgvsu.io.animationreader.Vector3Serializer;
 import com.cgvsu.model.ModelPrepared;
+import com.cgvsu.nmath.Vector3f;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class AnimationWriter {
-    public static void writeAnimationController(Map<ModelPrepared, ModelAnimation> animations) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static void writeAnimationController(Map<ModelPrepared, ModelAnimation> animations, String path) throws IOException {
+        Path fileName = Path.of(path);
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Vector3f.class, new Vector3Serializer())
+                .registerTypeAdapter(State.class, new StateSerializer())
+                .registerTypeAdapter(Frame.class, new FrameSerializer())
+                .registerTypeAdapter(ModelAnimation.class, new ModelAnimationSerializer())
+                .create();
+
+        JsonObject result = new JsonObject();
 
         for (Map.Entry<ModelPrepared, ModelAnimation> anim : animations.entrySet()){
             ModelPrepared modelPrepared = anim.getKey();
             ModelAnimation modelAnimation = anim.getValue();
 
-            JsonElement fileName = gson.toJsonTree(modelPrepared.getName());
-            for (Frame frame : modelAnimation.getFrames()){
-
-            }
+            result.add(modelPrepared.getName(), gson.toJsonTree(modelAnimation));
         }
-//        System.out.println("a");
-    }
 
-
-    public static void main(String[] args) {
-        Gson gson = new Gson();
+        Files.writeString(fileName, gson.toJson(result), StandardCharsets.UTF_8);
     }
 }
