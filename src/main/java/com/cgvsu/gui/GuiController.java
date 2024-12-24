@@ -5,6 +5,7 @@ import com.cgvsu.animation.AnimationController;
 import com.cgvsu.animation.Frame;
 import com.cgvsu.animation.ModelAnimation;
 import com.cgvsu.animation.State;
+import com.cgvsu.io.animationwriter.AnimationWriter;
 import com.cgvsu.io.objreader.ObjReader;
 import com.cgvsu.io.objwriter.ObjWriter;
 import com.cgvsu.math.Linal;
@@ -227,7 +228,8 @@ public class GuiController {
                         TimeUnit.MILLISECONDS.convert(3, TimeUnit.SECONDS)
                 )
         );
-        animationController.animations.put(modelController.currentModel.model, animation);
+        animationController.animations.put(modelController.currentModel, animation);
+        AnimationWriter.writeAnimationController(animationController.animations);
     }
 
     private void initializeCamerasController() {
@@ -387,7 +389,7 @@ public class GuiController {
             newModel.normals = Linal.calculateVerticesNormals(newModel.vertices, newModel.polygons);
             for (Polygon polygon : newModel.polygons)
                 Triangulation.convexPolygonTriangulate(polygon);
-            modelController.addModel(new ModelPrepared(newModel, RenderModeFactory.grid()));
+            modelController.addModel(new ModelPrepared(newModel, fileName.getFileName().toString(), RenderModeFactory.grid()));
             if (modelController.getModelsQuantity() >= 1) {
                 modelController.currentModel = modelController.getModelList().get(modelController.getModelsQuantity() - 1);
             }

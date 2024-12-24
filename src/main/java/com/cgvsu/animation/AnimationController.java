@@ -1,22 +1,23 @@
 package com.cgvsu.animation;
 
 import com.cgvsu.model.Model;
+import com.cgvsu.model.ModelPrepared;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AnimationController {
-    public Map<Model, ModelAnimation> animations;
+    public Map<ModelPrepared, ModelAnimation> animations;
 
     public AnimationController() {
         animations = new HashMap<>();
     }
 
     public void animate() {
-        for (Map.Entry<Model, ModelAnimation> entry : animations.entrySet()) {
+        for (Map.Entry<ModelPrepared, ModelAnimation> entry : animations.entrySet()) {
             State state = entry.getValue().animate();
             if (state != null)
-                entry.getKey().setState(state);
+                entry.getKey().model.setState(state);
         }
     }
 

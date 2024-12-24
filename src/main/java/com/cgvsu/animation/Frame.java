@@ -6,13 +6,12 @@ public class Frame {
     private final State initialState;
     private final State destinationState;
     private final long duration;
-    private long lasted;
+    transient private long lasted = 0;
 
     public Frame(State initialState, State destinationState, long duration) {
         this.initialState = initialState;
         this.destinationState = destinationState;
         this.duration = duration;
-        lasted = 0;
     }
 
     protected State next() {
@@ -22,5 +21,17 @@ public class Frame {
 
     protected boolean isOver() {
         return lasted >= duration;
+    }
+
+    public State getInitialState() {
+        return initialState;
+    }
+
+    public State getDestinationState() {
+        return destinationState;
+    }
+
+    public long getDuration() {
+        return duration;
     }
 }

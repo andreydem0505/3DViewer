@@ -11,6 +11,7 @@ public class ModelPrepared {
     private RenderMode renderMode;
 
     private String currentModeCode = "Grid";
+    private String name;
 
     public Color getCurrentColorCode() {
         return currentColorCode;
@@ -24,9 +25,18 @@ public class ModelPrepared {
     private BufferedImage texture = null;
     private boolean renderableFlag = true;
 
-    public ModelPrepared(Model model, RenderMode renderModeFactory) {
+    public ModelPrepared(Model model, String name, RenderMode renderModeFactory) {
         this.model = model;
+        this.name = name;
         this.renderMode = renderModeFactory;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCurrentModeCode() {

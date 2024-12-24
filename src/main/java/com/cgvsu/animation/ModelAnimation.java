@@ -5,11 +5,11 @@ import java.util.List;
 
 public class ModelAnimation {
     private final List<Frame> frames;
-    private int currentFrame;
+
+    transient private int currentFrame = 0;
 
     public ModelAnimation() {
         frames = new ArrayList<>();
-        currentFrame = 0;
     }
 
     public void addFrame(Frame frame) {
@@ -26,5 +26,9 @@ public class ModelAnimation {
 
     protected boolean isOver() {
         return currentFrame >= frames.size();
+    }
+
+    public List<Frame> getFrames() {
+        return frames;
     }
 }
