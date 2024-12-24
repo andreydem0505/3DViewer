@@ -83,9 +83,28 @@
                         <Button onAction="#loadTextureForModel" text="Load Texture" />
                     </HBox>
                     <TreeView fx:id="objectsTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleModelSelection" prefHeight="100.0" prefWidth="280.0" />
+               <HBox prefHeight="50.0" prefWidth="200.0">
+                  <children>
+                     <GridPane maxHeight="50.0" maxWidth="275.0" prefHeight="50.0" prefWidth="170.0">
+                       <columnConstraints>
+                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                       </columnConstraints>
+                       <rowConstraints>
+                         <RowConstraints maxHeight="52.33333524068196" minHeight="10.0" prefHeight="49.33333524068196" vgrow="SOMETIMES" />
+                         <RowConstraints maxHeight="71.00000190734863" minHeight="10.0" prefHeight="51.333331425984696" vgrow="SOMETIMES" />
+                       </rowConstraints>
+                        <children>
+                           <CheckBox fx:id="gridCheckbox" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" text="Grid" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.valignment="CENTER" onAction="#handleRenderChoiceBoxChoice"/>
+                           <CheckBox fx:id="colorCheckbox" mnemonicParsing="false" text="Color" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" onAction="#handleRenderChoiceBoxChoice"/>
+                           <CheckBox fx:id="textureCheckbox" mnemonicParsing="false" text="Texture" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" onAction="#handleRenderChoiceBoxChoice"/>
+                           <CheckBox fx:id="lightCheckbox" mnemonicParsing="false" text="Light" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER" onAction="#handleRenderChoiceBoxChoice"/>
+                        </children>
+                     </GridPane>
+                  </children>
+               </HBox>
                <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
                   <children>
-                     <ChoiceBox fx:id="choiceBoxRenderMode" onAction="#handleRenderChoiceBoxChoice" prefWidth="150.0" />
                      <ColorPicker fx:id="colorPicker" onAction="#handleColorPicker">
                         <value>
                            <Color />
@@ -98,7 +117,7 @@
                         <padding>
                            <Insets top="3.0" />
                         </padding></Label>
-                     <TextField fx:id="lightningCoeffTextField" prefHeight="25.0" prefWidth="116.0" />
+                     <TextField fx:id="lightningCoeffTextField" prefHeight="25.0" prefWidth="116.0" onKeyPressed="#handleCoefChange"/>
                      <Button mnemonicParsing="false" onMouseClicked="#handleLightningCoefChange" prefHeight="25.0" prefWidth="43.0" text="Set" />
                   </children>
                </HBox>
@@ -119,13 +138,13 @@
                     </TreeView>
                     <VBox spacing="5">
                          <Label text="Distance:" />
-                         <TextField fx:id="distance" maxWidth="170.0" prefWidth="100.0" />
+                         <TextField fx:id="distance" maxWidth="170.0" prefWidth="100.0" onKeyPressed="#handleCameraFieldUpdate" />
                         <Label text="Active Camera Rotation:" />
                         <GridPane hgap="10" vgap="5">
                             <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                            <TextField fx:id="cameraX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <TextField fx:id="cameraX" GridPane.columnIndex="1" GridPane.rowIndex="0" onKeyPressed="#handleCameraFieldUpdate"/>
                             <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                            <TextField fx:id="cameraY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <TextField fx:id="cameraY" GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyPressed="#handleCameraFieldUpdate"/>
                             <columnConstraints>
                                 <ColumnConstraints />
                                 <ColumnConstraints />
@@ -139,11 +158,11 @@
                         <Label text="Target coordinates:" />
                         <GridPane hgap="10" vgap="5">
                             <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                            <TextField fx:id="directionX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <TextField fx:id="directionX" GridPane.columnIndex="1" GridPane.rowIndex="0" onKeyPressed="#handleCameraFieldUpdate"/>
                             <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                            <TextField fx:id="directionY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <TextField fx:id="directionY" GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyPressed="#handleCameraFieldUpdate"/>
                             <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                            <TextField fx:id="directionZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <TextField fx:id="directionZ" GridPane.columnIndex="1" GridPane.rowIndex="2" onKeyPressed="#handleCameraFieldUpdate"/>
                             <columnConstraints>
                                 <ColumnConstraints />
                                 <ColumnConstraints />
@@ -155,7 +174,7 @@
                             </rowConstraints>
                         </GridPane>
                     </VBox>
-                    <Button mnemonicParsing="false" onAction="#updateCameraDirectionAndPosition" text="Set" textAlignment="CENTER" />
+                    <Button mnemonicParsing="false" onAction="#updateCameraDirectionAndPosition" text="Confirm" prefHeight="25.0" prefWidth="100.0" textAlignment="CENTER" />
                 </VBox>
             </TitledPane>
 
@@ -176,7 +195,7 @@
                  </rowConstraints>
                   <children>
                      <Label alignment="CENTER" prefHeight="17.0" prefWidth="54.0" text="Vertices:" textAlignment="CENTER" />
-                     <TextField fx:id="verticesToDeleteTextField" GridPane.columnIndex="1" />
+                     <TextField fx:id="verticesToDeleteTextField" GridPane.columnIndex="1" onKeyPressed="#handleVertexRemoverField"/>
                      <Button mnemonicParsing="false" onMouseClicked="#handleVerticesFromTxt" prefWidth="72.0" text="LoadTxt" GridPane.columnIndex="2" />
                   </children>
                </GridPane>
@@ -192,7 +211,7 @@
                         </rowConstraints>
                         <children>
                             <Label alignment="CENTER" prefHeight="17.0" prefWidth="60.0" text="Polygons:" />
-                            <TextField fx:id="polygonsToDeleteTextField" GridPane.columnIndex="1" />
+                            <TextField fx:id="polygonsToDeleteTextField" GridPane.columnIndex="1" onKeyPressed="#handlePolygonRemoverField"/>
                             <Button mnemonicParsing="false" onMouseClicked="#handlePolygonsFromTxt" prefHeight="25.0" prefWidth="72.0" text="LoadTxt" GridPane.columnIndex="2" />
                         </children>
                     </GridPane>
@@ -206,11 +225,11 @@
                     <Label text="Scale:" />
                     <GridPane hgap="10" vgap="5">
                         <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="scaleX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="scaleX" GridPane.columnIndex="1" GridPane.rowIndex="0" onKeyPressed="#handleModelTransformationField"/>
                         <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <TextField fx:id="scaleY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="scaleY" GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyPressed="#handleModelTransformationField"/>
                         <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="scaleZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="scaleZ" GridPane.columnIndex="1" GridPane.rowIndex="2" onKeyPressed="#handleModelTransformationField"/>
                         <columnConstraints>
                             <ColumnConstraints />
                             <ColumnConstraints />
@@ -224,11 +243,11 @@
                     <Label text="Rotation:" />
                     <GridPane hgap="10" vgap="5">
                         <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="rotationX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="rotationX" GridPane.columnIndex="1" GridPane.rowIndex="0" onKeyPressed="#handleModelTransformationField"/>
                         <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <TextField fx:id="rotationY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="rotationY" GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyPressed="#handleModelTransformationField"/>
                         <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="rotationZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="rotationZ" GridPane.columnIndex="1" GridPane.rowIndex="2" onKeyPressed="#handleModelTransformationField"/>
                         <columnConstraints>
                             <ColumnConstraints />
                             <ColumnConstraints />
@@ -242,11 +261,11 @@
                     <Label text="Position:" />
                     <GridPane hgap="10" vgap="5">
                         <Label text="X:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="positionX" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="positionX" GridPane.columnIndex="1" GridPane.rowIndex="0" onKeyPressed="#handleModelTransformationField"/>
                         <Label text="Y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <TextField fx:id="positionY" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="positionY" GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyPressed="#handleModelTransformationField"/>
                         <Label text="Z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="positionZ" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="positionZ" GridPane.columnIndex="1" GridPane.rowIndex="2" onKeyPressed="#handleModelTransformationField"/>
                         <columnConstraints>
                             <ColumnConstraints />
                             <ColumnConstraints />
