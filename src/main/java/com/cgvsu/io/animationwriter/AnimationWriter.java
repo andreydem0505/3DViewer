@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class AnimationWriter {
-    public static void writeAnimationController(Map<ModelPrepared, ModelAnimation> animations, String path) throws IOException {
+    public static void writeAnimations(Map<ModelPrepared, ModelAnimation> animations, String path) throws IOException {
         Path fileName = Path.of(path);
 
         Gson gson = new GsonBuilder()

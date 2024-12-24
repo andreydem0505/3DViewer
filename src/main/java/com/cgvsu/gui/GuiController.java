@@ -5,6 +5,7 @@ import com.cgvsu.animation.AnimationController;
 import com.cgvsu.animation.Frame;
 import com.cgvsu.animation.ModelAnimation;
 import com.cgvsu.animation.State;
+import com.cgvsu.io.animationreader.AnimationReader;
 import com.cgvsu.io.animationwriter.AnimationWriter;
 import com.cgvsu.io.objreader.ObjReader;
 import com.cgvsu.io.objwriter.ObjWriter;
@@ -47,12 +48,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.cgvsu.model.Model;
 
@@ -231,7 +232,15 @@ public class GuiController {
         animationController.animations.put(modelController.currentModel, animation);
 
         try {
-            AnimationWriter.writeAnimationController(animationController.animations, "animation_dump.json");
+            //todo remove
+            //illustration of writing and reading of the default animation
+            AnimationWriter.writeAnimations(animationController.animations, "animation_dump.json");
+
+            Map<String, ModelPrepared> models = modelController.getModelList().stream().collect(Collectors.toMap(
+                    ModelPrepared::getName,
+                    m -> m
+            ));
+            AnimationReader.readAnimations(models, "animation_dump.json");
         }catch (IOException e){
             System.err.println("Unable to save animation dump." + e.getLocalizedMessage());
         }
