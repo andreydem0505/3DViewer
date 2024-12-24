@@ -24,6 +24,10 @@ public class RenderModeFactory {
         return new RenderMode(true, null, image, true);
     }
 
+    public static RenderMode plainColor(Color color) {
+        return new RenderMode(false, color, null, false);
+    }
+
     public static RenderMode plainColorLightning(Color color) {
         return new RenderMode(false, color, null, true);
     }
