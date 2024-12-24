@@ -3,15 +3,10 @@ package com.cgvsu.io.animationwriter;
 import com.cgvsu.animation.Frame;
 import com.cgvsu.animation.ModelAnimation;
 import com.cgvsu.animation.State;
-import com.cgvsu.io.animationreader.FrameSerializer;
-import com.cgvsu.io.animationreader.ModelAnimationSerializer;
-import com.cgvsu.io.animationreader.StateSerializer;
-import com.cgvsu.io.animationreader.Vector3Serializer;
 import com.cgvsu.model.ModelPrepared;
 import com.cgvsu.nmath.Vector3f;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;

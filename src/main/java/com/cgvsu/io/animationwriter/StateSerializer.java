@@ -1,4 +1,4 @@
-package com.cgvsu.io.animationreader;
+package com.cgvsu.io.animationwriter;
 
 import com.cgvsu.animation.State;
 import com.google.gson.JsonElement;

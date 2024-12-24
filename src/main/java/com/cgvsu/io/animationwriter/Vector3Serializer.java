@@ -1,4 +1,4 @@
-package com.cgvsu.io.animationreader;
+package com.cgvsu.io.animationwriter;
 
 import com.cgvsu.nmath.Vector3f;
 import com.google.gson.*;
