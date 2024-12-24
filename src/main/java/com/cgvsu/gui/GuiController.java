@@ -114,8 +114,16 @@ public class GuiController {
     @FXML
     private TextField distance;
 
+//    @FXML
+//    private ChoiceBox choiceBoxRenderMode;
     @FXML
-    private ChoiceBox choiceBoxRenderMode;
+    private CheckBox gridCheckbox;
+    @FXML
+    private CheckBox colorCheckbox;
+    @FXML
+    private CheckBox textureCheckbox;
+    @FXML
+    private CheckBox lightCheckbox;
 
     @FXML
     private ColorPicker colorPicker;
@@ -200,8 +208,8 @@ public class GuiController {
     }
 
     private void initializeFields() {
-        choiceBoxRenderMode.getItems().addAll("Inactive", "Grid", "GridColor", "GridColorLight", "GridTexture", "GridTextureLight", "ColorLight", "Texture", "TextureLight");
-        choiceBoxRenderMode.setValue("Grid");
+        gridCheckbox.setSelected(true);
+        lightCheckbox.setDisable(true);
         scaleX.setText("1");
         scaleY.setText("1");
         scaleZ.setText("1");
@@ -581,45 +589,161 @@ public class GuiController {
 
     private void updateChoiceBoxes() {
         try {
-            choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
+//            choiceBoxRenderMode.setValue(modelController.currentModel.getCurrentModeCode());
             colorPicker.setValue(modelController.currentModel.getCurrentColorCode());
+            switch (modelController.currentModel.getCurrentModeCode()) {
+                case "Grid":
+                    gridCheckbox.setSelected(true);
+                    colorCheckbox.setSelected(false);
+                    textureCheckbox.setSelected(false);
+                    lightCheckbox.setSelected(false);
+
+                    lightCheckbox.setDisable(true);
+                    colorCheckbox.setDisable(false);
+                    textureCheckbox.setDisable(false);
+                    break;
+                case "GridColor":
+                    gridCheckbox.setSelected(true);
+                    colorCheckbox.setSelected(true);
+                    textureCheckbox.setSelected(false);
+                    lightCheckbox.setSelected(false);
+
+                    textureCheckbox.setDisable(true);
+                    colorCheckbox.setDisable(false);
+                    lightCheckbox.setDisable(false);
+                    break;
+                case "GridColorLight":
+                    gridCheckbox.setSelected(true);
+                    colorCheckbox.setSelected(true);
+                    textureCheckbox.setSelected(false);
+                    lightCheckbox.setSelected(true);
+
+                    textureCheckbox.setDisable(true);
+                    colorCheckbox.setDisable(false);
+                    lightCheckbox.setDisable(false);
+                    break;
+                case "GridTexture":
+                    gridCheckbox.setSelected(true);
+                    colorCheckbox.setSelected(false);
+                    textureCheckbox.setSelected(true);
+                    lightCheckbox.setSelected(false);
+
+                    textureCheckbox.setDisable(false);
+                    colorCheckbox.setDisable(true);
+                    lightCheckbox.setDisable(false);
+                    break;
+                case "GridTextureLight":
+                    gridCheckbox.setSelected(true);
+                    colorCheckbox.setSelected(false);
+                    textureCheckbox.setSelected(true);
+                    lightCheckbox.setSelected(true);
+
+                    textureCheckbox.setDisable(false);
+                    colorCheckbox.setDisable(true);
+                    lightCheckbox.setDisable(false);
+                    break;
+                case "ColorLight":
+                    gridCheckbox.setSelected(false);
+                    colorCheckbox.setSelected(true);
+                    textureCheckbox.setSelected(false);
+                    lightCheckbox.setSelected(true);
+
+                    textureCheckbox.setDisable(true);
+                    colorCheckbox.setDisable(false);
+                    lightCheckbox.setDisable(false);
+                    break;
+                case "Texture":
+                    gridCheckbox.setSelected(false);
+                    colorCheckbox.setSelected(false);
+                    textureCheckbox.setSelected(true);
+                    lightCheckbox.setSelected(false);
+
+                    textureCheckbox.setDisable(false);
+                    colorCheckbox.setDisable(true);
+                    lightCheckbox.setDisable(false);
+                    break;
+                case "TextureLight":
+                    gridCheckbox.setSelected(false);
+                    colorCheckbox.setSelected(false);
+                    textureCheckbox.setSelected(true);
+                    lightCheckbox.setSelected(true);
+
+                    textureCheckbox.setDisable(false);
+                    colorCheckbox.setDisable(true);
+                    lightCheckbox.setDisable(false);
+                    break;
+                default:
+                    gridCheckbox.setSelected(false);
+                    colorCheckbox.setSelected(false);
+                    textureCheckbox.setSelected(false);
+                    lightCheckbox.setSelected(false);
+
+                    textureCheckbox.setDisable(false);
+                    colorCheckbox.setDisable(false);
+                    lightCheckbox.setDisable(true);
+                    break;
+            }
         } catch (Exception ignored) {}
     }
 
     @FXML
     private void handleRenderChoiceBoxChoice() {
         if (modelController.currentModel != null) {
-            modelController.currentModel.setRenderableFlag(true);
-            switch (choiceBoxRenderMode.getValue().toString()) {
-                case "Grid":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.grid());
-                    break;
-                case "GridColor":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
-                    break;
-                case "GridColorLight":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
-                    break;
-                case "GridTexture":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
-                    break;
-                case "GridTextureLight":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
-                    break;
-                case "ColorLight":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
-                    break;
-                case "Texture":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
-                    break;
-                case "TextureLight":
-                    modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
-                    break;
-                default:
-                    modelController.currentModel.setRenderableFlag(false);
-                    break;
+            if ((!colorCheckbox.isSelected() && !textureCheckbox.isSelected()) && lightCheckbox.isSelected()) {
+                lightCheckbox.setSelected(false);
+                lightCheckbox.setDisable(true);
             }
-            modelController.currentModel.setCurrentModeCode(choiceBoxRenderMode.getValue().toString());
+            modelController.currentModel.setRenderableFlag(true);
+            if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.grid());
+                modelController.currentModel.setCurrentModeCode("Grid");
+                lightCheckbox.setDisable(true);
+                colorCheckbox.setDisable(false);
+                textureCheckbox.setDisable(false);
+            } else if (gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setCurrentModeCode("GridColor");
+                lightCheckbox.setDisable(false);
+                textureCheckbox.setDisable(true);
+            } else if (gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setCurrentModeCode("GridColorLight");
+                lightCheckbox.setDisable(false);
+                textureCheckbox.setDisable(true);
+            } else if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridTexture(modelController.currentModel.getTexture()));
+                modelController.currentModel.setCurrentModeCode("GridTexture");
+                lightCheckbox.setDisable(false);
+                colorCheckbox.setDisable(true);
+            } else if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
+                modelController.currentModel.setCurrentModeCode("GridTextureLight");
+                lightCheckbox.setDisable(false);
+                colorCheckbox.setDisable(true);
+            } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setCurrentModeCode("ColorLight");
+                lightCheckbox.setDisable(false);
+                textureCheckbox.setDisable(true);
+            } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
+                modelController.currentModel.setCurrentModeCode("Texture");
+                lightCheckbox.setDisable(false);
+                colorCheckbox.setDisable(true);
+            } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
+                modelController.currentModel.setCurrentModeCode("TextureLight");
+                lightCheckbox.setDisable(false);
+                colorCheckbox.setDisable(true);
+            } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderableFlag(false);
+                lightCheckbox.setDisable(false);
+            } else {
+                modelController.currentModel.setRenderableFlag(false);
+                lightCheckbox.setDisable(true);
+                textureCheckbox.setDisable(false);
+                colorCheckbox.setDisable(false);
+            }
         }
     }
 
