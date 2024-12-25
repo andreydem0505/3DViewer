@@ -662,12 +662,16 @@ public class GuiController {
         objectsTree.setShowRoot(false);
         setCurrentModel(root.getChildren().size() - 1);
         updateChoiceBoxes();
-        updateAnimationTree();
         clearLabelsAndNullifySelectedFrame();
+        handleAnimationsTree();
     }
 
     @FXML
     private void removeModel() {
+        if (objectsTree.getSelectionModel().getSelectedIndex() < 0) {
+            showWarning("No model to remove", "Empty sheet, nothing to remove");
+            return;
+        }
         modelController.removeModel(objectsTree.getSelectionModel().getSelectedIndex());
         updateModelTree();
     }
@@ -682,9 +686,17 @@ public class GuiController {
             }
         }
         updateChoiceBoxes();
-        updateAnimationTree();
+        handleAnimationsTree();
         clearLabelsAndNullifySelectedFrame();
         updateModelTransformation();
+
+    }
+
+    private void handleAnimationsTree() {
+        if (modelController.currentModel != null)
+            updateAnimationTree();
+        else
+            clearTree();
     }
 
     private void updateChoiceBoxes() {
@@ -942,6 +954,7 @@ public class GuiController {
     }
 
     private void updateModelTransformation() {
+        if (modelController.currentModel != null) {
         scaleX.setText(String.valueOf(modelController.currentModel.model.scale.x()));
         scaleY.setText(String.valueOf(modelController.currentModel.model.scale.y()));
         scaleZ.setText(String.valueOf(modelController.currentModel.model.scale.z()));
@@ -953,6 +966,17 @@ public class GuiController {
         positionX.setText(String.valueOf(modelController.currentModel.model.position.x()));
         positionY.setText(String.valueOf(modelController.currentModel.model.position.y()));
         positionZ.setText(String.valueOf(modelController.currentModel.model.position.z()));
+        } else {
+            scaleX.setText("1");
+            scaleY.setText("1");
+            scaleZ.setText("1");
+            rotationX.setText("0");
+            rotationY.setText("0");
+            rotationZ.setText("0");
+            positionX.setText("0");
+            positionY.setText("0");
+            positionZ.setText("0");
+        }
     }
 
     @FXML
@@ -1035,62 +1059,86 @@ public class GuiController {
 
     @FXML
     private void handleNewFrame () {
-        Model currModel = modelController.currentModel.model;
-        animationController.animations.get(modelController.currentModel).addFrame(new Frame(
-                new State(currModel.position, currModel.rotation, currModel.scale),
-                new State(currModel.position, currModel.rotation, currModel.scale),
-                0
-                )
-        );
-        updateAnimationTree();
-        animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
-        framesTree.getSelectionModel().select(framesTree.getRoot().getChildren().size() - 1);
-        updateAnimationInformation();
+        try {
+            Model currModel = modelController.currentModel.model;
+            animationController.animations.get(modelController.currentModel).addFrame(new Frame(
+                            new State(currModel.position, currModel.rotation, currModel.scale),
+                            new State(currModel.position, currModel.rotation, currModel.scale),
+                            0
+                    )
+            );
+            updateAnimationTree();
+            animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
+            framesTree.getSelectionModel().select(framesTree.getRoot().getChildren().size() - 1);
+            updateAnimationInformation();
+        } catch (NullPointerException npe) {
+            showError("No model", "No model selected, aborted");
+        }
     }
 
     private void updateAnimationTree() {
+//        try {
         TreeItem<String> root = new TreeItem<>("Frames");
         framesTree.setRoot(root);
         for (int i = 0; i < animationController.animations.get(modelController.currentModel).getFrames().size(); i++) {
             root.getChildren().add(new TreeItem<>("Frame " + (i + 1)));
         }
         framesTree.setShowRoot(false);
+//        } catch (NullPointerException npe) {
+//            showError("No frames left", "Nothing to remove here, no frames left");
+//            clearLabelsAndNullifySelectedFrame();
+//        }
+    }
+
+    private void clearTree() {
+        TreeItem<String> root = new TreeItem<>("Frames");
+        framesTree.setRoot(root);
+        framesTree.setShowRoot(false);
     }
 
     @FXML
     private void handleFrameSelection(MouseEvent event) {
-        TreeItem<String> selectedItem = framesTree.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            int selectedIndex = framesTree.getRoot().getChildren().indexOf(selectedItem);
-            if (selectedIndex >= 0) {
-                animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(selectedIndex);
-                framesTree.getSelectionModel().select(selectedIndex);
+        try {
+            TreeItem<String> selectedItem = framesTree.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                int selectedIndex = framesTree.getRoot().getChildren().indexOf(selectedItem);
+                if (selectedIndex >= 0) {
+                    animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(selectedIndex);
+                    framesTree.getSelectionModel().select(selectedIndex);
+                }
             }
+            updateAnimationInformation();
+        } catch (NullPointerException ignored) {
+            // Ошибка от клика по пустому treeview. Говорить юзеру не о чем, нужно просто игнорировать
         }
-        updateAnimationInformation();
     }
 
     @FXML
     private void handleSetInitialState() {
-        ModelPrepared currModel = modelController.currentModel;
-        animationController.selectedFrame.setInitialState(new State(currModel.model.position, currModel.model.rotation, currModel.model.scale));
-        System.out.println(animationController.selectedFrame.getInitialState().getPosition());
-        updateAnimationInformation();
+        try {
+            ModelPrepared currModel = modelController.currentModel;
+            animationController.selectedFrame.setInitialState(new State(currModel.model.position, currModel.model.rotation, currModel.model.scale));
+            updateAnimationInformation();
+        } catch (NullPointerException npe) {
+            showError("No frame", "No frame selected, aborted");
+        }
     }
 
     @FXML
     private void handleSetDestinationState() {
-        Model currModel = modelController.currentModel.model;
-        animationController.selectedFrame.setDestinationState(new State(currModel.position, currModel.rotation, currModel.scale));
-        System.out.println(animationController.selectedFrame.getDestinationState().getPosition());
-        updateAnimationInformation();
+        try {
+            Model currModel = modelController.currentModel.model;
+            animationController.selectedFrame.setDestinationState(new State(currModel.position, currModel.rotation, currModel.scale));
+            updateAnimationInformation();
+        } catch (NullPointerException npe) {
+            showError("No frame", "No frame selected, aborted");
+        }
     }
 
     @FXML
     private void handleSetDuration() {
         try {
             animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText())) * 1000);
-            System.out.println(animationController.selectedFrame.getDuration());
             updateAnimationInformation();
         } catch (NullPointerException npe) {
             showError("No frame", "No frame selected");
@@ -1112,6 +1160,10 @@ public class GuiController {
     }
 
     private void updateAnimationInformation() {
+        if (animationController.animations.get(modelController.currentModel).getFrames().isEmpty()) {
+            clearLabelsAndNullifySelectedFrame();
+            return;
+        }
         durationLabel.setText(animationController.selectedFrame.getDuration() / 1000 + " s");
         frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration() / 1000));
         State destinationState = animationController.selectedFrame.getDestinationState();
@@ -1130,16 +1182,24 @@ public class GuiController {
 
     @FXML
     private void removeFrame() {
+        if (animationController.animations.get(modelController.currentModel).getFrames().isEmpty()) {
+            showError("Nothing to remove here", "Nothing to remove here, aborted");
+        }
         TreeItem<String> selectedItem = framesTree.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             int selectedIndex = framesTree.getRoot().getChildren().indexOf(selectedItem);
             if (selectedIndex >= 0) {
                 animationController.animations.get(modelController.currentModel).removeFrame(selectedIndex);
+            } else {
+                showWarning("Nothing to remove", "Nothing to remove here, no frames left");
             }
         }
         updateAnimationTree();
+        updateAnimationInformation();
         framesTree.getSelectionModel().select(framesTree.getRoot().getChildren().size() - 1);
-        animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
+        if (!framesTree.getRoot().getChildren().isEmpty()) {
+            animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
+        }
     }
 
     @FXML

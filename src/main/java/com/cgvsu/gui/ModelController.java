@@ -42,6 +42,7 @@ public class ModelController {
     }
     public void removeModel(int index) {
         if (index >= 0 && index < modelList.size()) {
+            namesSet.remove(modelList.get(index).getName());
             modelList.remove(index);
             if (getModelsQuantity() > 0) {
                 currentModel = modelList.get(0);
