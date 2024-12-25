@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,6 @@ public class AnimationReader {
         for (Map.Entry<String, JsonElement> entry : object.entrySet()){
             ModelPrepared model = models.get(entry.getKey());
             ModelAnimation animation = gson.fromJson(entry.getValue(), ModelAnimation.class);
-
             result.put(model, animation);
         }
 

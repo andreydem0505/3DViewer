@@ -76,7 +76,7 @@
     <ScrollPane fx:id="scrollPaneMenu" focusTraversable="false" hbarPolicy="NEVER" layoutY="25.0" prefHeight="870.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="25.0">
         <VBox prefWidth="300.0">
             <!-- Меню объектов -->
-            <TitledPane expanded="false" focusTraversable="false" text="Objects">
+            <TitledPane focusTraversable="false" text="Objects">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addModelToTheScene" text="+" />
@@ -180,7 +180,7 @@
             </TitledPane>
 
             <!-- Меню модификаций -->
-            <TitledPane focusTraversable="false" text="Model modification">
+            <TitledPane expanded="false" focusTraversable="false" text="Model modification">
                 <VBox spacing="5">
                     <VBox spacing="5">
                         <Label text="VertexPolygonRemoverTool" />
@@ -298,7 +298,9 @@
              <VBox spacing="5">
                  <HBox spacing="5">
                      <Button onAction="#handleNewFrame" text="+" />
-                     <Button onAction="#removeCamera" text="-" />
+                     <Button onAction="#removeFrame" text="-" />
+                     <Button onAction="#loadAnimation" text="Load animation" />
+                     <Button onAction="#saveAnimation" text="Save animation" />
                  </HBox>
                  <TreeView fx:id="framesTree" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleFrameSelection" prefHeight="100.0" prefWidth="280.0">
                      <VBox.margin>

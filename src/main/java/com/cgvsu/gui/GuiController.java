@@ -53,7 +53,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.cgvsu.model.Model;
@@ -226,6 +225,7 @@ public class GuiController {
 
         loadModel("./models/caracal_cube.obj");
         updateModelTree();
+        updateModelTransformation();
 //        ModelAnimation animation = new ModelAnimation();
 //        animation.addFrame(
 //                new Frame(
@@ -242,20 +242,20 @@ public class GuiController {
 //                )
 //        );
 //        animationController.animations.put(modelController.currentModel, animation);
-
-        try {
+//        updateAnimationTree();
+//        try {
             //todo remove
             //illustration of writing and reading of the default animation
-            AnimationWriter.writeAnimations(animationController.animations, "animation_dump.json");
+//            AnimationWriter.writeAnimations(animationController.animations, "animation_dump.json");
 
-            Map<String, ModelPrepared> models = modelController.getModelList().stream().collect(Collectors.toMap(
-                    ModelPrepared::getName,
-                    m -> m
-            ));
-            AnimationReader.readAnimations(models, "animation_dump.json");
-        }catch (IOException e){
-            System.err.println("Unable to save animation dump." + e.getLocalizedMessage());
-        }
+//            Map<String, ModelPrepared> models = modelController.getModelList().stream().collect(Collectors.toMap(
+//                    ModelPrepared::getName,
+//                    m -> m
+//            ));
+//            AnimationReader.readAnimations(models, "animation_dump.json");
+//        }catch (IOException e){
+//            System.err.println("Unable to save animation dump." + e.getLocalizedMessage());
+//        }
     }
 
     private void initializeCamerasController() {
@@ -405,6 +405,7 @@ public class GuiController {
 
         loadModel(file.getAbsolutePath());
         updateModelTree();
+        updateModelTransformation();
     }
 
     private void loadModel(String path) {
@@ -657,6 +658,7 @@ public class GuiController {
         setCurrentModel(root.getChildren().size() - 1);
         updateChoiceBoxes();
         updateAnimationTree();
+        clearLabelsAndNullifySelectedFrame();
     }
 
     @FXML
@@ -676,6 +678,8 @@ public class GuiController {
         }
         updateChoiceBoxes();
         updateAnimationTree();
+        clearLabelsAndNullifySelectedFrame();
+        updateModelTransformation();
     }
 
     private void updateChoiceBoxes() {
@@ -932,6 +936,20 @@ public class GuiController {
         verticesToDeleteTextField.setText(readVertices.toString().substring(1, readVertices.toString().length() - 1));
     }
 
+    private void updateModelTransformation() {
+        scaleX.setText(String.valueOf(modelController.currentModel.model.scale.x()));
+        scaleY.setText(String.valueOf(modelController.currentModel.model.scale.y()));
+        scaleZ.setText(String.valueOf(modelController.currentModel.model.scale.z()));
+
+        rotationX.setText(String.valueOf(modelController.currentModel.model.rotation.x() * 180 / Linal.pi));
+        rotationY.setText(String.valueOf(modelController.currentModel.model.rotation.y() * 180 / Linal.pi));
+        rotationZ.setText(String.valueOf(modelController.currentModel.model.rotation.z() * 180 / Linal.pi));
+
+        positionX.setText(String.valueOf(modelController.currentModel.model.position.x()));
+        positionY.setText(String.valueOf(modelController.currentModel.model.position.y()));
+        positionZ.setText(String.valueOf(modelController.currentModel.model.position.z()));
+    }
+
     @FXML
     private void handleModelTransformation() {
         try {
@@ -1054,6 +1072,7 @@ public class GuiController {
                 framesTree.getSelectionModel().select(selectedIndex);
             }
         }
+        updateLabels();
     }
 
     @FXML
@@ -1098,5 +1117,68 @@ public class GuiController {
                 initialState.getRotation().x() / Linal.pi * 180, initialState.getRotation().y() / Linal.pi * 180, initialState.getRotation().z() / Linal.pi * 180,
                 initialState.getPosition().x(), initialState.getPosition().y(), initialState.getPosition().z()
         ));
+    }
+
+    @FXML
+    private void removeFrame() {
+        TreeItem<String> selectedItem = framesTree.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            int selectedIndex = framesTree.getRoot().getChildren().indexOf(selectedItem);
+            if (selectedIndex >= 0) {
+                animationController.animations.get(modelController.currentModel).removeFrame(selectedIndex);
+            }
+        }
+        updateAnimationTree();
+        framesTree.getSelectionModel().select(framesTree.getRoot().getChildren().size() - 1);
+        animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
+    }
+
+    @FXML
+    private void loadAnimation() throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Animation (*.json)", "*.json"));
+        fileChooser.setTitle("Load texture");
+
+        File file = fileChooser.showOpenDialog((Stage) imageView.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        Map<String, ModelPrepared> models = modelController.getModelList().stream().collect(Collectors.toMap(
+                ModelPrepared::getName,
+                m -> m
+        ));
+
+        animationController.animations = AnimationReader.readAnimations(models, file.toString());
+
+        updateAnimationTree();
+    }
+
+    @FXML
+    private void saveAnimation() throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName("Animation");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Animation (*.json)", "*.json"));
+        fileChooser.setTitle("Save animation");
+
+        File file = fileChooser.showSaveDialog((Stage) imageView.getScene().getWindow());
+
+        if (file == null) {
+            return;
+        }
+
+        String filename = file.getAbsolutePath();
+
+        try {
+            AnimationWriter.writeAnimations(animationController.animations, filename);
+        } catch (Exception e) {
+            showError("Error", "Error while writing file");
+        }
+    }
+
+    private void clearLabelsAndNullifySelectedFrame() {
+        animationController.selectedFrame = null;
+        initialVectors.setText("");
+        destinationVectors.setText("");
     }
 }

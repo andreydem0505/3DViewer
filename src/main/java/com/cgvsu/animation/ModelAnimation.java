@@ -16,6 +16,10 @@ public class ModelAnimation {
         frames.add(frame);
     }
 
+    public void removeFrame(int index) {
+        frames.remove(index);
+    }
+
     protected State animate() {
         if (isOver()) return null;
         Frame frame = frames.get(currentFrame);
