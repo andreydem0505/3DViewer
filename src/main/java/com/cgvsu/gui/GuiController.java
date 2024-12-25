@@ -784,7 +784,7 @@ public class GuiController {
             } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.plainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
                 modelController.currentModel.setCurrentModeCode("Color");
-                handleSetDisabledCheckboxes(true, false, false);
+                handleSetDisabledCheckboxes(false, true, false);
             } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("TextureLight");
