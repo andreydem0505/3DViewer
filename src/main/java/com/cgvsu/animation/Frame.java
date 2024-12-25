@@ -23,6 +23,10 @@ public class Frame {
         return lasted >= duration;
     }
 
+    protected void reset() {
+        lasted = 0;
+    }
+
     public State getInitialState() {
         return initialState;
     }

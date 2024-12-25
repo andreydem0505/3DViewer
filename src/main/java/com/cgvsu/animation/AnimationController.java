@@ -1,6 +1,5 @@
 package com.cgvsu.animation;
 
-import com.cgvsu.model.Model;
 import com.cgvsu.model.ModelPrepared;
 
 import java.util.HashMap;
@@ -27,5 +26,11 @@ public class AnimationController {
             over &= animation.isOver();
         }
         return over && !animations.isEmpty();
+    }
+
+    public void reset() {
+        for (ModelAnimation animation : animations.values()) {
+            animation.reset();
+        }
     }
 }

@@ -31,4 +31,11 @@ public class ModelAnimation {
     public List<Frame> getFrames() {
         return frames;
     }
+
+    protected void reset() {
+        for (Frame frame : frames) {
+            frame.reset();
+        }
+        currentFrame = 0;
+    }
 }

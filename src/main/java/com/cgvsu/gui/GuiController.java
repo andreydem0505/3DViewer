@@ -195,6 +195,8 @@ public class GuiController {
 
             if (!animationController.isOver()) {
                 animationController.animate();
+            } else {
+                animationController.reset();
             }
 
             if (modelController.hasRenderableModels()) {
