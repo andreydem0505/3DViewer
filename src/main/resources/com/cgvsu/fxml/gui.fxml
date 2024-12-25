@@ -64,10 +64,11 @@
       </Menu>
       <Menu mnemonicParsing="false" text="Utils">
         <items>
-          <MenuItem mnemonicParsing="false" onAction="#handleNormalsMenuItem" text="NormalsForCurrModel" />
-            <MenuItem mnemonicParsing="false" onAction="#musicChooser" text="Load and play music" />
-            <MenuItem mnemonicParsing="false" onAction="#musicStop" text="Stop Music" />
+            <MenuItem mnemonicParsing="false" onAction="#musicChooser" text="Load music" />
+            <MenuItem mnemonicParsing="false" onAction="#musicPauseResume" text="Pause/resume music" />
             <MenuItem mnemonicParsing="false" onAction="#handlePlayAnimationFLag" text="Play/pause animation" />
+            <MenuItem mnemonicParsing="false" onAction="#musicReset" text="Reset music" />
+            <MenuItem mnemonicParsing="false" onAction="#handleAnimationReset" text="Reset animation" />
         </items>
       </Menu>
     </MenuBar>
@@ -296,6 +297,21 @@
 <!--            Анимации-->
          <TitledPane animated="false" text="Animation">
              <VBox spacing="5">
+               <GridPane>
+                 <columnConstraints>
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="10.0" prefWidth="104.9999771118164" />
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0000228881836" minWidth="10.0" prefWidth="102.99999999999999" />
+                     <ColumnConstraints maxWidth="68.33333333333331" minWidth="54.333333333333314" prefWidth="66.33333333333331" />
+                 </columnConstraints>
+                 <rowConstraints>
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                 </rowConstraints>
+                  <children>
+                     <Button mnemonicParsing="false" onMouseClicked="#handlePlayAnimationFLag" prefWidth="100.0" text="Play/pause" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                     <Button mnemonicParsing="false" onMouseClicked="#handleAnimationReset" prefHeight="25.0" prefWidth="100.0" text="Reset" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                      <CheckBox fx:id="loopCheckbox" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLoopCheckbox" text="Loop" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+                  </children>
+               </GridPane>
                  <HBox spacing="5">
                      <Button onAction="#handleNewFrame" text="+" />
                      <Button onAction="#removeFrame" text="-" />
@@ -323,7 +339,7 @@
                            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="63.0" text="Duration: " textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                            <TextField fx:id="frameDuration" maxWidth="216.0" onKeyPressed="#handleSetDurationWithEnter" prefHeight="25.0" prefWidth="96.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                         <Button mnemonicParsing="false" onMouseClicked="#handleSetDuration" prefHeight="25.0" prefWidth="59.0" text="Set" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                         <CheckBox fx:id="loopCheckbox" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLoopCheckbox" text="Loop" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <Label fx:id="durationLabel" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                  </VBox>

@@ -30,6 +30,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -152,6 +153,8 @@ public class GuiController {
     private Label initialVectors;
     @FXML
     private Label destinationVectors;
+    @FXML
+    private Label durationLabel;
 
     private volatile boolean musicPlaying = false;
     private boolean playAnimationFlag = false;
@@ -172,7 +175,6 @@ public class GuiController {
     );
 
     private final ModelController modelController = new ModelController();
-
     private Timeline timeline;
 
     @FXML
@@ -206,7 +208,8 @@ public class GuiController {
 
             if (playAnimationFlag && !animationController.isOver()) {
                 animationController.animate();
-            } else if (loopFlag) {
+                updateModelTransformation();
+            } else if (loopFlag && animationController.isOver()) {
                 animationController.reset();
             }
 
@@ -1009,8 +1012,6 @@ public class GuiController {
             return;
         }
 
-        musicPlaying = true;
-
         service.submit(new Runnable() {
             public void run() {
                 playMusic(file);
@@ -1023,24 +1024,15 @@ public class GuiController {
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
 
-            clip.start();
-            while (musicPlaying) {
-                Thread.onSpinWait();
-            }
-
         } catch (FileNotFoundException e) {
             showError("Music", "File not found");
-        }catch (UnsupportedAudioFileException e) {
+        } catch (UnsupportedAudioFileException e) {
             showError("Music", "File is not supported");
         } catch (IOException | LineUnavailableException e) {
             showError("Sth", "Bruh, sth went wrong");
         }
     }
-    @FXML
-    private void musicStop() {
-        musicPlaying = false;
-        clip.stop();
-    }
+
     @FXML
     private void handleNewFrame () {
         Model currModel = modelController.currentModel.model;
@@ -1096,9 +1088,15 @@ public class GuiController {
 
     @FXML
     private void handleSetDuration() {
-        animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText())) * 1000);
-        System.out.println(animationController.selectedFrame.getDuration());
-        updateAnimationInformation();
+        try {
+            animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText())) * 1000);
+            System.out.println(animationController.selectedFrame.getDuration());
+            updateAnimationInformation();
+        } catch (NullPointerException npe) {
+            showError("No frame", "No frame selected");
+        } catch (NumberFormatException nfe) {
+            showNumberAlertTextField();
+        }
     }
 
     @FXML
@@ -1111,10 +1109,10 @@ public class GuiController {
     @FXML
     private void handlePlayAnimationFLag() {
         playAnimationFlag = !playAnimationFlag;
-        updateAnimationInformation();
     }
 
     private void updateAnimationInformation() {
+        durationLabel.setText(animationController.selectedFrame.getDuration() / 1000 + " s");
         frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration() / 1000));
         State destinationState = animationController.selectedFrame.getDestinationState();
         State initialState = animationController.selectedFrame.getInitialState();
@@ -1159,9 +1157,16 @@ public class GuiController {
                 ModelPrepared::getName,
                 m -> m
         ));
+        Map<ModelPrepared, ModelAnimation> loadedAnimations = AnimationReader.readAnimations(models, file.toString());
 
-        animationController.animations = AnimationReader.readAnimations(models, file.toString());
-        System.out.println(animationController.animations.get(modelController.currentModel).getFrames());
+        for (ModelPrepared modelPrepared : loadedAnimations.keySet()) {
+            if (!modelController.getModelList().contains(modelPrepared)) {
+                showError("Wrong animation", "Model list doesnt match the animation. Check and try again");
+                return;
+            }
+        }
+
+        animationController.animations = loadedAnimations;
         updateAnimationTree();
     }
 
@@ -1183,17 +1188,46 @@ public class GuiController {
         try {
             AnimationWriter.writeAnimations(animationController.animations, filename);
         } catch (Exception e) {
-            showError("Error", "Error while writing file");
+            showError("Error", "Error while writing the file");
         }
     }
 
     private void clearLabelsAndNullifySelectedFrame() {
         animationController.selectedFrame = null;
+        durationLabel.setText("");
         initialVectors.setText("");
         destinationVectors.setText("");
     }
     @FXML
     private void handleLoopCheckbox() {
         loopFlag = !loopFlag;
+    }
+
+    @FXML
+    private void handleAnimationReset() {
+        animationController.reset();
+    }
+
+    @FXML
+    private void musicPauseResume() {
+        try {
+            if (musicPlaying) {
+                clip.stop();
+            } else {
+                clip.start();
+            }
+            musicPlaying = !musicPlaying;
+        } catch (Exception e) {
+            showError("Music not found", "Check the file u've loaded");
+        }
+    }
+
+    @FXML
+    private void musicReset() {
+        try {
+            clip.setFramePosition(0);
+        } catch (Exception e) {
+            showError("Music not found", "Check the file u've loaded");
+        }
     }
 }
