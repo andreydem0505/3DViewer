@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 public class FrameDeserializer implements JsonDeserializer<Frame> {
     @Override
     public Frame deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject object = new JsonObject();
+        JsonObject object = json.getAsJsonObject();
 
         State initialState = context.deserialize(object.get("initialState"), State.class);
         State destinationState = context.deserialize(object.get("destinationState"), State.class);

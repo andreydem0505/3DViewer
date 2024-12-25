@@ -11,7 +11,7 @@ import java.util.List;
 public class ModelAnimationDeserializer implements JsonDeserializer<ModelAnimation> {
     @Override
     public ModelAnimation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonArray array = new JsonArray();
+        JsonArray array = json.getAsJsonArray();
 
         ModelAnimation animation = new ModelAnimation();
         for (int i = 0; i < array.size(); i++){
