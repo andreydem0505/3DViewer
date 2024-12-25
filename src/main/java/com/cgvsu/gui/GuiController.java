@@ -1112,7 +1112,7 @@ public class GuiController {
     }
 
     private void updateAnimationInformation() {
-        frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration()));
+        frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration() / 1000));
         State destinationState = animationController.selectedFrame.getDestinationState();
         State initialState = animationController.selectedFrame.getInitialState();
         destinationVectors.setText(String.format(("(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)"),
