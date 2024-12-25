@@ -42,4 +42,9 @@ public class ModelAnimation {
         }
         currentFrame = 0;
     }
+
+    protected State getInitialState() {
+        if (frames.isEmpty()) return null;
+        return frames.get(0).getInitialState();
+    }
 }

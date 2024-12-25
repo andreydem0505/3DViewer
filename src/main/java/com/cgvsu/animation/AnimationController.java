@@ -30,8 +30,12 @@ public class AnimationController {
     }
 
     public void reset() {
-        for (ModelAnimation animation : animations.values()) {
+        for (Map.Entry<ModelPrepared, ModelAnimation> entry : animations.entrySet()) {
+            ModelAnimation animation = entry.getValue();
             animation.reset();
+            State state = animation.getInitialState();
+            if (state != null)
+                entry.getKey().model.setState(state);
         }
     }
 }
