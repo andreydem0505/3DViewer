@@ -672,6 +672,7 @@ public class GuiController {
             showWarning("No model to remove", "Empty sheet, nothing to remove");
             return;
         }
+        animationController.animations.remove(modelController.currentModel);
         modelController.removeModel(objectsTree.getSelectionModel().getSelectedIndex());
         updateModelTree();
     }
