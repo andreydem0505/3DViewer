@@ -1138,7 +1138,7 @@ public class GuiController {
     @FXML
     private void handleSetDuration() {
         try {
-            animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText())) * 1000);
+            animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText()) * 1000));
             updateAnimationInformation();
         } catch (NullPointerException npe) {
             showError("No frame", "No frame selected");
@@ -1164,7 +1164,7 @@ public class GuiController {
             clearLabelsAndNullifySelectedFrame();
             return;
         }
-        durationLabel.setText(animationController.selectedFrame.getDuration() / 1000 + " s");
+        durationLabel.setText(animationController.selectedFrame.getDuration() / 1000.0 + " s");
         frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration() / 1000));
         State destinationState = animationController.selectedFrame.getDestinationState();
         State initialState = animationController.selectedFrame.getInitialState();
