@@ -956,17 +956,17 @@ public class GuiController {
 
     private void updateModelTransformation() {
         if (modelController.currentModel != null) {
-        scaleX.setText(String.valueOf(modelController.currentModel.model.scale.x()));
-        scaleY.setText(String.valueOf(modelController.currentModel.model.scale.y()));
-        scaleZ.setText(String.valueOf(modelController.currentModel.model.scale.z()));
+            scaleX.setText(String.valueOf(modelController.currentModel.model.scale.x()));
+            scaleY.setText(String.valueOf(modelController.currentModel.model.scale.y()));
+            scaleZ.setText(String.valueOf(modelController.currentModel.model.scale.z()));
 
-        rotationX.setText(String.valueOf(modelController.currentModel.model.rotation.x() * 180 / Linal.pi));
-        rotationY.setText(String.valueOf(modelController.currentModel.model.rotation.y() * 180 / Linal.pi));
-        rotationZ.setText(String.valueOf(modelController.currentModel.model.rotation.z() * 180 / Linal.pi));
+            rotationX.setText(String.valueOf(modelController.currentModel.model.rotation.x() * 180 / Linal.pi));
+            rotationY.setText(String.valueOf(modelController.currentModel.model.rotation.y() * 180 / Linal.pi));
+            rotationZ.setText(String.valueOf(modelController.currentModel.model.rotation.z() * 180 / Linal.pi));
 
-        positionX.setText(String.valueOf(modelController.currentModel.model.position.x()));
-        positionY.setText(String.valueOf(modelController.currentModel.model.position.y()));
-        positionZ.setText(String.valueOf(modelController.currentModel.model.position.z()));
+            positionX.setText(String.valueOf(modelController.currentModel.model.position.x()));
+            positionY.setText(String.valueOf(modelController.currentModel.model.position.y()));
+            positionZ.setText(String.valueOf(modelController.currentModel.model.position.z()));
         } else {
             scaleX.setText("1");
             scaleY.setText("1");
@@ -1078,17 +1078,12 @@ public class GuiController {
     }
 
     private void updateAnimationTree() {
-//        try {
         TreeItem<String> root = new TreeItem<>("Frames");
         framesTree.setRoot(root);
         for (int i = 0; i < animationController.animations.get(modelController.currentModel).getFrames().size(); i++) {
             root.getChildren().add(new TreeItem<>("Frame " + (i + 1)));
         }
         framesTree.setShowRoot(false);
-//        } catch (NullPointerException npe) {
-//            showError("No frames left", "Nothing to remove here, no frames left");
-//            clearLabelsAndNullifySelectedFrame();
-//        }
     }
 
     private void clearTree() {
@@ -1196,11 +1191,11 @@ public class GuiController {
             }
         }
         updateAnimationTree();
-        updateAnimationInformation();
         framesTree.getSelectionModel().select(framesTree.getRoot().getChildren().size() - 1);
         if (!framesTree.getRoot().getChildren().isEmpty()) {
             animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
         }
+        updateAnimationInformation();
     }
 
     @FXML
@@ -1268,6 +1263,7 @@ public class GuiController {
     @FXML
     private void handleAnimationReset() {
         animationController.reset();
+        updateModelTransformation();
     }
 
     @FXML
