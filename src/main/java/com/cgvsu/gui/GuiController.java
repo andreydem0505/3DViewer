@@ -1165,7 +1165,7 @@ public class GuiController {
             return;
         }
         durationLabel.setText(animationController.selectedFrame.getDuration() / 1000.0 + " s");
-        frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration() / 1000));
+        frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration() / 1000.0));
         State destinationState = animationController.selectedFrame.getDestinationState();
         State initialState = animationController.selectedFrame.getInitialState();
         destinationVectors.setText(String.format(("(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)"),
