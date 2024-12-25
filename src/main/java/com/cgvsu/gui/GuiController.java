@@ -1161,7 +1161,7 @@ public class GuiController {
         ));
 
         animationController.animations = AnimationReader.readAnimations(models, file.toString());
-
+        System.out.println(animationController.animations.get(modelController.currentModel).getFrames());
         updateAnimationTree();
     }
 
