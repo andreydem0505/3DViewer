@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnimationController {
+    public Frame selectedFrame;
     public Map<ModelPrepared, ModelAnimation> animations;
 
     public AnimationController() {

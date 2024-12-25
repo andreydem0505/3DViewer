@@ -29,6 +29,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -66,6 +67,9 @@ public class GuiController {
 
     @FXML
     private TreeView<String> camerasTree;
+
+    @FXML
+    private TreeView<String> framesTree;
 
     @FXML
     private TreeView<String> objectsTree;
@@ -123,8 +127,9 @@ public class GuiController {
     @FXML
     private TextField distance;
 
-//    @FXML
-//    private ChoiceBox choiceBoxRenderMode;
+    @FXML
+    private TextField frameDuration;
+
     @FXML
     private CheckBox gridCheckbox;
     @FXML
@@ -142,8 +147,14 @@ public class GuiController {
 
     @FXML
     private ImageView imageView;
+    @FXML
+    private Label initialVectors;
+    @FXML
+    private Label destinationVectors;
 
     private volatile boolean musicPlaying = false;
+    private boolean playAnimationFlag = false;
+    private boolean loopFlag = false;
     private ExecutorService service = Executors.newFixedThreadPool(4);
     private Clip clip;
     private AnimationController animationController;
@@ -169,7 +180,6 @@ public class GuiController {
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue()));
 
         initializeFields();
-
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
@@ -193,9 +203,9 @@ public class GuiController {
             pixelWriter.clearScreen((int) width, (int) height);
             camerasController.currentCamera.setAspectRatio((float) (height / width));
 
-            if (!animationController.isOver()) {
+            if (playAnimationFlag && !animationController.isOver()) {
                 animationController.animate();
-            } else {
+            } else if (true) {
                 animationController.reset();
             }
 
@@ -216,22 +226,22 @@ public class GuiController {
 
         loadModel("./models/caracal_cube.obj");
         updateModelTree();
-        ModelAnimation animation = new ModelAnimation();
-        animation.addFrame(
-                new Frame(
-                        new State(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
-                        new State(new Vector3f(8, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
-                        TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS)
-                )
-        );
-        animation.addFrame(
-                new Frame(
-                        new State(new Vector3f(8, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
-                        new State(new Vector3f(8, 0, 0), new Vector3f(Linal.pi / 4, 0, 0), new Vector3f(1, 1, 1)),
-                        TimeUnit.MILLISECONDS.convert(3, TimeUnit.SECONDS)
-                )
-        );
-        animationController.animations.put(modelController.currentModel, animation);
+//        ModelAnimation animation = new ModelAnimation();
+//        animation.addFrame(
+//                new Frame(
+//                        new State(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
+//                        new State(new Vector3f(8, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
+//                        TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS)
+//                )
+//        );
+//        animation.addFrame(
+//                new Frame(
+//                        new State(new Vector3f(8, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)),
+//                        new State(new Vector3f(8, 0, 0), new Vector3f(Linal.pi / 4, 0, 0), new Vector3f(1, 1, 1)),
+//                        TimeUnit.MILLISECONDS.convert(3, TimeUnit.SECONDS)
+//                )
+//        );
+//        animationController.animations.put(modelController.currentModel, animation);
 
         try {
             //todo remove
@@ -407,8 +417,10 @@ public class GuiController {
             for (Polygon polygon : newModel.polygons)
                 Triangulation.convexPolygonTriangulate(polygon);
             String modelName = getModelName(fileName);
-            modelController.addModel(new ModelPrepared(newModel, modelName, RenderModeFactory.grid()));
+            ModelPrepared loadedModel = new ModelPrepared(newModel, modelName, RenderModeFactory.grid());
+            modelController.addModel(loadedModel);
             modelController.addNameToNameSet(modelName);
+            animationController.animations.put(loadedModel, new ModelAnimation());
             if (modelController.getModelsQuantity() >= 1) {
                 modelController.currentModel = modelController.getModelList().get(modelController.getModelsQuantity() - 1);
             }
@@ -644,6 +656,7 @@ public class GuiController {
         objectsTree.setShowRoot(false);
         setCurrentModel(root.getChildren().size() - 1);
         updateChoiceBoxes();
+        updateAnimationTree();
     }
 
     @FXML
@@ -662,6 +675,7 @@ public class GuiController {
             }
         }
         updateChoiceBoxes();
+        updateAnimationTree();
     }
 
     private void updateChoiceBoxes() {
@@ -744,6 +758,10 @@ public class GuiController {
             } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.texture(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("Texture");
+                handleSetDisabledCheckboxes(true, false, false);
+            } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
+                modelController.currentModel.setRenderMode(RenderModeFactory.plainColor(convertColor(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setCurrentModeCode("Color");
                 handleSetDisabledCheckboxes(true, false, false);
             } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
                 modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
@@ -1001,5 +1019,84 @@ public class GuiController {
     private void musicStop() {
         musicPlaying = false;
         clip.stop();
+    }
+    @FXML
+    private void handleNewFrame () {
+        Model currModel = modelController.currentModel.model;
+        animationController.animations.get(modelController.currentModel).addFrame(new Frame(
+                new State(currModel.position, currModel.rotation, currModel.scale),
+                new State(currModel.position, currModel.rotation, currModel.scale),
+                0
+                )
+        );
+        updateAnimationTree();
+        animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
+        framesTree.getSelectionModel().select(framesTree.getRoot().getChildren().size() - 1);
+        updateLabels();
+    }
+
+    private void updateAnimationTree() {
+        TreeItem<String> root = new TreeItem<>("Frames");
+        framesTree.setRoot(root);
+        for (int i = 0; i < animationController.animations.get(modelController.currentModel).getFrames().size(); i++) {
+            root.getChildren().add(new TreeItem<>("Frame " + (i + 1)));
+        }
+        framesTree.setShowRoot(false);
+    }
+
+    @FXML
+    private void handleFrameSelection(MouseEvent event) {
+        TreeItem<String> selectedItem = framesTree.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            int selectedIndex = framesTree.getRoot().getChildren().indexOf(selectedItem);
+            if (selectedIndex >= 0) {
+                animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(selectedIndex);
+                framesTree.getSelectionModel().select(selectedIndex);
+            }
+        }
+    }
+
+    @FXML
+    private void handleSetInitialState() {
+        ModelPrepared currModel = modelController.currentModel;
+        animationController.selectedFrame.setInitialState(new State(currModel.model.position, currModel.model.rotation, currModel.model.scale));
+        System.out.println(animationController.selectedFrame.getInitialState().getPosition());
+        updateLabels();
+    }
+
+    @FXML
+    private void handleSetDestinationState() {
+        Model currModel = modelController.currentModel.model;
+        animationController.selectedFrame.setDestinationState(new State(currModel.position, currModel.rotation, currModel.scale));
+        System.out.println(animationController.selectedFrame.getDestinationState().getPosition());
+        updateLabels();
+    }
+
+    @FXML
+    private void handleSetDuration() {
+        animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText())) * 1000);
+        System.out.println(animationController.selectedFrame.getDuration());
+        updateLabels();
+    }
+
+    @FXML
+    private void handlePlayAnimationFLag() {
+        playAnimationFlag = !playAnimationFlag;
+        updateLabels();
+    }
+
+    private void updateLabels() {
+        State destinationState = animationController.selectedFrame.getDestinationState();
+        State initialState = animationController.selectedFrame.getInitialState();
+        destinationVectors.setText(String.format(("(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)"),
+                destinationState.getScale().x(), destinationState.getScale().y(), destinationState.getScale().z(),
+                destinationState.getRotation().x() / Linal.pi * 180, destinationState.getRotation().y() / Linal.pi * 180, destinationState.getRotation().z() / Linal.pi * 180,
+                destinationState.getPosition().x(), destinationState.getPosition().y(), destinationState.getPosition().z()
+                ));
+        initialVectors.setText(String.format(("(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)"),
+                initialState.getScale().x(), initialState.getScale().y(), initialState.getScale().z(),
+                initialState.getRotation().x() / Linal.pi * 180, initialState.getRotation().y() / Linal.pi * 180, initialState.getRotation().z() / Linal.pi * 180,
+                initialState.getPosition().x(), initialState.getPosition().y(), initialState.getPosition().z()
+        ));
     }
 }
