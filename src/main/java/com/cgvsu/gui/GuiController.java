@@ -954,6 +954,7 @@ public class GuiController {
 
     @FXML
     private void handleModelTransformation() {
+        playAnimationFlag = false;
         try {
             modelController.currentModel.model.scale = new Vector3f(Float.parseFloat(scaleX.getText()), Float.parseFloat(scaleY.getText()), Float.parseFloat(scaleZ.getText()));
             modelController.currentModel.model.rotation = new Vector3f(Float.parseFloat(rotationX.getText()) / 180 * Linal.pi, Float.parseFloat(rotationY.getText()) / 180 * Linal.pi, Float.parseFloat(rotationZ.getText()) / 180 * Linal.pi);
