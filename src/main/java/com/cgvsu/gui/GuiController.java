@@ -622,7 +622,7 @@ public class GuiController {
         TreeItem<String> root = new TreeItem<>("Models");
         objectsTree.setRoot(root);
         for (int i = 0; i < modelController.getModelsQuantity(); i++) {
-            root.getChildren().add(new TreeItem<>("Model " + (i + 1)));
+            root.getChildren().add(new TreeItem<>(modelController.getModelList().get(i).getName()));
         }
         objectsTree.setShowRoot(false);
         setCurrentModel(root.getChildren().size() - 1);
