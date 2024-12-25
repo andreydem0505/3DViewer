@@ -1,5 +1,6 @@
 package com.cgvsu.animation;
 
+import com.cgvsu.math.Linal;
 import com.cgvsu.nmath.Vector3f;
 
 public class State {
@@ -14,23 +15,10 @@ public class State {
     }
 
     protected State interpolate(State another, float t) {
-        return new State(
-                new Vector3f(
-                        position.x() + (another.position.x() - position.x()) * t,
-                        position.y() + (another.position.y() - position.y()) * t,
-                        position.z() + (another.position.z() - position.z()) * t
-                ),
-                new Vector3f(
-                        rotation.x() + (another.rotation.x() - rotation.x()) * t,
-                        rotation.y() + (another.rotation.y() - rotation.y()) * t,
-                        rotation.z() + (another.rotation.z() - rotation.z()) * t
-                ),
-                new Vector3f(
-                        scale.x() + (another.scale.x() - scale.x()) * t,
-                        scale.y() + (another.scale.y() - scale.y()) * t,
-                        scale.z() + (another.scale.z() - scale.z()) * t
-                )
-        );
+        Vector3f pos = Linal.interpolateVector(this.position, another.position, t);
+        Vector3f rot = Linal.interpolateVector(this.rotation, another.rotation, t);
+        Vector3f sca = Linal.interpolateVector(this.scale, another.scale, t);
+        return new State(pos, rot, sca);
     }
 
     public Vector3f getPosition() {

@@ -59,6 +59,15 @@ public class Linal {
         return b;
     }
 
+    public static Vector3f interpolateVector(Vector3f start, Vector3f end, float t) {
+        Vector3f result = new Vector3f(end);
+        result.subtract(start);
+        result.scale(t);
+        result.add(start);
+
+        return result;
+    }
+
     public static Vector3f mean(List<Vector3f> vectors) {
         Vector3f result = new Vector3f(0f, 0f, 0f);
 
