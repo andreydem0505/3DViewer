@@ -127,7 +127,7 @@
             </TitledPane>
 
             <!-- Меню камер -->
-            <TitledPane expanded="false" focusTraversable="false" text="Cameras">
+            <TitledPane focusTraversable="false" text="Cameras">
                 <VBox spacing="5">
                     <HBox spacing="5">
                         <Button onAction="#addCamera" text="+" />
@@ -181,7 +181,7 @@
             </TitledPane>
 
             <!-- Меню модификаций -->
-            <TitledPane expanded="false" focusTraversable="false" text="Model modification">
+            <TitledPane focusTraversable="false" text="Model modification">
                 <VBox spacing="5">
                     <VBox spacing="5">
                         <Label text="VertexPolygonRemoverTool" />
@@ -222,7 +222,7 @@
             </TitledPane>
 
             <!-- Меню редактирования модели -->
-            <TitledPane expanded="false" focusTraversable="false" text="Model State">
+            <TitledPane focusTraversable="false" text="Model State">
                 <VBox spacing="5">
                     <Label text="Scale:" />
                     <GridPane hgap="10" vgap="5">
