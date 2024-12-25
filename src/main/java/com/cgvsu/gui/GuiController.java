@@ -1099,6 +1099,13 @@ public class GuiController {
     }
 
     @FXML
+    private void handleSetDurationWithEnter(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            handleSetDuration();
+        }
+    }
+
+    @FXML
     private void handlePlayAnimationFLag() {
         playAnimationFlag = !playAnimationFlag;
         updateAnimationInformation();

@@ -320,7 +320,7 @@
                     </rowConstraints>
                      <children>
                            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="63.0" text="Duration: " textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                           <TextField fx:id="frameDuration" maxWidth="216.0" prefHeight="25.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                           <TextField fx:id="frameDuration" maxWidth="216.0" prefHeight="25.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" onKeyPressed="#handleSetDurationWithEnter"/>
                         <Button mnemonicParsing="false" onMouseClicked="#handleSetDuration" prefHeight="25.0" prefWidth="59.0" text="Set" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                      </children>
                   </GridPane>
