@@ -3,7 +3,9 @@ package com.cgvsu.gui;
 import com.cgvsu.model.ModelPrepared;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ModelController {
     public ModelPrepared currentModel;
@@ -13,11 +15,16 @@ public class ModelController {
     }
 
     private final List<ModelPrepared> modelList;
+    private Set<String> namesSet = new HashSet<>();
 
     public ModelController(ModelPrepared modelPrepared) {
         modelList = new ArrayList<>();
         modelList.add(modelPrepared);
         currentModel = modelPrepared;
+    }
+
+    public void addNameToNameSet(String name) {
+        namesSet.add(name);
     }
 
     public ModelController() {
@@ -58,5 +65,9 @@ public class ModelController {
             }
         }
         return false;
+    }
+
+    public Set<String> getNamesSet() {
+        return namesSet;
     }
 }

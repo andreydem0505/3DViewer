@@ -326,6 +326,7 @@ public class GuiController {
     private void saveModelFile() {
         ObjWriter objWriter = new ObjWriter();
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName(modelController.currentModel.getName());
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Save model");
 
@@ -405,13 +406,27 @@ public class GuiController {
             newModel.normals = Linal.calculateVerticesNormals(newModel.vertices, newModel.polygons);
             for (Polygon polygon : newModel.polygons)
                 Triangulation.convexPolygonTriangulate(polygon);
-            modelController.addModel(new ModelPrepared(newModel, fileName.getFileName().toString(), RenderModeFactory.grid()));
+            String modelName = getModelName(fileName);
+            modelController.addModel(new ModelPrepared(newModel, modelName, RenderModeFactory.grid()));
+            modelController.addNameToNameSet(modelName);
             if (modelController.getModelsQuantity() >= 1) {
                 modelController.currentModel = modelController.getModelList().get(modelController.getModelsQuantity() - 1);
             }
         } catch (IOException exception) {
             showError("Error loading the model","Failed to load model.\nError: " + exception.getLocalizedMessage());
         }
+    }
+
+    private String getModelName(Path fileName) {
+        String modelName = fileName.getFileName().toString();
+        if (modelController.getNamesSet().contains(modelName)) {
+            int counter = 0;
+            while (modelController.getNamesSet().contains(modelName)) {
+                modelName = modelName.substring(0, (modelName.length() - 4 - (counter > 0 ? String.valueOf(counter).length() : 0))) + (counter + 1) + ".obj";
+                counter++;
+            }
+        }
+        return modelName;
     }
 
     private Model getTransformedModel(Model model) {
