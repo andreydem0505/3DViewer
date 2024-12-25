@@ -1050,7 +1050,7 @@ public class GuiController {
         updateAnimationTree();
         animationController.selectedFrame = animationController.animations.get(modelController.currentModel).getFrames().get(framesTree.getRoot().getChildren().size() - 1);
         framesTree.getSelectionModel().select(framesTree.getRoot().getChildren().size() - 1);
-        updateLabels();
+        updateAnimationInformation();
     }
 
     private void updateAnimationTree() {
@@ -1072,7 +1072,7 @@ public class GuiController {
                 framesTree.getSelectionModel().select(selectedIndex);
             }
         }
-        updateLabels();
+        updateAnimationInformation();
     }
 
     @FXML
@@ -1080,7 +1080,7 @@ public class GuiController {
         ModelPrepared currModel = modelController.currentModel;
         animationController.selectedFrame.setInitialState(new State(currModel.model.position, currModel.model.rotation, currModel.model.scale));
         System.out.println(animationController.selectedFrame.getInitialState().getPosition());
-        updateLabels();
+        updateAnimationInformation();
     }
 
     @FXML
@@ -1088,23 +1088,24 @@ public class GuiController {
         Model currModel = modelController.currentModel.model;
         animationController.selectedFrame.setDestinationState(new State(currModel.position, currModel.rotation, currModel.scale));
         System.out.println(animationController.selectedFrame.getDestinationState().getPosition());
-        updateLabels();
+        updateAnimationInformation();
     }
 
     @FXML
     private void handleSetDuration() {
         animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText())) * 1000);
         System.out.println(animationController.selectedFrame.getDuration());
-        updateLabels();
+        updateAnimationInformation();
     }
 
     @FXML
     private void handlePlayAnimationFLag() {
         playAnimationFlag = !playAnimationFlag;
-        updateLabels();
+        updateAnimationInformation();
     }
 
-    private void updateLabels() {
+    private void updateAnimationInformation() {
+        frameDuration.setText(String.valueOf(animationController.selectedFrame.getDuration()));
         State destinationState = animationController.selectedFrame.getDestinationState();
         State initialState = animationController.selectedFrame.getInitialState();
         destinationVectors.setText(String.format(("(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)\n(%.2f, %.2f, %.2f)"),
