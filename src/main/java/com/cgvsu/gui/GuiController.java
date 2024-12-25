@@ -1168,6 +1168,7 @@ public class GuiController {
 
         animationController.animations = loadedAnimations;
         updateAnimationTree();
+        clearLabelsAndNullifySelectedFrame();
     }
 
     @FXML
