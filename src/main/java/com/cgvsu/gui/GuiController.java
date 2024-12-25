@@ -137,6 +137,8 @@ public class GuiController {
     private CheckBox textureCheckbox;
     @FXML
     private CheckBox lightCheckbox;
+    @FXML
+    private CheckBox loopCheckbox;
 
     @FXML
     private ColorPicker colorPicker;
@@ -204,7 +206,7 @@ public class GuiController {
 
             if (playAnimationFlag && !animationController.isOver()) {
                 animationController.animate();
-            } else if (true) {
+            } else if (loopFlag) {
                 animationController.reset();
             }
 
@@ -1188,5 +1190,9 @@ public class GuiController {
         animationController.selectedFrame = null;
         initialVectors.setText("");
         destinationVectors.setText("");
+    }
+    @FXML
+    private void handleLoopCheckbox() {
+        loopFlag = !loopFlag;
     }
 }
