@@ -30,7 +30,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -138,8 +137,6 @@ public class GuiController {
     private CheckBox textureCheckbox;
     @FXML
     private CheckBox lightCheckbox;
-    @FXML
-    private CheckBox loopCheckbox;
 
     @FXML
     private ColorPicker colorPicker;
@@ -159,7 +156,7 @@ public class GuiController {
     private volatile boolean musicPlaying = false;
     private boolean playAnimationFlag = false;
     private boolean loopFlag = false;
-    private ExecutorService service = Executors.newFixedThreadPool(4);
+    private ExecutorService service = Executors.newSingleThreadExecutor();
     private Clip clip;
     private AnimationController animationController;
 
