@@ -65,6 +65,9 @@ public class GuiController {
     final private float TRANSLATION = 2F;
 
     @FXML
+    private CheckBox musicLoop;
+
+    @FXML
     private TreeView<String> camerasTree;
 
     @FXML
@@ -1269,7 +1272,10 @@ public class GuiController {
             if (musicPlaying) {
                 clip.stop();
             } else {
-                clip.start();
+                if (musicLoop.isSelected()) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
+                } else
+                    clip.start();
             }
             musicPlaying = !musicPlaying;
         } catch (Exception e) {
