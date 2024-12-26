@@ -183,6 +183,12 @@ public class GuiController {
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue()));
 
         initializeFields();
+
+        Platform.runLater(() -> {
+            Stage stage = (Stage) anchorPane.getScene().getWindow();
+            stage.setOnCloseRequest(event -> shutdownExecutorService());
+        });
+
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
@@ -861,10 +867,14 @@ public class GuiController {
             showNumberAlertTextField();
             return;
         }
-        VertexRemoverNextGen.processModelAndCleanEverything(modelController.currentModel.model, verticesToDelete);
-        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
-        for (Polygon polygon : modelController.currentModel.model.polygons)
-            Triangulation.convexPolygonTriangulate(polygon);
+        try {
+            VertexRemoverNextGen.processModelAndCleanEverything(modelController.currentModel.model, verticesToDelete);
+            modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+            for (Polygon polygon : modelController.currentModel.model.polygons)
+                Triangulation.convexPolygonTriangulate(polygon);
+        } catch (NullPointerException npe) {
+            showError("No model selected", "No model found, check everything and try again");
+        }
     }
 
     @FXML
@@ -890,10 +900,14 @@ public class GuiController {
             showNumberAlertTextField();
             return;
         }
-        PolygonRemover.processModelAndCleanPolygons(modelController.currentModel.model, polygonsToDelete, true, true, true);
-        modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
-        for (Polygon polygon : modelController.currentModel.model.polygons)
-            Triangulation.convexPolygonTriangulate(polygon);
+        try {
+            PolygonRemover.processModelAndCleanPolygons(modelController.currentModel.model, polygonsToDelete, true, true, true);
+            modelController.currentModel.model.normals = Linal.calculateVerticesNormals(modelController.currentModel.model.vertices, modelController.currentModel.model.polygons);
+            for (Polygon polygon : modelController.currentModel.model.polygons)
+                Triangulation.convexPolygonTriangulate(polygon);
+        } catch (NullPointerException npe) {
+            showError("No model selected", "No model found, check everything and try again");
+        }
     }
 
     @FXML
@@ -1134,7 +1148,7 @@ public class GuiController {
     @FXML
     private void handleSetDuration() {
         try {
-            animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText()) * 1000));
+            animationController.selectedFrame.setDuration((long) (Float.parseFloat(frameDuration.getText()) * 1000) > 0 ? (long) (Float.parseFloat(frameDuration.getText()) * 1000) : 0);
             updateAnimationInformation();
         } catch (NullPointerException npe) {
             showError("No frame", "No frame selected");
@@ -1289,6 +1303,20 @@ public class GuiController {
             clip.setFramePosition(0);
         } catch (Exception e) {
             showError("Music not found", "Check the file u've loaded");
+        }
+    }
+
+    public void shutdownExecutorService() {
+        if (service != null && !service.isShutdown()) {
+            service.shutdown();
+            try {
+                if (!service.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
+                    service.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                service.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
