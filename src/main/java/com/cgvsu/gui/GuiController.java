@@ -1296,7 +1296,21 @@ public class GuiController {
             showError("Music not found", "Check the file u've loaded");
         }
     }
-
+    @FXML
+    private void handleMusicLoopCheck() {
+        try {
+            if (musicLoop.isSelected() && musicPlaying) {
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+            } else if (!musicLoop.isSelected() && musicPlaying) {
+                clip.loop(0);
+                clip.start();
+            } else {
+                clip.stop();
+            }
+        } catch (NullPointerException ignored) {
+            // ничего не надо делать, юзер просто музыку еще не подгрузил.
+        }
+    }
     @FXML
     private void musicReset() {
         try {

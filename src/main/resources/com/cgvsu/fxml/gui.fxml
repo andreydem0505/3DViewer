@@ -68,7 +68,7 @@
             <MenuItem mnemonicParsing="false" onAction="#musicPauseResume" text="Pause/resume music" />
             <CustomMenuItem mnemonicParsing="false" text="Loop music">
               <content>
-                <CheckBox fx:id="musicLoop" text="loop" textFill="#121111" />
+                <CheckBox fx:id="musicLoop" text="loop" textFill="#121111" onAction="#handleMusicLoopCheck"/>
               </content>
             </CustomMenuItem>
             <MenuItem mnemonicParsing="false" onAction="#handlePlayAnimationFLag" text="Play/pause animation" />
