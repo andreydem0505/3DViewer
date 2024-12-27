@@ -187,6 +187,7 @@ public class GuiController {
         Platform.runLater(() -> {
             Stage stage = (Stage) anchorPane.getScene().getWindow();
             stage.setOnCloseRequest(event -> shutdownExecutorService());
+            switchThemeToLight();
         });
 
         timeline = new Timeline();
