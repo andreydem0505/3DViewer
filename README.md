@@ -3,6 +3,8 @@ Final project for computer graphics course in Voronezh State University
 
 3D models render written in Java allows user to interact with models and even create animations.
 
+<a href="https://youtu.be/lfBWsFlg0Xo">Watch how it works!</a>
+
 <a href="https://github.com/lein3000zzz">Vladislav Severov<a/>: UI/UX, loading and saving models and 
 animations, multiple models support, removing model's vertices, exceptions handling, exe file
 
@@ -30,5 +32,3 @@ Developing this project required knowledge of linear algebra and computer graphi
 interpolation, barycentric coordinates, z-buffer, lighting) as well as OOP and code architecture.
 
 The code is covered by unit-tests.
-
-[![](https://img.youtube.com/vi/lfBWsFlg0Xo/0.jpg)](https://youtu.be/lfBWsFlg0Xo)
