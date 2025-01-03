@@ -1,6 +1,6 @@
 # 3DViewer ![](https://github.com/andreydem0505/3DViewer/workflows/Testing/badge.svg)
 
-[](image.png)
+![](https://raw.githubusercontent.com/andreydem0505/3DViewer/refs/heads/main/image.png)
 
 Final project for computer graphics course in Voronezh State University
 
