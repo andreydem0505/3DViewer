@@ -383,7 +383,7 @@ public class GuiController {
         String filename = file.getAbsolutePath();
 
         try {
-            objWriter.write(getTransformedModel(modelController.currentModel.model), filename);
+            objWriter.write(Linal.getTransformedModel(modelController.currentModel.model), filename);
         } catch (Exception e) {
             showError("Error", "Error while writing file");
         }
@@ -452,25 +452,6 @@ public class GuiController {
             }
         }
         return modelName;
-    }
-
-    private Model getTransformedModel(Model model) {
-        Model newModel = new Model();
-        newModel.vertices = new ArrayList<>();
-
-        Matrix4x4 modelMatrix = model.getModelMatrix();
-        for (Vector3f vertex : model.vertices){
-            Vector4f vertex4 = new Vector4f(vertex.x(), vertex.y(), vertex.z(), 1f);
-            vertex4 = modelMatrix.multiplyMV(vertex4);
-
-            newModel.vertices.add(new Vector3f(vertex4.x(), vertex4.y(), vertex.z()));
-        }
-        newModel.textureVertices = new ArrayList<>(model.textureVertices);
-        newModel.normals = new ArrayList<>(model.normals);
-        newModel.polygons = new ArrayList<>(model.polygons);
-        newModel.groups = new ArrayList<>(model.groups);
-
-        return newModel;
     }
 
     @FXML

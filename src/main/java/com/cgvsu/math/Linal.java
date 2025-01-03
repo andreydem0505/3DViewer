@@ -1,8 +1,11 @@
 package com.cgvsu.math;
 
+import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.nmath.Matrix3x3;
+import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector3f;
+import com.cgvsu.nmath.Vector4f;
 
 import java.util.*;
 
@@ -104,6 +107,25 @@ public class Linal {
                 coefs.get(2, 0), coefs.get(2, 1), adjoint.z());
 
         return new float[]{determinant1 / determinant, determinant2 / determinant, determinant3 / determinant};
+    }
+
+    public static Model getTransformedModel(Model model) {
+        Model newModel = new Model();
+        newModel.vertices = new ArrayList<>();
+
+        Matrix4x4 modelMatrix = model.getModelMatrix();
+        for (Vector3f vertex : model.vertices){
+            Vector4f vertex4 = new Vector4f(vertex.x(), vertex.y(), vertex.z(), 1f);
+            vertex4 = modelMatrix.multiplyMV(vertex4);
+
+            newModel.vertices.add(new Vector3f(vertex4.x(), vertex4.y(), vertex.z()));
+        }
+        newModel.textureVertices = new ArrayList<>(model.textureVertices);
+        newModel.normals = new ArrayList<>(model.normals);
+        newModel.polygons = new ArrayList<>(model.polygons);
+        newModel.groups = new ArrayList<>(model.groups);
+
+        return newModel;
     }
 
     private static void putToDict(Map<Integer, Pair> dict, ArrayList<Vector3f> vertices, ArrayList<Integer> indices, int prevIndex, int currIndex, int nextIndex) {

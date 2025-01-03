@@ -3,6 +3,7 @@ package com.cgvsu.io.animationreader;
 import com.cgvsu.animation.Frame;
 import com.cgvsu.animation.ModelAnimation;
 import com.cgvsu.animation.State;
+import com.cgvsu.io.Vector3Deserializer;
 import com.cgvsu.model.ModelPrepared;
 import com.cgvsu.nmath.Vector3f;
 import com.google.gson.*;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
