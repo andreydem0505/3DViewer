@@ -6,7 +6,7 @@ import com.cgvsu.render_engine.GraphicConveyor;
 
 import java.awt.*;
 
-public class Lightning {
+public class Lighting {
     public static float k = 0.95f;
 
     public static InterpolationResult light(

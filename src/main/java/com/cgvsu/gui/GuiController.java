@@ -18,7 +18,7 @@ import com.cgvsu.nmath.Matrix4x4;
 import com.cgvsu.nmath.Vector2f;
 import com.cgvsu.nmath.Vector3f;
 import com.cgvsu.nmath.Vector4f;
-import com.cgvsu.rasterization.Lightning;
+import com.cgvsu.rasterization.Lighting;
 import com.cgvsu.render_engine.*;
 import com.cgvsu.triangulation.Triangulation;
 import javafx.application.Platform;
@@ -115,7 +115,7 @@ public class GuiController {
     @FXML
     private TextField directionY;
     @FXML
-    private TextField lightningCoeffTextField;
+    private TextField lightingCoeffTextField;
 
     @FXML
     private TextField directionZ;
@@ -289,7 +289,7 @@ public class GuiController {
         positionX.setText("0");
         positionY.setText("0");
         positionZ.setText("0");
-        lightningCoeffTextField.setText(Float.toString(Lightning.k));
+        lightingCoeffTextField.setText(Float.toString(Lighting.k));
     }
 
     @FXML
@@ -581,18 +581,18 @@ public class GuiController {
     }
 
     @FXML
-    private void handleLightningCoefChange() {
+    private void handleLightingCoefChange() {
         try {
-            if (Float.parseFloat(lightningCoeffTextField.getText()) > 1) {
-                Lightning.k = 1;
-                lightningCoeffTextField.setText("1");
+            if (Float.parseFloat(lightingCoeffTextField.getText()) > 1) {
+                Lighting.k = 1;
+                lightingCoeffTextField.setText("1");
                 showWarning("Wrong input", "Maximum coefficient is 1");
-            } else if (Float.parseFloat(lightningCoeffTextField.getText()) <= 0.009) {
-                Lightning.k = 0.01f;
-                lightningCoeffTextField.setText("0.01");
+            } else if (Float.parseFloat(lightingCoeffTextField.getText()) <= 0.009) {
+                Lighting.k = 0.01f;
+                lightingCoeffTextField.setText("0.01");
                 showWarning("Wrong input", "Minimum coefficient is 0.01");
             } else
-                Lightning.k = Float.parseFloat(lightningCoeffTextField.getText());
+                Lighting.k = Float.parseFloat(lightingCoeffTextField.getText());
         } catch (Exception e) {
             showNumberAlertTextField();
         }
@@ -631,7 +631,7 @@ public class GuiController {
     @FXML
     private void handleCoefChange(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
-            handleLightningCoefChange();
+            handleLightingCoefChange();
         }
     }
 
@@ -750,7 +750,7 @@ public class GuiController {
                 modelController.currentModel.setCurrentModeCode("GridColor");
                 handleSetDisabledCheckboxes(false, true, false);
             } else if (gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridPlainColorLighting(convertColor(modelController.currentModel.getCurrentColorCode())));
                 modelController.currentModel.setCurrentModeCode("GridColorLight");
                 handleSetDisabledCheckboxes(false, true, false);
             } else if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
@@ -758,11 +758,11 @@ public class GuiController {
                 modelController.currentModel.setCurrentModeCode("GridTexture");
                 handleSetDisabledCheckboxes(true, false, false);
             } else if (gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
-                modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLightning(modelController.currentModel.getTexture()));
+                modelController.currentModel.setRenderMode(RenderModeFactory.gridTextureLighting(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("GridTextureLight");
                 handleSetDisabledCheckboxes(true, false, false);
             } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
-                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLightning(convertColor(modelController.currentModel.getCurrentColorCode())));
+                modelController.currentModel.setRenderMode(RenderModeFactory.plainColorLighting(convertColor(modelController.currentModel.getCurrentColorCode())));
                 modelController.currentModel.setCurrentModeCode("ColorLight");
                 handleSetDisabledCheckboxes(false, true, false);
             } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {
@@ -774,7 +774,7 @@ public class GuiController {
                 modelController.currentModel.setCurrentModeCode("Color");
                 handleSetDisabledCheckboxes(false, true, false);
             } else if (!gridCheckbox.isSelected() && !colorCheckbox.isSelected() && textureCheckbox.isSelected() && lightCheckbox.isSelected()) {
-                modelController.currentModel.setRenderMode(RenderModeFactory.textureLightning(modelController.currentModel.getTexture()));
+                modelController.currentModel.setRenderMode(RenderModeFactory.textureLighting(modelController.currentModel.getTexture()));
                 modelController.currentModel.setCurrentModeCode("TextureLight");
                 handleSetDisabledCheckboxes(true, false, false);
             } else if (!gridCheckbox.isSelected() && colorCheckbox.isSelected() && !textureCheckbox.isSelected() && !lightCheckbox.isSelected()) {

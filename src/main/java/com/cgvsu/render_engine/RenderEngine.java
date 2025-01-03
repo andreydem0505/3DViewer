@@ -67,13 +67,13 @@ public class RenderEngine {
 
         if (renderMode.color != null) {
             if (renderMode.light) {
-                fillWithColorAndLightning(camera.getPosition(), renderMode.color);
+                fillWithColorAndLighting(camera.getPosition(), renderMode.color);
             } else {
                 fillWithColor(renderMode.color);
             }
         } else if (renderMode.texture != null) {
             if (renderMode.light) {
-                fillWithTextureAndLightning(camera.getPosition(), renderMode.texture);
+                fillWithTextureAndLighting(camera.getPosition(), renderMode.texture);
             } else {
                 fillWithTexture(renderMode.texture);
             }
@@ -125,7 +125,7 @@ public class RenderEngine {
         }
     }
 
-    private void fillWithColorAndLightning(Vector3f lightSource, Color color) {
+    private void fillWithColorAndLighting(Vector3f lightSource, Color color) {
         int[] x = new int[3];
         int[] y = new int[3];
         double[] z = new double[3];
@@ -140,7 +140,7 @@ public class RenderEngine {
                     n[i] = normals[triangle[i]];
                     v[i] = mesh.vertices.get(triangle[i]);
                 }
-                TriangleRasterization.fillTriangle(new PlainColorWithLightningTrianglePainter(
+                TriangleRasterization.fillTriangle(new PlainColorWithLightingTrianglePainter(
                         pixelWriter, x, y, z, n, v, lightSource, color
                 ));
             }
@@ -169,7 +169,7 @@ public class RenderEngine {
         }
     }
 
-    private void fillWithTextureAndLightning(Vector3f lightSource, BufferedImage image) {
+    private void fillWithTextureAndLighting(Vector3f lightSource, BufferedImage image) {
         int nTriangles;
         int[] x = new int[3];
         int[] y = new int[3];
@@ -190,7 +190,7 @@ public class RenderEngine {
                     n[j] = normals[vertexTriangle[j]];
                     v[j] = mesh.vertices.get(vertexTriangle[j]);
                 }
-                TriangleRasterization.fillTriangle(new TextureWithLightningTrianglePainter(
+                TriangleRasterization.fillTriangle(new TextureWithLightingTrianglePainter(
                         pixelWriter, x, y, z, textureV, image, n, v, lightSource
                 ));
             }

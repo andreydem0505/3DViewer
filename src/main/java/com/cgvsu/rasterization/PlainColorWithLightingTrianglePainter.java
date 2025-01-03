@@ -5,12 +5,12 @@ import com.cgvsu.render_engine.PixelWriter;
 
 import java.awt.*;
 
-public class PlainColorWithLightningTrianglePainter extends PlainColorTrianglePainter {
+public class PlainColorWithLightingTrianglePainter extends PlainColorTrianglePainter {
     private final Vector3f[] normals;
     private final Vector3f[] vertices;
     private final Vector3f lightSource;
 
-    public PlainColorWithLightningTrianglePainter(
+    public PlainColorWithLightingTrianglePainter(
             PixelWriter pixelWriter,
             int[] arrX,
             int[] arrY,
@@ -28,7 +28,7 @@ public class PlainColorWithLightningTrianglePainter extends PlainColorTrianglePa
     @Override
     protected InterpolationResult interpolate(int x, int y) {
         InterpolationResult result = super.interpolate(x, y);
-        return Lightning.light(result, normals, vertices, lightSource);
+        return Lighting.light(result, normals, vertices, lightSource);
     }
 
     @Override
