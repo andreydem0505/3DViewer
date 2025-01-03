@@ -120,12 +120,12 @@
                </HBox>
                <HBox prefHeight="25.0" prefWidth="200.0">
                   <children>
-                     <Label contentDisplay="CENTER" text="Lightning coefficient: " textAlignment="CENTER">
+                     <Label contentDisplay="CENTER" text="Lighting coefficient: " textAlignment="CENTER">
                         <padding>
                            <Insets top="3.0" />
                         </padding></Label>
-                     <TextField fx:id="lightningCoeffTextField" onKeyPressed="#handleCoefChange" prefHeight="25.0" prefWidth="116.0" />
-                     <Button mnemonicParsing="false" onMouseClicked="#handleLightningCoefChange" prefHeight="25.0" prefWidth="43.0" text="Set" />
+                     <TextField fx:id="lightingCoeffTextField" onKeyPressed="#handleCoefChange" prefHeight="25.0" prefWidth="116.0" />
+                     <Button mnemonicParsing="false" onMouseClicked="#handleLightingCoefChange" prefHeight="25.0" prefWidth="43.0" text="Set" />
                   </children>
                </HBox>
                 </VBox>

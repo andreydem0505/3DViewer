@@ -12,7 +12,7 @@ public class RenderModeFactory {
         return new RenderMode(true, color, null, false);
     }
 
-    public static RenderMode gridPlainColorLightning(Color color) {
+    public static RenderMode gridPlainColorLighting(Color color) {
         return new RenderMode(true, color, null, true);
     }
 
@@ -20,7 +20,7 @@ public class RenderModeFactory {
         return new RenderMode(true, null, image, false);
     }
 
-    public static RenderMode gridTextureLightning(BufferedImage image) {
+    public static RenderMode gridTextureLighting(BufferedImage image) {
         return new RenderMode(true, null, image, true);
     }
 
@@ -28,7 +28,7 @@ public class RenderModeFactory {
         return new RenderMode(false, color, null, false);
     }
 
-    public static RenderMode plainColorLightning(Color color) {
+    public static RenderMode plainColorLighting(Color color) {
         return new RenderMode(false, color, null, true);
     }
 
@@ -36,7 +36,7 @@ public class RenderModeFactory {
         return new RenderMode(false, null, image, false);
     }
 
-    public static RenderMode textureLightning(BufferedImage image) {
+    public static RenderMode textureLighting(BufferedImage image) {
         return new RenderMode(false, null, image, true);
     }
 }
