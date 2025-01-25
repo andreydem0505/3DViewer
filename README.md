@@ -10,8 +10,8 @@ Final project for computer graphics course in Voronezh State University
 
 ## Contributors
 
-[Vladislav Severov](https://github.com/lein3000zzz): UI/UX, loading and saving models and  animations,
-multiple models support, removing model's vertices, exceptions handling, exe file.
+[Vladislav Severov](https://github.com/lein3000zzz): UI/UX, integration, loading and saving models and animations,
+multiple models support, removing model's vertices and polygons, exceptions handling, exe file, qol functionality and music :D.
 
 [Ilya Ektov](https://github.com/LiptonItTea): math module, affine transformations, camera control, 
 serializing and deserializing animations.
