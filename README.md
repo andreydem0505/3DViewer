@@ -11,7 +11,8 @@ Final project for computer graphics course in Voronezh State University
 ## Contributors
 
 [Vladislav Severov](https://github.com/lein3000zzz): UI/UX, integration, loading and saving models and animations,
-multiple models support, removing model's vertices and polygons, exceptions handling, exe file, qol functionality and music :D.
+multiple models support, removing model's vertices and polygons, exceptions handling, exe file, qol functionality 
+and music :D.
 
 [Ilya Ektov](https://github.com/LiptonItTea): math module, affine transformations, camera control, 
 serializing and deserializing animations.
@@ -21,15 +22,15 @@ cameras support, animations core.
 
 ## Features
 
-User can choose a way of displaying model. There are different options:
+User can choose a way of displaying the model. There are different options:
 
 1. Showing polygon grid or not
-2. Filling model with a plain color or a texture
+2. Filling the model with a plain color or a texture
 3. Using lighting or not
 
-User has ability to add several models and work with them simultaneously. He can perform affine transformations on them:
-translate, rotate and scale models. Also, he can manage several cameras to see the model from different sides. Camera 
-control is performing with the help of polar coordinates.
+User has an ability to add several models and work with them simultaneously. They can perform affine transformations 
+on them: translate, rotate and scale models. Also, the user can manage several cameras to see the model from different 
+sides. Camera control is performing with the help of polar coordinates.
 
 Any state of the current model can be set as an animation frame allowing user to compose diverse animations. Then they 
 can be saved as json files and loaded to the program.
@@ -37,7 +38,7 @@ can be saved as json files and loaded to the program.
 Developing this project required knowledge of linear algebra and computer graphics concepts (rasterization, 
 interpolation, barycentric coordinates, z-buffer, lighting) as well as OOP and code architecture.
 
-The code is covered by unit-tests.
+The code is covered with unit-tests.
 
 ## Build
 Building is performed via maven.
